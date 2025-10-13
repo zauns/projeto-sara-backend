@@ -41,6 +41,7 @@ Antes de iniciar, certifique-se de ter instalado:
 
 git clone https://github.com/seu-usuario/seu-projeto.git
 cd seu-projeto
+
 ## 3. Compilar e executar a aplicação
 bash \
 Copiar código \
@@ -53,7 +54,7 @@ A aplicação iniciará em http://localhost:8080.
 1. Usando Docker
 Se desejar rodar o RabbitMQ via Docker, execute:
 
-Copiar código
+
 docker run -d \
   --name rabbitmq \
   -p 5672:5672 \
@@ -99,6 +100,7 @@ Receber mensagens
 As mensagens são consumidas automaticamente pelo listener configurado, mas você pode visualizar logs no console.
 
 ## 4.Padrões de Código e Diretrizes
+
 Utilize Lombok para reduzir boilerplate (@Getter, @Setter, @Builder, etc.)
 
 Todas as classes devem seguir Clean Code e arquitetura em camadas:
@@ -113,7 +115,7 @@ producer / consumer: responsáveis por enviar e receber mensagens RabbitMQ
 
 dto / model: classes de dados
 
-## 4.Convenções de Nomenclatura
+## 5.Convenções de Nomenclatura
 Tipo	Convenção	Exemplo
 Pacotes	minúsculo, separado por ponto	com.seuusuario.rabbitmqtemplate
 Classes	PascalCase	MessageProducer, MessageConsumer
