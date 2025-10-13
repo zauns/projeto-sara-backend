@@ -116,9 +116,10 @@ producer / consumer: responsáveis por enviar e receber mensagens RabbitMQ
 dto / model: classes de dados
 
 ## 5.Convenções de Nomenclatura
-Tipo	Convenção	Exemplo
-Pacotes	minúsculo, separado por ponto	com.seuusuario.rabbitmqtemplate
-Classes	PascalCase	MessageProducer, MessageConsumer
-Métodos	camelCase	sendMessage(), consumeMessage()
-Constantes	MAIÚSCULO_COM_UNDERSCORE	QUEUE_NAME
-Variáveis	camelCase	messageContent
+| Tipo         | Convenção                 | Exemplo                              |
+|---------------|---------------------------|---------------------------------------|
+| **Pacotes**   | minúsculo, separado por ponto | `com.seuusuario.rabbitmqtemplate`     |
+| **Classes**   | PascalCase                | `MessageProducer`, `MessageConsumer`  |
+| **Métodos**   | camelCase                 | `sendMessage()`, `consumeMessage()`   |
+| **Constantes**| MAIÚSCULO_COM_UNDERSCORE  | `QUEUE_NAME`                          |
+| **Variáveis** | camelCase                 | `messageContent`                      |
