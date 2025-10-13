@@ -9,12 +9,8 @@ Este é um projeto **Spring Boot 3.5.6** configurado com **Java 21**, **Maven 21
 1. [Stack Tecnológica](#stack-tecnológica)  
 2. [Começando](#começando)  
 3. [Configuração do RabbitMQ](#configuração-do-rabbitmq)  
-4. [APIs e Endpoints](#apis-e-endpoints)  
-5. [Padrões de Código e Diretrizes](#padrões-de-código-e-diretrizes)  
-6. [Estrutura de Diretórios](#estrutura-de-diretórios)  
-7. [Convenções de Nomenclatura](#convenções-de-nomenclatura)  
-8. [Contribuição](#contribuição)  
-9. [Licença](#licença)
+4. [Padrões de Código](#padrões-de-código-e-diretrizes)  
+5. [Convenções de Nomenclatura](#convenções-de-nomenclatura)  
 
 ---
 
@@ -45,18 +41,18 @@ Antes de iniciar, certifique-se de ter instalado:
 
 git clone https://github.com/seu-usuario/seu-projeto.git
 cd seu-projeto
-3. Compilar e executar a aplicação
+## 3. Compilar e executar a aplicação
 bash
 Copiar código
 mvn clean install
 mvn spring-boot:run
 A aplicação iniciará em http://localhost:8080.
 
-Configuração do RabbitMQ
+## 3.Configuração do RabbitMQ
+
 1. Usando Docker
 Se desejar rodar o RabbitMQ via Docker, execute:
 
-bash
 Copiar código
 docker run -d \
   --name rabbitmq \
@@ -101,7 +97,7 @@ Copiar código
 Receber mensagens
 As mensagens são consumidas automaticamente pelo listener configurado, mas você pode visualizar logs no console.
 
-Padrões de Código e Diretrizes
+## 4.Padrões de Código e Diretrizes
 Utilize Lombok para reduzir boilerplate (@Getter, @Setter, @Builder, etc.)
 
 Todas as classes devem seguir Clean Code e arquitetura em camadas:
@@ -116,25 +112,7 @@ producer / consumer: responsáveis por enviar e receber mensagens RabbitMQ
 
 dto / model: classes de dados
 
-Estrutura de Diretórios
-bash
-Copiar código
-src/
- ├─ main/
- │   ├─ java/com/seuusuario/rabbitmqtemplate/
- │   │   ├─ config/            # Configurações (RabbitMQ, Beans, etc.)
- │   │   ├─ controller/        # Controllers REST
- │   │   ├─ service/           # Lógica de negócio
- │   │   ├─ producer/          # Publicação de mensagens
- │   │   ├─ consumer/          # Consumo de mensagens
- │   │   ├─ dto/               # Data Transfer Objects
- │   │   └─ RabbitmqTemplateApplication.java
- │   └─ resources/
- │       ├─ application.yml
- │       └─ logback-spring.xml
- └─ test/
-     └─ java/com/seuusuario/rabbitmqtemplate/
-Convenções de Nomenclatura
+## 4.Convenções de Nomenclatura
 Tipo	Convenção	Exemplo
 Pacotes	minúsculo, separado por ponto	com.seuusuario.rabbitmqtemplate
 Classes	PascalCase	MessageProducer, MessageConsumer
