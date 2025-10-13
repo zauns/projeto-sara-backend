@@ -61,11 +61,11 @@ docker run -d \
   rabbitmq:3-management
 Acesse o painel do RabbitMQ em:
 
-arduino
-Copiar código
-http://localhost:15672
-Usuário padrão: guest
-Senha padrão: guest
+arduino \
+Copiar código \
+http://localhost:15672 \
+Usuário padrão: guest \
+Senha padrão: guest \
 
 2. Configuração no application.yml
 yaml
