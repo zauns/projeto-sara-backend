@@ -1,6 +1,6 @@
 # Spring Boot + Maven + RabbitMQ Project Template
 
-Este é um projeto **Spring Boot 3.5.6** configurado com **Java 21**, **Maven 21** e integração com **RabbitMQ**, ideal como base para desenvolvimento de microsserviços e aplicações backend modernas.
+Este é um projeto **Spring Boot 3.5.6** configurado com **Java 21**, **Maven 21** e integração com **RabbitMQ**.
 
 ---
 
