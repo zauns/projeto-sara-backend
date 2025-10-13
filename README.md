@@ -42,10 +42,10 @@ Antes de iniciar, certifique-se de ter instalado:
 git clone https://github.com/seu-usuario/seu-projeto.git
 cd seu-projeto
 ## 3. Compilar e executar a aplicação
-bash
-Copiar código
-mvn clean install
-mvn spring-boot:run
+bash \
+Copiar código \
+mvn clean install \ 
+mvn spring-boot:run \
 A aplicação iniciará em http://localhost:8080.
 
 ## 3.Configuração do RabbitMQ
@@ -58,16 +58,17 @@ docker run -d \
   --name rabbitmq \
   -p 5672:5672 \
   -p 15672:15672 \
-  rabbitmq:3-management
+  rabbitmq:3-management \
 Acesse o painel do RabbitMQ em:
 
 arduino \
 Copiar código \
 http://localhost:15672 \
 Usuário padrão: guest \
-Senha padrão: guest \
+Senha padrão: guest 
 
 2. Configuração no application.yml
+   
 yaml
 Copiar código
 spring:
