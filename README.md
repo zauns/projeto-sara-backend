@@ -56,14 +56,14 @@ Se desejar rodar o RabbitMQ via Docker, execute:
 
 
 docker run -d \
+
   --name rabbitmq \
   -p 5672:5672 \
   -p 15672:15672 \
   rabbitmq:3-management \
+  
 Acesse o painel do RabbitMQ em:
 
-arduino \
-Copiar código \
 http://localhost:15672 \
 Usuário padrão: guest \
 Senha padrão: guest 
@@ -96,6 +96,7 @@ Copiar código
 {
   "content": "Mensagem de teste"
 }
+
 Receber mensagens
 As mensagens são consumidas automaticamente pelo listener configurado, mas você pode visualizar logs no console.
 
