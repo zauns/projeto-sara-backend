@@ -13,7 +13,5 @@ public record UserRequestDTO(
         String email,
 
         @NotBlank(message = "A senha é obrigatória")
-        String password,
-
-        CurriculumRequestDTO curriculum
+        String password
 ) {}

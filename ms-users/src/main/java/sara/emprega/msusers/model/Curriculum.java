@@ -3,8 +3,7 @@ package sara.emprega.msusers.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -12,6 +11,9 @@ import java.util.UUID;
     @Table(name = "curriculums")
     @AllArgsConstructor
     @NoArgsConstructor
+    @Getter
+    @Setter
+    @Builder
     public class Curriculum {
 
         @Id

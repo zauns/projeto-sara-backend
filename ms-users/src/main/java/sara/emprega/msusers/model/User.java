@@ -21,6 +21,7 @@ public class User {
     private UUID id;
     private String firstName;
     private String email;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Curriculum curriculum;
 }
