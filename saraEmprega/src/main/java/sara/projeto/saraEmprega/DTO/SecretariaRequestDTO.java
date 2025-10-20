@@ -10,5 +10,6 @@ public record SecretariaRequestDTO(
     String email,
     @NotBlank(message = "Senha é obrigatória") String senha,
     @NotBlank(message = "Telefone é obrigatório") String telefone,
-    @NotBlank(message = "Endereço é obrigatório") String endereco
+    @NotBlank(message = "Endereço é obrigatório") String endereco,
+    @NotBlank(message = "Município é obrigatório") String municipio
 ) {}

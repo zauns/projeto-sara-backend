@@ -13,7 +13,6 @@ import sara.projeto.saraEmprega.model.Conta;
 import sara.projeto.saraEmprega.model.Secretaria;
 import sara.projeto.saraEmprega.repository.ContaRepository;
 
-
 @Service
 public class ContaService {
 
@@ -25,7 +24,6 @@ public class ContaService {
         // sobrecarregar este método para outros tipos
         Secretaria secretaria = new Secretaria();
         mapToSecretaria(dto, secretaria);
-        
 
         Secretaria secretariaSalva = contaRepository.save(secretaria);
         return new ContaResponseDTO(secretariaSalva);
@@ -39,43 +37,66 @@ public class ContaService {
 
     @Transactional(readOnly = true)
     public List<ContaResponseDTO> buscarTodasAsContas() {
-        return contaRepository.findAll().stream().map(ContaResponseDTO::new).collect(Collectors.toList());
+        return contaRepository
+            .findAll()
+            .stream()
+            .map(ContaResponseDTO::new)
+            .collect(Collectors.toList());
     }
 
     @Transactional
     public void excluirConta(UUID id) {
         if (!contaRepository.existsById(id)) {
-            throw new EntityNotFoundException("Conta não encontrada com o ID: " + id);
+            throw new EntityNotFoundException(
+                "Conta não encontrada com o ID: " + id
+            );
         }
         contaRepository.deleteById(id);
     }
 
     @Transactional
-    public ContaResponseDTO atualizarSecretaria(UUID id, SecretariaRequestDTO dto) {
+    public ContaResponseDTO atualizarSecretaria(
+        UUID id,
+        SecretariaRequestDTO dto
+    ) {
         Conta conta = buscarConta(id);
 
         if (!(conta instanceof Secretaria secretariaExistente)) {
-            throw new IllegalArgumentException("A conta com o ID " + id + " não é uma Secretaria.");
+            throw new IllegalArgumentException(
+                "A conta com o ID " + id + " não é uma Secretaria."
+            );
         }
 
         mapToSecretaria(dto, secretariaExistente);
 
-        Secretaria secretariaAtualizada = contaRepository.save(secretariaExistente);
+        Secretaria secretariaAtualizada = contaRepository.save(
+            secretariaExistente
+        );
 
         return new ContaResponseDTO(secretariaAtualizada);
     }
 
     //funções auxiliares
 
-    private void mapToSecretaria(SecretariaRequestDTO dto, Secretaria secretaria){
+    private void mapToSecretaria(
+        SecretariaRequestDTO dto,
+        Secretaria secretaria
+    ) {
         secretaria.setNome(dto.nome());
         secretaria.setEmail(dto.email());
         secretaria.setTelefone(dto.telefone());
         secretaria.setEndereco(dto.endereco());
         secretaria.setSenha(dto.senha());
+        secretaria.setMunicipio(dto.municipio());
     }
 
-    private Conta buscarConta(UUID id){
-        return contaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Conta não encontrada com o ID: " + id));
+    private Conta buscarConta(UUID id) {
+        return contaRepository
+            .findById(id)
+            .orElseThrow(() ->
+                new EntityNotFoundException(
+                    "Conta não encontrada com o ID: " + id
+                )
+            );
     }
 }

@@ -16,12 +16,16 @@ public class ContaResponseDTO {
     private UUID id;
     private String nome;
     private String email;
+    private String telefone;
+    private String endereco;
     private String tipoConta;
 
     public ContaResponseDTO(Conta conta) {
         this.id = conta.getId();
         this.nome = conta.getNome();
         this.email = conta.getEmail();
+        this.telefone = conta.getTelefone();
+        this.endereco = conta.getEndereco();
         this.tipoConta = conta.getClass().getSimpleName();
     }
 }
