@@ -17,8 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+    private UUID id = UUID.randomUUID();
     private String firstName;
     private String email;
 

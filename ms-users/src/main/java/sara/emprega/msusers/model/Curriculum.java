@@ -17,12 +17,7 @@ import java.util.UUID;
     public class Curriculum {
 
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private UUID id;
-
-        private String fileName;
-
-        private String fileType;
+        private UUID id = UUID.randomUUID();
 
         @Lob
         @Column(columnDefinition = "LONGBLOB")
