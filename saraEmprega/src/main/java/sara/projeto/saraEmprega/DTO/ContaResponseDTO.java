@@ -1,7 +1,5 @@
 package sara.projeto.saraEmprega.DTO;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
