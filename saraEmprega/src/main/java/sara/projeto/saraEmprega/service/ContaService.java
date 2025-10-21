@@ -137,6 +137,8 @@ public class ContaService {
         empresa.setEndereco(dto.endereco());
         empresa.setSenha(dto.senha());
         empresa.setCnpj(dto.cnpj());
+        empresa.setBiografia(dto.biografia());
+        empresa.setLinks(dto.links());
     }
 
     private Conta buscarConta(UUID id) {
