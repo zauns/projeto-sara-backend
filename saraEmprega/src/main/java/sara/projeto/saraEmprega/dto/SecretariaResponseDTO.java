@@ -1,4 +1,4 @@
-package sara.projeto.saraEmprega.DTO;
+package sara.projeto.saraEmprega.dto;
 
 import sara.projeto.saraEmprega.model.Secretaria;
 

@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sara.projeto.saraEmprega.DTO.ContaResponseDTO;
-import sara.projeto.saraEmprega.DTO.SecretariaRequestDTO;
+import sara.projeto.saraEmprega.dto.ContaResponseDTO;
+import sara.projeto.saraEmprega.dto.SecretariaRequestDTO;
 import sara.projeto.saraEmprega.service.ContaService;
 
 @RestController
