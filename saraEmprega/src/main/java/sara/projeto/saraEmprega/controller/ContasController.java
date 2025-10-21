@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
+import sara.projeto.saraEmprega.dto.EmpresaRequestDTO;
 import sara.projeto.saraEmprega.dto.SecretariaRequestDTO;
 import sara.projeto.saraEmprega.service.ContaService;
 
@@ -20,6 +21,14 @@ public class ContasController {
 
     @PostMapping("/secretaria")
     public ResponseEntity<ContaResponseDTO> criarSecretaria(
+        @Valid @RequestBody SecretariaRequestDTO dto
+    ) {
+        ContaResponseDTO novaConta = contaService.criarConta(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novaConta);
+    }
+
+    @PostMapping("/empresa")
+    public ResponseEntity<ContaResponseDTO> criarEmpresa(
         @Valid @RequestBody SecretariaRequestDTO dto
     ) {
         ContaResponseDTO novaConta = contaService.criarConta(dto);
@@ -47,6 +56,18 @@ public class ContasController {
         @Valid @RequestBody SecretariaRequestDTO dto
     ) {
         ContaResponseDTO contaAtualizada = contaService.atualizarSecretaria(
+            id,
+            dto
+        );
+        return ResponseEntity.ok(contaAtualizada);
+    }
+
+    @PutMapping("/empresa/{id}")
+    public ResponseEntity<ContaResponseDTO> atualizarEmpresa(
+        @PathVariable UUID id,
+        @Valid @RequestBody EmpresaRequestDTO dto
+    ) {
+        ContaResponseDTO contaAtualizada = contaService.atualizarEmpresa(
             id,
             dto
         );
