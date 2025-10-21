@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
+import sara.projeto.saraEmprega.dto.EmpresaRequestDTO;
 import sara.projeto.saraEmprega.dto.SecretariaRequestDTO;
 import sara.projeto.saraEmprega.model.Conta;
+import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.model.Secretaria;
 import sara.projeto.saraEmprega.repository.ContaRepository;
 
@@ -19,6 +21,7 @@ public class ContaService {
     @Autowired
     private ContaRepository contaRepository;
 
+    //CRIAR SECRETARIA
     @Transactional
     public ContaResponseDTO criarConta(SecretariaRequestDTO dto) {
         // sobrecarregar este método para outros tipos
@@ -27,6 +30,16 @@ public class ContaService {
 
         Secretaria secretariaSalva = contaRepository.save(secretaria);
         return new ContaResponseDTO(secretariaSalva);
+    }
+
+    //CRIAR EMPRESA
+    @Transactional
+    public ContaResponseDTO criarConta(EmpresaRequestDTO dto){
+        Empresa empresa = new Empresa ();
+        mapToEmpresa (dto, empresa);
+
+        Empresa empresaSalva = contaRepository.save(empresa);
+        return new ContaResponseDTO(empresaSalva);
     }
 
     @Transactional(readOnly = true)
@@ -54,6 +67,7 @@ public class ContaService {
         contaRepository.deleteById(id);
     }
 
+    //ATUALIZAR SECRETARIA
     @Transactional
     public ContaResponseDTO atualizarSecretaria(
         UUID id,
@@ -76,6 +90,29 @@ public class ContaService {
         return new ContaResponseDTO(secretariaAtualizada);
     }
 
+    //ATUALIZAR EMPRESA
+    @Transactional
+    public ContaResponseDTO atualizarEmpresa(
+        UUID id,
+        EmpresaRequestDTO dto
+    ) {
+        Conta conta = buscarConta(id);
+
+        if (!(conta instanceof Empresa empresaExistente)) {
+            throw new IllegalArgumentException(
+                "A conta com o ID " + id + " não é uma Empresa."
+            );
+        }
+
+        mapToEmpresa(dto, empresaExistente);
+
+        Empresa empresaAtualizada = contaRepository.save(
+            empresaExistente
+        );
+
+        return new ContaResponseDTO(empresaAtualizada);
+    }
+
     //funções auxiliares
 
     private void mapToSecretaria(
@@ -88,6 +125,18 @@ public class ContaService {
         secretaria.setEndereco(dto.endereco());
         secretaria.setSenha(dto.senha());
         secretaria.setMunicipio(dto.municipio());
+    }
+
+    private void mapToEmpresa(
+        EmpresaRequestDTO dto, 
+        Empresa empresa
+        ) {
+        empresa.setNome(dto.nome());
+        empresa.setEmail(dto.email());
+        empresa.setTelefone(dto.telefone());
+        empresa.setEndereco(dto.endereco());
+        empresa.setSenha(dto.senha());
+        empresa.setCnpj(dto.cnpj());
     }
 
     private Conta buscarConta(UUID id) {
