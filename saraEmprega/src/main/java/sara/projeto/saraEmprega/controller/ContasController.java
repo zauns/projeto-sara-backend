@@ -29,7 +29,7 @@ public class ContasController {
 
     @PostMapping("/empresa")
     public ResponseEntity<ContaResponseDTO> criarEmpresa(
-        @Valid @RequestBody SecretariaRequestDTO dto
+        @Valid @RequestBody EmpresaRequestDTO dto
     ) {
         ContaResponseDTO novaConta = contaService.criarConta(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaConta);
