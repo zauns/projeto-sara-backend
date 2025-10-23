@@ -1,13 +1,13 @@
-package sara.projeto.saraEmprega;
+package sara.emprega.msusers;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SaraEmpregaApplicationTests {
+class MsUsersApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }
