@@ -25,7 +25,6 @@ public class CurriculumController {
             return ResponseEntity.ok().body(new CurriculumDTO(curriculum.getId(),curriculum.getData()));
         }
 
-
     @GetMapping
     public ResponseEntity<CurriculumDTO> getCurriculo(){
         //todo
