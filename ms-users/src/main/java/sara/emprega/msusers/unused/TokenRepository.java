@@ -1,3 +1,4 @@
+/*
 package sara.emprega.msusers.repository;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 *
 * essa classe vai servir para logout da conta por meio do block do tokenJWT (OPCIONAL)
 *
-    */
 
 public class TokenRepository {
 
@@ -69,3 +69,5 @@ public class TokenRepository {
     }
 
 }
+
+ */

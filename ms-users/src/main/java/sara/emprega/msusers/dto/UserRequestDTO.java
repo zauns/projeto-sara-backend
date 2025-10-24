@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import sara.emprega.msusers.model.Curriculum;
 
 public record UserRequestDTO(
+
         @NotBlank(message = "O nome é obrigatório")
         String name,
 

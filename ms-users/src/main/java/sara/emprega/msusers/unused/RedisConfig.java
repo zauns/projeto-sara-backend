@@ -1,3 +1,4 @@
+/*
 package sara.emprega.msusers.security_config;
 
 import org.springframework.context.annotation.Bean;
@@ -30,3 +31,4 @@ public class RedisConfig {
     }
 
 }
+*/

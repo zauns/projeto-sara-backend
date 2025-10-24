@@ -1,4 +1,4 @@
-package sara.emprega.msusers.jwt_util;
+package sara.emprega.msusers.util.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,8 +7,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import sara.emprega.msusers.model.User;
 import sara.emprega.msusers.ports.UserServicePort;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +20,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         if(toReturn == null){
             throw new UsernameNotFoundException(username);
         }
-        return new UserAuthenticaded(toReturn);
+        return new UserAuthenticated(toReturn);
     }
 }

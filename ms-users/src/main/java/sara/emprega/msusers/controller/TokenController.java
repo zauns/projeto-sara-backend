@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("token")
+@RequestMapping("/token")
 public class TokenController {
 
     private final TokenServicesPort tokenServices;
@@ -29,7 +29,5 @@ public class TokenController {
     public ResponseEntity<String> token(Authentication authentication) {
       return ResponseEntity.ok().body(tokenServices.token(authentication));
     }
-
-
 
 }

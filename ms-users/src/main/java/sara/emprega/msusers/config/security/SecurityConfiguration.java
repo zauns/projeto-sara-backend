@@ -1,4 +1,4 @@
-package sara.emprega.msusers.security_config;
+package sara.emprega.msusers.config.security;
 
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;

@@ -39,5 +39,4 @@ public class TokenServices implements TokenServicesPort {
 
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
-
 }

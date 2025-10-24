@@ -1,32 +1,32 @@
 package sara.emprega.msusers.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
-
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class User {
-    @Id
-    private UUID id = UUID.randomUUID();
-    private String firstName;
-    private String email;
-    private String hashedPassword;
+@AllArgsConstructor
+public class User extends Account {
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> roles;
+    String firstName;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Curriculum curriculum;
+
+    public void setCurriculum(Curriculum curriculum) {
+        this.curriculum = curriculum;
+        if (curriculum != null) {
+            curriculum.setUser(this);
+        }
+    }
 }
+

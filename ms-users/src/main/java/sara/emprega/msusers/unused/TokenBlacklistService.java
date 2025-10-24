@@ -1,3 +1,4 @@
+/*
 package sara.emprega.msusers.service;
 
 import lombok.RequiredArgsConstructor;
@@ -21,3 +22,4 @@ public class TokenBlacklistService {
         return Boolean.TRUE.equals(redisTemplate.hasKey(PREFIX + token));
     }
 }
+*/
