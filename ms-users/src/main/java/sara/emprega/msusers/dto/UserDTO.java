@@ -2,9 +2,8 @@ package sara.emprega.msusers.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import sara.emprega.msusers.model.Curriculum;
 
-public record UserRequestDTO(
+public record UserDTO(
 
         @NotBlank(message = "O nome é obrigatório")
         String name,

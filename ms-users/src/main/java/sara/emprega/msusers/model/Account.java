@@ -1,28 +1,26 @@
 package sara.emprega.msusers.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-@Table(name = "Accounts")
+@MappedSuperclass
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@SuperBuilder(toBuilder = true)
 public class Account {
+
     @Id
+    @Builder.Default
     private UUID id = UUID.randomUUID();
     private String email;
     private String hashedPassword;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
-
 }

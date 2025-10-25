@@ -1,0 +1,26 @@
+package sara.emprega.msusers.util.user_strategy;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import sara.emprega.msusers.dto.UserDTO;
+import sara.emprega.msusers.model.User;
+
+@Component
+public class UpdatePasswordStrategy implements UserUpdateStrategy {
+
+    @Value("${spring.util.encoderStrength}")
+    private int encoderStrength;
+
+    @Override
+    public boolean update(User user, UserDTO dto) {
+        if (dto.password() != null && !user.getHashedPassword().equals(dto.password())) {
+            PasswordEncoder encoder = new BCryptPasswordEncoder(encoderStrength);
+            user.setEmail(encoder.encode(dto.password()));
+            return true;
+        }
+        return false;
+    }
+}
+

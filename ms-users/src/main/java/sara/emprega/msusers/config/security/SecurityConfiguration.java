@@ -33,6 +33,10 @@ import java.security.interfaces.RSAPublicKey;
 @EnableMethodSecurity
 class SecurityConfiguration {
 
+    @Value("${spring.util.encoderStrength}")
+    private int encoderStrong;
+
+
     @Value("${jwt.public.key}")
     RSAPublicKey key;
 
@@ -72,6 +76,6 @@ class SecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(encoderStrong);
     }
 }

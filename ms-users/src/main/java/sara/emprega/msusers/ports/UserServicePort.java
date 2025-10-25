@@ -1,6 +1,9 @@
 package sara.emprega.msusers.ports;
 
+import sara.emprega.msusers.dto.UserDTO;
 import sara.emprega.msusers.model.User;
+import sara.emprega.msusers.util.jwt.UserAuthenticated;
+
 import java.util.UUID;
 import java.util.List;
 
@@ -13,12 +16,7 @@ public interface UserServicePort {
     List<User> getAllUsers();
     List<User> getUsersByRole(String role);
 
-    User logoutUser();
-    // --- Create/update ---
-    User createUser(User user);
-
-    //TODO envio do usuario com alteracoes e altera o user com o msm ID
-    User updateUser(User user);
+    User updateUser(UserDTO userDTO, UserAuthenticated userAuth);
 
     void updateUserRoles(UUID id, List<String> roles);
 
