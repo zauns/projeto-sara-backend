@@ -1,4 +1,4 @@
-package sara.emprega.msusers.util.user_strategy;
+package sara.projeto.saraEmprega.util.user_statagy;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,12 +15,16 @@ public class UpdatePasswordStrategy implements UserUpdateStrategy {
 
     @Override
     public boolean update(User user, UserDTO dto) {
-        if (dto.password() != null && !user.getHashedPassword().equals(dto.password())) {
-            PasswordEncoder encoder = new BCryptPasswordEncoder(encoderStrength);
+        if (
+            dto.password() != null &&
+            !user.getHashedPassword().equals(dto.password())
+        ) {
+            PasswordEncoder encoder = new BCryptPasswordEncoder(
+                encoderStrength
+            );
             user.setEmail(encoder.encode(dto.password()));
             return true;
         }
         return false;
     }
 }
-

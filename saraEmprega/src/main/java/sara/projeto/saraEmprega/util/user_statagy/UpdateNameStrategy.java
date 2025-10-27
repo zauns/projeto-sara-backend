@@ -1,9 +1,9 @@
-package sara.emprega.msusers.util.user_strategy;
+package sara.projeto.saraEmprega.util.user_statagy;
 
 import sara.emprega.msusers.dto.UserDTO;
 import sara.emprega.msusers.model.User;
 
-public class UpdateNameStrategy  implements UserUpdateStrategy {
+public class UpdateNameStrategy implements UserUpdateStrategy {
 
     @Override
     public boolean update(User user, UserDTO dto) {

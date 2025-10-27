@@ -1,5 +1,4 @@
-package sara.emprega.msusers.util.user_strategy;
-
+package sara.projeto.saraEmprega.util.user_statagy;
 
 import sara.emprega.msusers.dto.UserDTO;
 import sara.emprega.msusers.model.User;
