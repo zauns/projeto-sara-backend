@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import  org.springframework.web.bind.annotation.ExceptionHandler;
+import sara.emprega.msusers.exception.UserNotFoundException;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -23,5 +24,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new RestErrorMessage(HttpStatus.BAD_REQUEST, ex.getMessage()));
 
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    ResponseEntity<RestErrorMessage> UserNotFoundHandler(UserNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new RestErrorMessage(HttpStatus.NOT_FOUND, ex.getMessage()));
     }
 }

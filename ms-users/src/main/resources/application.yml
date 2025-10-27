@@ -1,0 +1,3 @@
+spring:
+  util:
+    encoderStrength = 4
