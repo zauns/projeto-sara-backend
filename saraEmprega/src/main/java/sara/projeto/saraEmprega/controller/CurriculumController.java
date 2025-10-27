@@ -5,20 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-<<<<<<< HEAD:saraEmprega/src/main/java/sara/projeto/saraEmprega/controller/CurriculumController.java
 import sara.projeto.saraEmprega.dto.CurriculumDTO;
 import sara.projeto.saraEmprega.model.Curriculum;
-import sara.projeto.saraEmprega.util.Mapper;
-import sara.projeto.saraEmprega.util.Validate;
-=======
-import sara.emprega.msusers.dto.CurriculumDTO;
-import sara.emprega.msusers.model.Curriculum;
-import sara.emprega.msusers.model.User;
-import sara.emprega.msusers.ports.CurriculumServerPort;
-import sara.emprega.msusers.util.Mapper;
-import sara.emprega.msusers.util.Validate;
-import sara.emprega.msusers.util.jwt.UserAuthenticated;
->>>>>>> 06f735752fbcc028c83f7c3fb527063abf02ce34:ms-users/src/main/java/sara/emprega/msusers/controller/CurriculumController.java
+import sara.projeto.saraEmprega.model.User;
+import sara.projeto.saraEmprega.ports.CurriculumServerPort;
+import sara.projeto.saraEmprega.util.*;
+import sara.projeto.saraEmprega.util.jwt.UserAuthenticated;
 
 import java.io.IOException;
 

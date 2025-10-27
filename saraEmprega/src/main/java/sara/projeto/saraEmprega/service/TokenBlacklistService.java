@@ -1,6 +1,4 @@
-<<<<<<<< HEAD:saraEmprega/src/main/java/sara/projeto/saraEmprega/service/TokenBlacklistService.java
 package sara.projeto.saraEmprega.service;
-========
 /*
 package sara.emprega.msusers.service;
 >>>>>>>> 06f735752fbcc028c83f7c3fb527063abf02ce34:ms-users/src/main/java/sara/emprega/msusers/unused/TokenBlacklistService.java

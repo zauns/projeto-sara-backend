@@ -3,8 +3,8 @@ package sara.projeto.saraEmprega.util.user_statagy;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import sara.emprega.msusers.dto.UserDTO;
-import sara.emprega.msusers.model.User;
+import sara.projeto.saraEmprega.dto.UserDTO;
+import sara.projeto.saraEmprega.model.User;
 
 @Component
 @RequiredArgsConstructor

@@ -1,8 +1,7 @@
 package sara.projeto.saraEmprega.ports;
 
-import sara.emprega.msusers.dto.CurriculumDTO;
-import sara.emprega.msusers.model.Curriculum;
-import sara.emprega.msusers.util.jwt.UserAuthenticated;
+import sara.projeto.saraEmprega.model.Curriculum;
+import sara.projeto.saraEmprega.util.jwt.UserAuthenticated;
 
 public interface CurriculumServerPort {
     public Curriculum getCurriculum();

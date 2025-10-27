@@ -1,8 +1,8 @@
-package sara.emprega.msusers.service;
+package sara.projeto.saraEmprega.service;
 
-import sara.emprega.msusers.model.Curriculum;
-import sara.emprega.msusers.ports.CurriculumServerPort;
-import sara.emprega.msusers.util.jwt.UserAuthenticated;
+import sara.projeto.saraEmprega.model.Curriculum;
+import sara.projeto.saraEmprega.ports.CurriculumServerPort;
+import sara.projeto.saraEmprega.util.jwt.UserAuthenticated;
 
 public class CurriculumServer implements CurriculumServerPort {
     @Override

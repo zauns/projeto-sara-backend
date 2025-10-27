@@ -2,9 +2,9 @@ package sara.projeto.saraEmprega.ports;
 
 import java.util.List;
 import java.util.UUID;
-import sara.emprega.msusers.dto.UserDTO;
-import sara.emprega.msusers.model.User;
-import sara.emprega.msusers.util.jwt.UserAuthenticated;
+import sara.projeto.saraEmprega.dto.UserDTO;
+import sara.projeto.saraEmprega.model.User;
+import sara.projeto.saraEmprega.util.jwt.UserAuthenticated;
 
 public interface UserServicePort {
     // --- Consultas ---

@@ -3,18 +3,13 @@ package sara.projeto.saraEmprega.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-<<<<<<< HEAD:saraEmprega/src/main/java/sara/projeto/saraEmprega/service/UserService.java
+import sara.projeto.saraEmprega.dto.UserDTO;
+import sara.projeto.saraEmprega.exception.UserNotFoundException;
 import sara.projeto.saraEmprega.model.User;
 import sara.projeto.saraEmprega.ports.UserServicePort;
-=======
-import sara.emprega.msusers.dto.UserDTO;
-import sara.emprega.msusers.exception.UserNotFoundException;
-import sara.emprega.msusers.model.User;
-import sara.emprega.msusers.ports.UserServicePort;
-import sara.emprega.msusers.repository.UserRepository;
-import sara.emprega.msusers.util.jwt.UserAuthenticated;
-import sara.emprega.msusers.util.user_strategy.UpdateContext;
->>>>>>> 06f735752fbcc028c83f7c3fb527063abf02ce34:ms-users/src/main/java/sara/emprega/msusers/service/UserService.java
+import sara.projeto.saraEmprega.repository.UserRepository;
+import sara.projeto.saraEmprega.util.jwt.UserAuthenticated;
+import sara.projeto.saraEmprega.util.user_statagy.UpdateContext;
 
 import java.util.List;
 

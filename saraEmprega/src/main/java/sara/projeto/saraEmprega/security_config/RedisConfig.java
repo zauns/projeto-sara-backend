@@ -1,6 +1,4 @@
-<<<<<<<< HEAD:saraEmprega/src/main/java/sara/projeto/saraEmprega/security_config/RedisConfig.java
 package sara.projeto.saraEmprega.security_config;
-========
 /*
 package sara.emprega.msusers.security_config;
 >>>>>>>> 06f735752fbcc028c83f7c3fb527063abf02ce34:ms-users/src/main/java/sara/emprega/msusers/unused/RedisConfig.java
