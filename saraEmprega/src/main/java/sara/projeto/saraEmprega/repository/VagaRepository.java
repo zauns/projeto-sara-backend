@@ -1,0 +1,7 @@
+package sara.projeto.saraEmprega.repository;
+
+import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+import sara.projeto.saraEmprega.model.Vaga;
+
+public interface VagaRepository extends JpaRepository<Vaga, UUID> {}
