@@ -54,7 +54,7 @@ public class VagaService {
     }
     
     //ATUALIZAR VAGA
-    //TODO: conferir se esta ok
+    //TODO: conferir se esta ok, relacao com empresa
     @Transactional
     public VagaResponseDTO atualizarVaga(
         UUID id,
