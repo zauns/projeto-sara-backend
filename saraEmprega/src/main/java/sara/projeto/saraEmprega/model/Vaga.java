@@ -13,7 +13,6 @@ import lombok.Setter;
 @Table(name = "vagas")
 @AllArgsConstructor
 @NoArgsConstructor
-//relacionar com empresa
 public class Vaga {
 
     @Id
@@ -22,5 +21,9 @@ public class Vaga {
 
     private String titulo;
     private String descricao;
-
+     
+    // Relacionamento Many-to-One com Empresa
+    @ManyToOne
+    @JoinColumn(name = "empresa_id", nullable = false) // coluna com chave estrangeira
+    private Empresa empresa; // Empresa que oferece a vaga
 }
