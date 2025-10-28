@@ -21,7 +21,6 @@ public class Empresa extends Conta{
 
     private String cnpj;
     private String biografia;
-    private boolean isAprovada;
     private boolean isValidada;
     private String links;
     

@@ -18,6 +18,9 @@ public class VagaService {
     @Autowired
     private VagaRepository vagaRepository;
 
+    @Autowired
+    private ContaService contaService;
+
     //CRIAR VAGA
     @Transactional
     public VagaResponseDTO criarVaga(VagaRequestDTO dto){
@@ -44,6 +47,16 @@ public class VagaService {
     }
 
     @Transactional
+    public List<VagaResponseDTO> buscarVagasPorEmpresa(UUID empresaId){
+        contaService.buscarConta(empresaId); // Verifica se a empresa existe
+
+        return vagaRepository
+            .findByEmpresaId(empresaId)
+            .stream()
+            .map(VagaResponseDTO::new)
+            .toList();
+    }
+    @Transactional
     public void excluirVaga(UUID id){
         if(!vagaRepository.existsById(id)){
             throw new EntityNotFoundException(
@@ -54,7 +67,6 @@ public class VagaService {
     }
     
     //ATUALIZAR VAGA
-    //TODO: conferir se esta ok, relacao com empresa
     @Transactional
     public VagaResponseDTO atualizarVaga(
         UUID id,
@@ -69,13 +81,21 @@ public class VagaService {
     }
 
     //FUNÇÕES AUXILIARES
-
     private void mapToVaga(
         VagaRequestDTO dto,
         Vaga vaga
     ) {
         vaga.setTitulo(dto.titulo());
         vaga.setDescricao(dto.descricao());
+
+        Conta conta = contaService.buscarConta(dto.empresaId());
+        if (!(conta instanceof Empresa empresa)) {
+            throw new IllegalArgumentException(
+                "O ID fornecido (" + dto.empresaId() + ") não pertence a uma empresa. 
+                Apenas Empresas podem criar vagas."
+            );
+        }
+        vaga.setEmpresa(empresa);
     }
 
     private Vaga buscarVaga(UUID id) {
