@@ -1,15 +1,19 @@
+# --- Configuração do Servidor ---
 server:
-  port: 8080
+  port: ${SERVER_PORT}
 
 spring:
+  application:
+    name: sara-emprega
+
   util:
     encoderStrength: 10
 
   datasource:
-    url: jdbc:mysql://localhost:3306/sara_emprega
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: administrador
-    password: admin123
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
 
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
@@ -17,6 +21,19 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  cloud:
+    consul:
+      enabled: false
+      host: host.docker.internal
+      port: 8500
+      discovery:
+        enabled: false
+
+    service-registry:
+      auto-registration:
+        enabled: false
+
 jwt:
   public-key: ${JWT_PUBLIC_KEY_PATH}
   private-key: ${JWT_PRIVATE_KEY_PATH}
+
