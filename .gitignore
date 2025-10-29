@@ -1,3 +1,8 @@
+saraEmprega/.env
+saraEmprega/target/
+.idea/
+.vscode/
+
 # Compiled class file
 *.class
 
@@ -26,3 +31,5 @@ replay_pid*
 
 projeto-sara-frontend/
 .env
+/jwtkeys/
+saraEmprega/jwtkeys/*

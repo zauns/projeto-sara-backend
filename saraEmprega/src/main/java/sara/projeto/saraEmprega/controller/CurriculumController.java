@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sara.projeto.saraEmprega.dto.CurriculumDTO;
 import sara.projeto.saraEmprega.model.Curriculum;
-import sara.projeto.saraEmprega.model.User;
-import sara.projeto.saraEmprega.ports.CurriculumServerPort;
-import sara.projeto.saraEmprega.util.*;
+import sara.projeto.saraEmprega.ports.CurriculumServicePort;
+import sara.projeto.saraEmprega.util.Mapper;
+import sara.projeto.saraEmprega.util.Validate;
 import sara.projeto.saraEmprega.util.jwt.UserAuthenticated;
 
 import java.io.IOException;
@@ -18,29 +18,28 @@ import java.io.IOException;
 @RequestMapping("api/curriculum")
 public class CurriculumController {
 
-    CurriculumServerPort curriculumServer;
+    CurriculumServicePort curriculumService;
 
     @PostMapping()
     public ResponseEntity<CurriculumDTO> saveCurriculum(@RequestParam("file") MultipartFile file
-            ,Authentication authentication) throws IOException {
+            ,Authentication auth) throws IOException {
 
-            //TODO security
             Validate.validatePDF(file);
             Curriculum curriculum = Mapper.mapToCurriculum(file);
+        UserAuthenticated userAuth = (UserAuthenticated) auth.getPrincipal();
+            curriculumService.setCurriculum(curriculum, userAuth);
             return ResponseEntity.ok().body(new CurriculumDTO(curriculum.getData()));
         }
 
     @GetMapping
-    public ResponseEntity<CurriculumDTO> getCurriculo(Authentication auth) {
+    public ResponseEntity<CurriculumDTO> getCurriculum(Authentication auth) {
 
         UserAuthenticated authUser = (UserAuthenticated) auth.getPrincipal();
-        User user= (User) authUser.getUser();
-        curriculumServer.getCurriculum();
-
-        CurriculumDTO curriculum = new CurriculumDTO(user.getCurriculum().getData());
+        Curriculum curriculum = curriculumService.getCurriculum(authUser);
+        CurriculumDTO curriculumDTO = new CurriculumDTO(curriculum.getData());
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION
                         , "inline; filename=\"curriculo.pdf\"")
-                .body(curriculum);
+                .body(curriculumDTO);
     }
 }

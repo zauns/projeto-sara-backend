@@ -16,7 +16,7 @@ import java.util.UUID;
     public class Curriculum {
 
         @Id
-        //@GeneratedValue //a gente ta gerando com @GeneratedValue, mas acho que da no mesmo
+        @Builder.Default
         private UUID id = UUID.randomUUID();
 
         @Lob
@@ -26,7 +26,6 @@ import java.util.UUID;
         @OneToOne
         @JoinColumn(name = "user_id", referencedColumnName = "id")
         private User user;
-
     }
 
 
