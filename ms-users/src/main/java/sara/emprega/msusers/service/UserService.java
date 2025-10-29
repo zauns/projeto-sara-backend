@@ -3,9 +3,12 @@ package sara.emprega.msusers.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sara.emprega.msusers.dto.CurriculumDTO;
 import sara.emprega.msusers.dto.UserDTO;
 import sara.emprega.msusers.exception.UserNotFoundException;
+import sara.emprega.msusers.model.Curriculum;
 import sara.emprega.msusers.model.User;
+import sara.emprega.msusers.ports.UserRepositoryPort;
 import sara.emprega.msusers.ports.UserServicePort;
 import sara.emprega.msusers.repository.UserRepository;
 import sara.emprega.msusers.util.jwt.UserAuthenticated;
@@ -21,12 +24,12 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserService implements UserServicePort {
 
-    UserRepository userRepository;
+    UserRepositoryPort userRepository;
     UpdateContext updateContext;
 
     @Override
     public User getUserByMail(String mail) {
-        return null;
+        return userRepository.findByMail(mail);
     }
 
     @Override
@@ -34,28 +37,28 @@ public class UserService implements UserServicePort {
         return null;
     }
 
-    @Override
-    public List<User> getAllUsers() {
-        return List.of();
-    }
-
-    @Override
-    public List<User> getUsersByRole(String role) {
-        return List.of();
-    }
-
-
 
     @Override
     public User updateUser(UserDTO userDTO, UserAuthenticated userAuth) {
         UUID userID = userAuth.getUser().getId();
-        User user = userRepository.findById(userID).orElseThrow(()
-                -> new UserNotFoundException("Usuário não encontrado" ));
+        User user = userRepository.findByID(userID);
         updateContext.execute(user, userDTO);
-        userRepository.save(user);
+        userRepository.update(user);
         return user;
     }
 
+    public User curriculumUpdate(User user) {
+        return userRepository.update(user);
+    }
+
+    public User CreateUser(UserAuthenticated auth, User user) {
+        if(auth.getAuthorities().contains("ROLE_SECRETARY")){
+            return userRepository.create(user);
+        }
+        throw new IllegalArgumentException("usuario mal formatado");
+    }
+
+    /*
     @Override
     public void updateUserRoles(UUID id, List<String> roles) {
 
@@ -80,9 +83,6 @@ public class UserService implements UserServicePort {
     public boolean existsById(UUID id) {
         return false;
     }
+*/
 
-    @Override
-    public void updatePassword(UUID id, String newHashedPassword) {
-
-    }
 }

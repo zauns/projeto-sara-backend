@@ -17,6 +17,7 @@ import java.util.UUID;
     public class Curriculum {
 
         @Id
+        @Builder.Default
         private UUID id = UUID.randomUUID();
 
         @Lob
@@ -26,7 +27,6 @@ import java.util.UUID;
         @OneToOne
         @JoinColumn(name = "user_id", referencedColumnName = "id")
         private User user;
-
     }
 
 

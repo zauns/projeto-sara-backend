@@ -1,5 +1,6 @@
 package sara.emprega.msusers.util;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,18 +13,19 @@ import sara.emprega.msusers.exception.UserNotFoundException;
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
+    /*
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<RestErrorMessage> ArgNotValidHandler(MethodArgumentNotValidException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new RestErrorMessage(HttpStatus.BAD_REQUEST, ex.getMessage()));
 
     }
+     */
 
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<RestErrorMessage> IllegalArgumentHandler(IllegalArgumentException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new RestErrorMessage(HttpStatus.BAD_REQUEST, ex.getMessage()));
-
     }
 
     @ExceptionHandler(UserNotFoundException.class)

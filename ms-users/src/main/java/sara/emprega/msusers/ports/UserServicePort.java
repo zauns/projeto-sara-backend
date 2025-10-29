@@ -5,7 +5,6 @@ import sara.emprega.msusers.model.User;
 import sara.emprega.msusers.util.jwt.UserAuthenticated;
 
 import java.util.UUID;
-import java.util.List;
 
 
 public interface UserServicePort {
@@ -13,11 +12,11 @@ public interface UserServicePort {
     // --- Consultas ---
     User getUserByMail(String mail);
     User getUserById(UUID id);
-    List<User> getAllUsers();
-    List<User> getUsersByRole(String role);
 
     User updateUser(UserDTO userDTO, UserAuthenticated userAuth);
+    User curriculumUpdate(User user);
 
+    /*
     void updateUserRoles(UUID id, List<String> roles);
 
     // --- Exclusão ---
@@ -27,8 +26,6 @@ public interface UserServicePort {
     // --- Verificação / Existência ---
     boolean existsByMail(String mail);
     boolean existsById(UUID id);
-
-    // --- Senha ---
-    void updatePassword(UUID id, String newHashedPassword);
+*/
 }
 
