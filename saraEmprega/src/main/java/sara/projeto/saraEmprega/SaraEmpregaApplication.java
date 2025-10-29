@@ -1,12 +1,15 @@
 package sara.projeto.saraEmprega;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//Desabilitei o SpringSecurity enquanto o login e logout ainda não foram implementados para fins de testes
-//@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+@SpringBootApplication
 public class SaraEmpregaApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SaraEmpregaApplication.class, args);
+        SpringApplication app = new SpringApplication(SaraEmpregaApplication.class);
+        app.setWebApplicationType(WebApplicationType.SERVLET);
+        app.run(args);
     }
 }

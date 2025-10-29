@@ -34,32 +34,34 @@ class SecurityConfiguration {
     @Value("${spring.util.encoderStrength}")
     private int encoderStrong;
 
-    @Value("${jwt.public.key}")
+
+    @Value("${jwt.public-key}")
     RSAPublicKey key;
 
-    @Value("${jwt.private.key}")
+    @Value("${jwt.private-key}")
     RSAPrivateKey priv;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http)
         throws Exception {
         http
-            .authorizeHttpRequests(authorize ->
-                authorize.anyRequest().authenticated()
-            )
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/token"))
-            .httpBasic(Customizer.withDefaults())
-            .oauth2ResourceServer(jwt -> jwt.jwt(Customizer.withDefaults()))
-            .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .exceptionHandling(exceptions ->
-                exceptions
-                    .authenticationEntryPoint(
-                        new BearerTokenAuthenticationEntryPoint()
-                    )
-                    .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
-            );
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .csrf((csrf) -> csrf.ignoringRequestMatchers("/h2-console/**","/token"))
+                //h2CONFIG
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.disable()))
+                .httpBasic(Customizer.withDefaults())
+                .oauth2ResourceServer((jwt)
+                        -> jwt.jwt(Customizer.withDefaults()))
+                .sessionManagement((session)
+                        -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling((exceptions) -> exceptions
+                        .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
+                );
         // @formatter:on
         return http.build();
     }

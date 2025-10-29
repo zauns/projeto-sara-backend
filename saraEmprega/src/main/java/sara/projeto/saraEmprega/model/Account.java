@@ -3,7 +3,6 @@ package sara.projeto.saraEmprega.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
 import java.util.List;
 import java.util.UUID;
 
