@@ -141,7 +141,7 @@ public class ContaService {
         empresa.setLinks(dto.links());
     }
 
-    private Conta buscarConta(UUID id) {
+    public Conta buscarConta(UUID id) {
         return contaRepository
             .findById(id)
             .orElseThrow(() ->
