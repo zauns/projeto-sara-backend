@@ -42,6 +42,26 @@ public class VagaController {
         return ResponseEntity.ok(todasAsVagas);
     }
 
+    @GetMapping("/por-empresa")
+    public ResponseEntity<List<VagaResponseDTO>> buscarVagasPorEmpresa(
+        @RequestParam UUID empresaId
+    ){
+      List<VagaResponseDTO> vagas = vagaService.buscarVagasPorEmpresa(empresaId);
+      return ResponseEntity.ok(vagas);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<VagaResponseDTO> atualizarVaga(
+        @PathVariable UUID id,
+        @Valid @RequestBody VagaRequestDTO dto
+    ){
+        VagaResponseDTO vagaAtualizada = vagaService.atualizarVaga(
+            id,
+            dto
+        );
+        return ResponseEntity.ok(vagaAtualizada);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluirVaga(@PathVariable UUID id){
         vagaService.excluirVaga(id);
