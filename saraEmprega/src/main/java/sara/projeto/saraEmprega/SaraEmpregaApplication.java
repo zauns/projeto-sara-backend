@@ -1,4 +1,4 @@
-package sara.saraEmprega;
+package sara.projeto.saraEmprega;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
