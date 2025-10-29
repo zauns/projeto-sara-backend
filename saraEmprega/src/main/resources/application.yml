@@ -3,26 +3,20 @@ server:
 
 spring:
   util:
-    encoderStrength: 4
+    encoderStrength: 10
+
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: 123
+    url: jdbc:mysql://localhost:3306/sara_emprega
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: administrador
+    password: admin123
 
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: update  # opções: none | validate | update | create | create-drop
-    show-sql: true       # exibe as queries SQL no console
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
+      ddl-auto: update
+    show-sql: true
 
 jwt:
-  public-key: classpath:jwtKeys/public_key.pem
-  private-key: classpath:jwtKeys/private_key.pem
-
+  public-key: ${JWT_PUBLIC_KEY_PATH}
+  private-key: ${JWT_PRIVATE_KEY_PATH}

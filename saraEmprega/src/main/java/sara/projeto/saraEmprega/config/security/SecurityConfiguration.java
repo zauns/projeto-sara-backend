@@ -46,13 +46,9 @@ class SecurityConfiguration {
         throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .csrf((csrf) -> csrf.ignoringRequestMatchers("/h2-console/**","/token"))
-                //h2CONFIG
-                .headers(headers -> headers
-                        .frameOptions(frame -> frame.disable()))
+                .csrf((csrf) -> csrf.ignoringRequestMatchers("/token")) 
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer((jwt)
                         -> jwt.jwt(Customizer.withDefaults()))

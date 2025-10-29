@@ -1,3 +1,8 @@
+saraEmprega/.env
+saraEmprega/target/
+.idea/
+.vscode/
+
 # Compiled class file
 *.class
 
@@ -24,4 +29,5 @@
 hs_err_pid*
 replay_pid*
 
-saraEmprega/target/*
+/jwtkeys/
+saraEmprega/jwtkeys/*
