@@ -39,7 +39,7 @@ public class ContasController {
     public ResponseEntity<ContaResponseDTO> buscaContaPorID(
         @PathVariable UUID id
     ) {
-        ContaResponseDTO conta = contaService.buscarContaPorId(id);
+        ContaResponseDTO conta = contaService.buscarPorId(id);
         return ResponseEntity.ok(conta);
     }
 
