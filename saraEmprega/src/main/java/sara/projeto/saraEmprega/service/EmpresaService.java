@@ -1,24 +1,42 @@
 package sara.projeto.saraEmprega.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.dto.EmpresaRequestDTO;
 import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.repository.EmpresaRepository;
 
-public class EmpresaService {
+public class EmpresaService extends ContaService<Empresa> {
 
     @Autowired
     private EmpresaRepository empresaRepository;
 
+    @Override
+    protected JpaRepository<Empresa, UUID> repositorio() {
+        return empresaRepository;
+    }
+
     @Transactional
-    public ContaResponseDTO criar(EmpresaRequestDTO dto){
+    public ContaResponseDTO criar(EmpresaRequestDTO dto) {
         Empresa empresa = new Empresa();
         mapToEmpresa(dto, empresa);
-        Empresa novaEmpresa = empresaRepository.save(empresa);                                                                                                                                    
+        Empresa novaEmpresa = empresaRepository.save(empresa);
         return new ContaResponseDTO(novaEmpresa);
+    }
+
+    @Transactional
+    public ContaResponseDTO atualizar(UUID id, EmpresaRequestDTO dto) {
+        Empresa empresa = empresaRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + id));
+        mapToEmpresa(dto, empresa);
+        Empresa atualizada = empresaRepository.save(empresa);
+        return new ContaResponseDTO(atualizada);
     }
 
     private void mapToEmpresa(EmpresaRequestDTO dto, Empresa empresa) {
