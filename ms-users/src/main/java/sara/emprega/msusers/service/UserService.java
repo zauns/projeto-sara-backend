@@ -39,9 +39,8 @@ public class UserService implements UserServicePort {
 
 
     @Override
-    public User updateUser(UserDTO userDTO, UserAuthenticated userAuth) {
-        UUID userID = userAuth.getUser().getId();
-        User user = userRepository.findByID(userID);
+    public User updateUser(UserDTO userDTO, String mail) {
+        User user = userRepository.findByMail(mail);
         updateContext.execute(user, userDTO);
         userRepository.update(user);
         return user;
@@ -51,8 +50,8 @@ public class UserService implements UserServicePort {
         return userRepository.update(user);
     }
 
-    public User CreateUser(UserAuthenticated auth, User user) {
-        if(auth.getAuthorities().contains("ROLE_SECRETARY")){
+    public User CreateUser(String claim, User user) {
+        if(claim.contains("ROLE_SECRETARY")){
             return userRepository.create(user);
         }
         throw new IllegalArgumentException("usuario mal formatado");
@@ -76,11 +75,6 @@ public class UserService implements UserServicePort {
 
     @Override
     public boolean existsByMail(String mail) {
-        return false;
-    }
-
-    @Override
-    public boolean existsById(UUID id) {
         return false;
     }
 */

@@ -7,6 +7,7 @@ import sara.emprega.msusers.model.Curriculum;
 import sara.emprega.msusers.model.User;
 import sara.emprega.msusers.repository.UserRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -29,7 +30,8 @@ public class UserRepositoryPort {
     }
 
     public User findByMail(String username) {
-        return userRepository.findUserByEmail(username);
+        Optional<User> toReturn = userRepository.findUserByEmail(username);
+    return toReturn.orElseThrow(() -> new UserNotFoundException("user Not Found"));
     }
 
 }

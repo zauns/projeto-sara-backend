@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal" created-in="IU-242.26775.15">
-    <data-source name="testdb" uuid="fc98faa2-3e7e-494a-92ba-1df4927122ba">
+    <data-source name="testdb" uuid="8d62b228-bb10-45c3-bf54-da3243730d84">
       <database-info product="H2" version="2.3.232 (2024-08-11)" jdbc-version="4.3" driver-name="H2 JDBC Driver" driver-version="2.3.232 (2024-08-11)" dbms="H2" exact-version="2.3.232" exact-driver-version="2.3">
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>
       <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
       <user-name>sa</user-name>
       <schema-mapping>
         <introspection-scope>
