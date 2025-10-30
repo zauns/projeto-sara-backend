@@ -27,7 +27,7 @@ public class UserController {
                                                 , Authentication auth){
         Jwt jwt = (Jwt) auth.getPrincipal();
         User user = userService.updateUser(userDTO,jwt.getSubject());
-        //UserDTO userResponseDTO = Mapper.mapToUserRequestDTO(user);
+        UserDTO userResponseDTO = Mapper.mapToUserRequestDTO(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
