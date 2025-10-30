@@ -12,7 +12,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@DiscriminatorValue("EMPRESA")
 public class Empresa extends Conta{
 
     private String cnpj;
