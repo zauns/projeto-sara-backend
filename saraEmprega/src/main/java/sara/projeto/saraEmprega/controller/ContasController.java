@@ -18,22 +18,6 @@ public abstract class ContasController<TRequestDTO, TService extends ContaServic
         this.service = service;
     }
 
-    // @PostMapping("/secretaria")
-    // public ResponseEntity<ContaResponseDTO> criarSecretaria(
-    // @Valid @RequestBody SecretariaRequestDTO dto
-    // ) {
-    // ContaResponseDTO novaConta = contaService.criarConta(dto);
-    // return ResponseEntity.status(HttpStatus.CREATED).body(novaConta);
-    // }
-
-    // @PostMapping("/empresa")
-    // public ResponseEntity<ContaResponseDTO> criarEmpresa(
-    // @Valid @RequestBody EmpresaRequestDTO dto
-    // ) {
-    // ContaResponseDTO novaConta = contaService.criarConta(dto);
-    // return ResponseEntity.status(HttpStatus.CREATED).body(novaConta);
-    // }
-
     @GetMapping("/{id}")
     public ResponseEntity<ContaResponseDTO> buscaContaPorID(@PathVariable UUID id) {
         ContaResponseDTO conta = service.buscarPorId(id);
@@ -52,23 +36,4 @@ public abstract class ContasController<TRequestDTO, TService extends ContaServic
         return ResponseEntity.noContent().build();
     }
 
-    // @PutMapping("/secretaria/{id}")
-    // public ResponseEntity<ContaResponseDTO> atualizarSecretaria(
-    // @PathVariable UUID id,
-    // @Valid @RequestBody SecretariaRequestDTO dto) {
-    // ContaResponseDTO contaAtualizada = contaService.atualizarSecretaria(
-    // id,
-    // dto);
-    // return ResponseEntity.ok(contaAtualizada);
-    // }
-
-    // @PutMapping("/empresa/{id}")
-    // public ResponseEntity<ContaResponseDTO> atualizarEmpresa(
-    // @PathVariable UUID id,
-    // @Valid @RequestBody EmpresaRequestDTO dto) {
-    // ContaResponseDTO contaAtualizada = contaService.atualizarEmpresa(
-    // id,
-    // dto);
-    // return ResponseEntity.ok(contaAtualizada);
-    // }
 }
