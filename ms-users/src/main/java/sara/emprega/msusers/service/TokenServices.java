@@ -36,7 +36,6 @@ public class TokenServices implements TokenServicesPort {
                 .subject(authentication.getName())
                 .claim("scope", scope)
                 .build();
-
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 }
