@@ -4,150 +4,43 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
-import sara.projeto.saraEmprega.dto.EmpresaRequestDTO;
-import sara.projeto.saraEmprega.dto.SecretariaRequestDTO;
 import sara.projeto.saraEmprega.model.Conta;
-import sara.projeto.saraEmprega.model.Empresa;
-import sara.projeto.saraEmprega.model.Secretaria;
-import sara.projeto.saraEmprega.repository.ContaRepository;
 
 @Service
-public class ContaService {
+public abstract class ContaService<T extends Conta> {
 
-    @Autowired
-    private ContaRepository contaRepository;
 
-    //CRIAR SECRETARIA
-    @Transactional
-    public ContaResponseDTO criarConta(SecretariaRequestDTO dto) {
-        // sobrecarregar este método para outros tipos
-        Secretaria secretaria = new Secretaria();
-        mapToSecretaria(dto, secretaria);
-
-        Secretaria secretariaSalva = contaRepository.save(secretaria);
-        return new ContaResponseDTO(secretariaSalva);
-    }
-
-    //CRIAR EMPRESA
-    @Transactional
-    public ContaResponseDTO criarConta(EmpresaRequestDTO dto){
-        Empresa empresa = new Empresa ();
-        mapToEmpresa (dto, empresa);
-
-        Empresa empresaSalva = contaRepository.save(empresa);
-        return new ContaResponseDTO(empresaSalva);
-    }
+    protected abstract JpaRepository<T, UUID> repositorio();                                                                                                         
 
     @Transactional(readOnly = true)
-    public ContaResponseDTO buscarContaPorId(UUID id) {
-        Conta conta = buscarConta(id);
+    public ContaResponseDTO buscarPorId(UUID id) {
+        T conta = repositorio().findById(id).orElseThrow(()
+            -> new EntityNotFoundException("Conta não encontrada") //depois criar uma exceção específica para este caso
+        );
         return new ContaResponseDTO(conta);
     }
 
     @Transactional(readOnly = true)
     public List<ContaResponseDTO> buscarTodasAsContas() {
-        return contaRepository
+        return repositorio()
             .findAll()
             .stream()
-            .map(ContaResponseDTO::new)
+            .map(ContaResponseDTO::new) // lambda
             .collect(Collectors.toList());
     }
 
     @Transactional
     public void excluirConta(UUID id) {
-        if (!contaRepository.existsById(id)) {
+        if (!repositorio().existsById(id)) {
             throw new EntityNotFoundException(
                 "Conta não encontrada com o ID: " + id
             );
         }
-        contaRepository.deleteById(id);
+        repositorio().deleteById(id);
     }
 
-    //ATUALIZAR SECRETARIA
-    @Transactional
-    public ContaResponseDTO atualizarSecretaria(
-        UUID id,
-        SecretariaRequestDTO dto
-    ) {
-        Conta conta = buscarConta(id);
-
-        if (!(conta instanceof Secretaria secretariaExistente)) {
-            throw new IllegalArgumentException(
-                "A conta com o ID " + id + " não é uma Secretaria."
-            );
-        }
-
-        mapToSecretaria(dto, secretariaExistente);
-
-        Secretaria secretariaAtualizada = contaRepository.save(
-            secretariaExistente
-        );
-
-        return new ContaResponseDTO(secretariaAtualizada);
-    }
-
-    //ATUALIZAR EMPRESA
-    @Transactional
-    public ContaResponseDTO atualizarEmpresa(
-        UUID id,
-        EmpresaRequestDTO dto
-    ) {
-        Conta conta = buscarConta(id);
-
-        if (!(conta instanceof Empresa empresaExistente)) {
-            throw new IllegalArgumentException(
-                "A conta com o ID " + id + " não é uma Empresa."
-            );
-        }
-
-        mapToEmpresa(dto, empresaExistente);
-
-        Empresa empresaAtualizada = contaRepository.save(
-            empresaExistente
-        );
-
-        return new ContaResponseDTO(empresaAtualizada);
-    }
-
-    //funções auxiliares
-
-    private void mapToSecretaria(
-        SecretariaRequestDTO dto,
-        Secretaria secretaria
-    ) {
-        secretaria.setNome(dto.nome());
-        secretaria.setEmail(dto.email());
-        secretaria.setTelefone(dto.telefone());
-        secretaria.setEndereco(dto.endereco());
-        secretaria.setSenha(dto.senha());
-        secretaria.setMunicipio(dto.municipio());
-    }
-
-    private void mapToEmpresa(
-        EmpresaRequestDTO dto, 
-        Empresa empresa
-        ) {
-        empresa.setNome(dto.nome());
-        empresa.setEmail(dto.email());
-        empresa.setTelefone(dto.telefone());
-        empresa.setEndereco(dto.endereco());
-        empresa.setSenha(dto.senha());
-        empresa.setCnpj(dto.cnpj());
-        empresa.setBiografia(dto.biografia());
-        empresa.setLinks(dto.links());
-    }
-
-    private Conta buscarConta(UUID id) {
-        return contaRepository
-            .findById(id)
-            .orElseThrow(() ->
-                new EntityNotFoundException(
-                    "Conta não encontrada com o ID: " + id
-                )
-            );
-    }
 }

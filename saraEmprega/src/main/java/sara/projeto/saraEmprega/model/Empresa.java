@@ -1,6 +1,5 @@
 package sara.projeto.saraEmprega.model;
 
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +11,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@DiscriminatorValue("EMPRESA")
 public class Empresa extends Conta{
 
     private String cnpj;

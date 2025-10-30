@@ -29,5 +29,7 @@ saraEmprega/target/
 hs_err_pid*
 replay_pid*
 
+projeto-sara-frontend/
+.env
 /jwtkeys/
 saraEmprega/jwtkeys/*
