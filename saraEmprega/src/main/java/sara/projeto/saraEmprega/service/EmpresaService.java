@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -12,6 +13,7 @@ import sara.projeto.saraEmprega.dto.EmpresaRequestDTO;
 import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.repository.EmpresaRepository;
 
+@Service
 public class EmpresaService extends ContaService<Empresa> {
 
     @Autowired
