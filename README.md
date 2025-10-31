@@ -1,4 +1,4 @@
-# Spring Boot + Maven + RabbitMQ Project Template
+# SARA Emprega - Spring Project
 
 Este é um projeto **Spring Boot 3.5.6** configurado com **Java 21**, **Maven 21** e integração com **RabbitMQ**.
 
@@ -8,7 +8,6 @@ Este é um projeto **Spring Boot 3.5.6** configurado com **Java 21**, **Maven 21
 
 1. [Stack Tecnológica](#Stack-Tecnológica)  
 2. [Começando](#começando)  
-3. [Configuração do RabbitMQ](#configuração-do-rabbitmq)  
 4. [Configuração do Docker](#configuração-do-docker)
 5. [Padrões de Código](#padrões-de-código-e-diretrizes)  
 6. [Convenções de Nomenclatura](#convenções-de-nomenclatura)  
@@ -22,7 +21,6 @@ Este é um projeto **Spring Boot 3.5.6** configurado com **Java 21**, **Maven 21
 | **Spring Boot** | 3.5.6 | Framework principal da aplicação |
 | **Java** | 21 | Linguagem base |
 | **Maven** | 21 | Gerenciador de dependências e build |
-| **Spring AMQP / RabbitMQ** | ^3.x | Integração para mensageria assíncrona |
 | **Spring Web** | ^3.x | Criação de APIs REST |
 | **Spring Validation** | ^3.x | Validação de dados |
 | **Spring Boot Test / JUnit 5** | ^3.x | Testes unitários e de integração |
@@ -49,57 +47,6 @@ mvn clean install
 mvn spring-boot:run
 # A aplicação iniciará em http://localhost:8080.
 ```
-
-## 3.Configuração do RabbitMQ
-
-1. Usando Docker
-Se desejar rodar o RabbitMQ via Docker, execute:
-
-```bash
-docker run -d
-  --name rabbitmq 
-  -p 5672:5672
-  -p 15672:15672
-  rabbitmq:3-management
-```
-  
-Acesse o painel do RabbitMQ em:
-
-http://localhost:15672 \
-Usuário padrão: guest \
-Senha padrão: guest 
-
-2. Configuração no application.yml
-   
-```yaml
-Copiar código
-spring:
-  application:
-    name: rabbitmq-template
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-  main:
-    allow-bean-definition-overriding: true
-
-server:
-  port: 8080
-```
-APIs e Endpoints
-Exemplo básico de API que envia e consome mensagens do RabbitMQ:
-
-Enviar mensagem
-```bash
-POST /api/messages/send
-{
-  "content": "Mensagem de teste"
-}
-```
-
-Receber mensagens
-As mensagens são consumidas automaticamente pelo listener configurado, mas você pode visualizar logs no console.
 
 ## 4. Configuração do Docker
 
