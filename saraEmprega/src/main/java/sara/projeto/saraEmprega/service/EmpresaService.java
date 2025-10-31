@@ -41,6 +41,13 @@ public class EmpresaService extends ContaService<Empresa> {
         return new ContaResponseDTO(atualizada);
     }
 
+    @Transactional(readOnly = true)
+    public EmpresaResponseDTO buscarPorId(UUID id) {
+        Empresa empresa = empresaRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + id));
+        return new EmpresaResponseDTO(empresa);
+    }
+
     private void mapToEmpresa(EmpresaRequestDTO dto, Empresa empresa) {
         empresa.setNome(dto.nome());
         empresa.setEmail(dto.email());
