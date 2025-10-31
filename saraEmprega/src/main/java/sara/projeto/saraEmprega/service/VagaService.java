@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityNotFoundException;
 import sara.projeto.saraEmprega.dto.VagaRequestDTO;
 import sara.projeto.saraEmprega.dto.VagaResponseDTO;
-import sara.projeto.saraEmprega.model.Conta;
 import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.model.Vaga;
 import sara.projeto.saraEmprega.repository.VagaRepository;
@@ -21,7 +20,7 @@ public class VagaService {
     private VagaRepository vagaRepository;
 
     @Autowired
-    private ContaService contaService;
+    private EmpresaService empresaService;
 
     //CRIAR VAGA
     @Transactional
@@ -50,7 +49,7 @@ public class VagaService {
 
     @Transactional
     public List<VagaResponseDTO> buscarVagasPorEmpresa(UUID empresaId){
-        contaService.buscarContaPorId(empresaId); // Verifica se a empresa existe
+        empresaService.buscarPorId(empresaId); // Verifica se a empresa existe
 
         return vagaRepository
             .findByEmpresaId(empresaId)
@@ -58,6 +57,7 @@ public class VagaService {
             .map(VagaResponseDTO::new)
             .toList();
     }
+
     @Transactional
     public void excluirVaga(UUID id){
         if(!vagaRepository.existsById(id)){
@@ -90,12 +90,8 @@ public class VagaService {
         vaga.setTitulo(dto.titulo());
         vaga.setDescricao(dto.descricao());
 
-        Conta conta = contaService.buscarConta(dto.empresaId());
-        if (!(conta instanceof Empresa empresa)) {
-            throw new IllegalArgumentException(
-                "O ID fornecido (" + dto.empresaId() + ") não pertence a uma empresa. Apenas Empresas podem criar vagas."
-            );
-        }
+        Empresa empresa = empresaService.buscarPorId(dto.empresaId());
+        
         vaga.setEmpresa(empresa);
     }
 
