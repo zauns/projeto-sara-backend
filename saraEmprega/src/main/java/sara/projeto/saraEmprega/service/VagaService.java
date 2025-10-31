@@ -90,7 +90,7 @@ public class VagaService {
         vaga.setTitulo(dto.titulo());
         vaga.setDescricao(dto.descricao());
 
-        Empresa empresa = empresaService.buscarPorId(dto.empresaId());
+        Empresa empresa = empresaService.buscarEmpresaPorId(dto.empresaId());
         
         vaga.setEmpresa(empresa);
     }
