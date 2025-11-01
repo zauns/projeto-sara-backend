@@ -10,7 +10,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.dto.EmpresaRequestDTO;
-import sara.projeto.saraEmprega.dto.EmpresaResponseDTO;
 import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.repository.EmpresaRepository;
 
