@@ -3,19 +3,12 @@ package sara.emprega.msusers.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sara.emprega.msusers.dto.CurriculumDTO;
 import sara.emprega.msusers.dto.UserDTO;
-import sara.emprega.msusers.exception.UserNotFoundException;
-import sara.emprega.msusers.model.Curriculum;
 import sara.emprega.msusers.model.User;
 import sara.emprega.msusers.ports.UserRepositoryPort;
 import sara.emprega.msusers.ports.UserServicePort;
-import sara.emprega.msusers.repository.UserRepository;
-import sara.emprega.msusers.util.jwt.UserAuthenticated;
+import sara.emprega.msusers.util.user_concurrency.strategy.UserUpdateContext;
 import sara.emprega.msusers.util.user_strategy.UpdateContext;
-
-import java.util.List;
-
 import java.util.UUID;
 
 //TODO
@@ -37,7 +30,6 @@ public class UserService implements UserServicePort {
         return null;
     }
 
-
     @Override
     public User updateUser(UserDTO userDTO, String mail) {
         User user = userRepository.findByMail(mail);
@@ -47,6 +39,7 @@ public class UserService implements UserServicePort {
     }
 
     public User curriculumUpdate(User user) {
+        //TODO
         return userRepository.update(user);
     }
 
@@ -56,6 +49,7 @@ public class UserService implements UserServicePort {
         }
         throw new IllegalArgumentException("usuario mal formatado");
     }
+}
 
     /*
     @Override
@@ -79,4 +73,4 @@ public class UserService implements UserServicePort {
     }
 */
 
-}
+

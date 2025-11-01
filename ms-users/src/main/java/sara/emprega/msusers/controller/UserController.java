@@ -9,10 +9,14 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sara.emprega.msusers.dto.UserDTO;
+import sara.emprega.msusers.enums.UserAction;
 import sara.emprega.msusers.model.User;
 import sara.emprega.msusers.ports.UserServicePort;
 import sara.emprega.msusers.util.Mapper;
 import sara.emprega.msusers.util.jwt.UserAuthenticated;
+import sara.emprega.msusers.util.user_concurrency.UserProcessor;
+import sara.emprega.msusers.util.user_concurrency.abstractions.UserOperationCreate;
+import sara.emprega.msusers.util.user_concurrency.abstractions.UserOperationUpdate;
 
 @Validated
 @RestController
@@ -20,23 +24,23 @@ import sara.emprega.msusers.util.jwt.UserAuthenticated;
 @RequestMapping("/api/user")
 public class UserController {
 
-    UserServicePort userService;
+    UserProcessor processor;
 
     @PostMapping("/update")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody @Valid UserDTO userDTO
-                                                , Authentication auth){
+    public ResponseEntity<UserDTO> updateUser(@RequestBody @Valid UserDTO userDTO, Authentication auth){
         Jwt jwt = (Jwt) auth.getPrincipal();
-        User user = userService.updateUser(userDTO,jwt.getSubject());
-        UserDTO userResponseDTO = Mapper.mapToUserRequestDTO(user);
-        return new ResponseEntity<>(HttpStatus.OK);
+        UserOperationUpdate operationUpdate = new UserOperationUpdate(UserAction.UPDATE_USER,jwt.getSubject(),userDTO);
+        processor.addToQueue(operationUpdate);
+        return new ResponseEntity<>(userDTO,HttpStatus.OK);
     }
 
     @PostMapping("/create")
     public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO userDTO, Authentication auth){
         Jwt jwt = (Jwt) auth.getPrincipal();
-        User user = userService.CreateUser(jwt.getClaim("scope"),Mapper.MapToUser(userDTO));
-        UserDTO userResponseDTO = Mapper.mapToUserRequestDTO(user);
-        return new ResponseEntity<>(userResponseDTO,HttpStatus.OK);
+        UserOperationCreate operationCreate = new UserOperationCreate(UserAction.CREATE_USER,jwt.getSubject()
+                ,Mapper.MapToUser(userDTO),jwt.getClaim("scope"));
+        processor.addToQueue(operationCreate);
+        return new ResponseEntity<>(userDTO,HttpStatus.OK);
     }
 
     @GetMapping("/validate-token")

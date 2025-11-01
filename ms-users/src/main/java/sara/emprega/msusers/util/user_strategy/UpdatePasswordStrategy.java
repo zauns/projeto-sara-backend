@@ -15,9 +15,9 @@ public class UpdatePasswordStrategy implements UserUpdateStrategy {
 
     @Override
     public boolean update(User user, UserDTO dto) {
-        if (dto.password() != null && !user.getHashedPassword().equals(dto.password())) {
+        if  (dto.password() != null && !user.getHashedPassword().equals(dto.password())) {
             PasswordEncoder encoder = new BCryptPasswordEncoder(encoderStrength);
-            user.setEmail(encoder.encode(dto.password()));
+            user.setHashedPassword(encoder.encode(dto.password()));
             return true;
         }
         return false;
