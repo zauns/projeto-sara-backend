@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.dto.EmpresaRequestDTO;
 import sara.projeto.saraEmprega.model.Empresa;
@@ -39,6 +39,14 @@ public class EmpresaService extends ContaService<Empresa> {
         mapToEmpresa(dto, empresa);
         Empresa atualizada = empresaRepository.save(empresa);
         return new ContaResponseDTO(atualizada);
+    }
+
+    //utilizado em vagas
+    @Transactional(readOnly = true)
+    public Empresa buscarEmpresaPorId(UUID id) {
+        Empresa empresa = empresaRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + id));
+        return empresa;
     }
 
     private void mapToEmpresa(EmpresaRequestDTO dto, Empresa empresa) {

@@ -1,6 +1,7 @@
 package sara.projeto.saraEmprega.model;
 
-import jakarta.persistence.Entity;
+import java.util.Set;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,14 +10,17 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Empresa extends Conta{
 
     private String cnpj;
     private String biografia;
-    private boolean isAprovada;
     private boolean isValidada;
     private String links;
+    
+    // Relacionamento One-to-Many com Vaga
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Vaga> vagas; // vagas oferecidas pela empresa
     
 }
