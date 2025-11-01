@@ -2,7 +2,6 @@ package sara.projeto.saraEmprega.controller;
 
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +19,6 @@ import sara.projeto.saraEmprega.service.EmpresaService;
 @RestController
 @RequestMapping("/empresa")
 public class EmpresaController extends ContasController<EmpresaRequestDTO, EmpresaService> {
-
-    @Autowired
-    private EmpresaService empresaService;
 
     protected EmpresaController(EmpresaService service) {
         super(service);

@@ -3,7 +3,6 @@ package sara.projeto.saraEmprega.service;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +15,14 @@ import sara.projeto.saraEmprega.repository.VagaRepository;
 
 @Service
 public class VagaService {
-    @Autowired
-    private VagaRepository vagaRepository;
+    
+    private final VagaRepository vagaRepository;
+    private final EmpresaService empresaService;
 
-    @Autowired
-    private EmpresaService empresaService;
+    public VagaService(VagaRepository vagaRepository, EmpresaService empresaService) {
+        this.vagaRepository = vagaRepository;
+        this.empresaService = empresaService;
+    }
 
     //CRIAR VAGA
     @Transactional
