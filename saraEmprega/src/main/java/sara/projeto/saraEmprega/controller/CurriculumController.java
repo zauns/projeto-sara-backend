@@ -3,6 +3,7 @@ package sara.projeto.saraEmprega.controller;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sara.projeto.saraEmprega.dto.CurriculumDTO;
@@ -26,16 +27,16 @@ public class CurriculumController {
 
             Validate.validatePDF(file);
             Curriculum curriculum = Mapper.mapToCurriculum(file);
-        UserAuthenticated userAuth = (UserAuthenticated) auth.getPrincipal();
-            curriculumService.setCurriculum(curriculum, userAuth);
+            Jwt jwt = (Jwt) auth.getPrincipal();
+            curriculumService.setCurriculum(curriculum, jwt.getSubject());
             return ResponseEntity.ok().body(new CurriculumDTO(curriculum.getData()));
         }
 
     @GetMapping
     public ResponseEntity<CurriculumDTO> getCurriculum(Authentication auth) {
 
-        UserAuthenticated authUser = (UserAuthenticated) auth.getPrincipal();
-        Curriculum curriculum = curriculumService.getCurriculum(authUser);
+        Jwt jwt = (Jwt) auth.getPrincipal();;
+        Curriculum curriculum = curriculumService.getCurriculum(jwt.getSubject());
         CurriculumDTO curriculumDTO = new CurriculumDTO(curriculum.getData());
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION

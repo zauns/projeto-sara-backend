@@ -12,8 +12,9 @@ public interface UserServicePort {
     User getUserByMail(String mail);
     User getUserById(UUID id);
 
-    User updateUser(UserDTO userDTO, UserAuthenticated userAuth);
+    User updateUser(UserDTO userDTO, String mail);
     User curriculumUpdate(User user);
+    User CreateUser(String claim, User user);
 
     /*
     void updateUserRoles(UUID id, List<String> roles);

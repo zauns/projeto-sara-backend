@@ -11,7 +11,9 @@ import java.security.interfaces.RSAPublicKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -46,10 +48,14 @@ class SecurityConfiguration {
         throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/h2-console/**","/token").permitAll()
                         .anyRequest().authenticated()
                 )
-                .csrf((csrf) -> csrf.ignoringRequestMatchers("/token")) 
-                .httpBasic(Customizer.withDefaults())
+                .csrf((csrf) -> csrf.ignoringRequestMatchers("/h2-console/**","/token"))
+                //h2CONFIG
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.disable()))
+                //
                 .oauth2ResourceServer((jwt)
                         -> jwt.jwt(Customizer.withDefaults()))
                 .sessionManagement((session)
@@ -60,6 +66,11 @@ class SecurityConfiguration {
                 );
         // @formatter:on
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
     @Bean

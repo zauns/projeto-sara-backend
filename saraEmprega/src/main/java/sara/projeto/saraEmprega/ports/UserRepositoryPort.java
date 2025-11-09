@@ -6,6 +6,7 @@ import sara.projeto.saraEmprega.exception.UserNotFoundException;
 import sara.projeto.saraEmprega.model.User;
 import sara.projeto.saraEmprega.repository.UserRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -28,7 +29,8 @@ public class UserRepositoryPort {
     }
 
     public User findByMail(String username) {
-        return userRepository.findUserByEmail(username);
+        Optional<User> toReturn = userRepository.findUserByEmail(username);
+    return toReturn.orElseThrow(() -> new UserNotFoundException("user Not Found"));
     }
 
 }

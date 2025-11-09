@@ -20,8 +20,8 @@ public class CurriculumService implements CurriculumServicePort {
     private UserServicePort userService;
 
     @Override
-    public Curriculum getCurriculum(UserAuthenticated userAuth) {
-        User user = (User) userAuth.getUser();
+    public Curriculum getCurriculum(String userMail) {
+        User user = userService.getUserByMail(userMail);
         if (user.getCurriculum() == null){
             throw new UserNotFoundException("curriculo nao encontrado");
         }
@@ -29,8 +29,8 @@ public class CurriculumService implements CurriculumServicePort {
     }
 
     @Override
-    public void setCurriculum(Curriculum curriculum, UserAuthenticated auth) {
-        User user = (User) auth.getUser();
+    public void setCurriculum(Curriculum curriculum, String mail) {
+        User user = userService.getUserByMail(mail);
         user.setCurriculum(curriculum);
         curriculum.setUser(user);
         userService.curriculumUpdate(user);

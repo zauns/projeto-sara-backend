@@ -5,6 +5,6 @@ import sara.projeto.saraEmprega.util.jwt.UserAuthenticated;
 
 public interface CurriculumServicePort {
 
-    public Curriculum getCurriculum(UserAuthenticated Auth);
-    public void setCurriculum(Curriculum curriculum, UserAuthenticated Auth);
+    public Curriculum getCurriculum(String mail);
+    public void setCurriculum(Curriculum curriculum, String mail);
 }
