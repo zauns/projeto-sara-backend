@@ -7,7 +7,7 @@ spring:
     name: sara-emprega
 
   util:
-    encoderStrength: 10
+    encoderStrength: 4
 
   datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
@@ -18,8 +18,14 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create #update depois
     show-sql: true
+    defer-datasouce-initialization: true
+
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
 
   cloud:
     consul:
@@ -36,4 +42,3 @@ spring:
 jwt:
   public-key: ${JWT_PUBLIC_KEY_PATH}
   private-key: ${JWT_PRIVATE_KEY_PATH}
-
