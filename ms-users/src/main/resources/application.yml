@@ -31,3 +31,8 @@ spring:
 jwt:
   public-key: classpath:jwtKeys/public_key.pem
   private-key: classpath:jwtKeys/private_key.pem
+
+youtube:
+  api:
+    key: AIzaSyA4KNeM3jYrDEIWT78-9NU42QmfgG8-UZM
+    url: https://www.googleapis.com/youtube/v3/videos
