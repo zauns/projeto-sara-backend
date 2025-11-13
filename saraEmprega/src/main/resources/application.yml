@@ -1,6 +1,6 @@
 # --- Configuração do Servidor ---
 server:
-  port: ${SERVER_PORT}
+  port: ${SERVER_PORT:8080}
 
 spring:
   application:
@@ -10,17 +10,20 @@ spring:
     encoderStrength: 4
 
   datasource:
-    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:sara_emprega}?useSSL=false&allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DB_USER}
     password: ${DB_PASSWORD}
 
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: create #update depois
+      ddl-auto: update
     show-sql: true
-    defer-datasouce-initialization: true
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
 
   sql:
     init:
@@ -29,16 +32,26 @@ spring:
 
   cloud:
     consul:
-      enabled: false
-      host: host.docker.internal
-      port: 8500
-      discovery:
         enabled: false
 
     service-registry:
       auto-registration:
         enabled: false
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
 jwt:
   public-key: ${JWT_PUBLIC_KEY_PATH}
   private-key: ${JWT_PRIVATE_KEY_PATH}
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.springframework.jdbc.datasource: DEBUG

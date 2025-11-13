@@ -48,7 +48,12 @@ class SecurityConfiguration {
         throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/token","/api/public/**").permitAll()
+                        .requestMatchers("/token",
+                            "/api/public/**",
+                            "/health",
+                            "/actuator/health",
+                            "/actuator/info"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf((csrf) -> csrf.disable())
