@@ -11,20 +11,14 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3306:3306"
-    # volumes:
-    #   - db-data:/var/lib/mysql
     networks:
       - app-network
-    # healthcheck:
-    #   test:
-    #     [
-    #       "CMD-SHELL",
-    #       "mysqladmin ping -h localhost -u root --password=$$MYSQL_ROOT_PASSWORD || exit 1",
-    #     ]
-    #   interval: 20s
-    #   timeout: 10s
-    #   retries: 5
-    #   start_period: 60s
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
   backend:
     build:
@@ -45,10 +39,9 @@ services:
       - "8080:8080"
     networks:
       - app-network
-    # depends_on:
-    #   database:
-    #     condition: service_healthy
-
+    depends_on:
+      database:
+          condition: service_healthy
   frontend:
     build:
       context: ./projeto-sara-frontend
