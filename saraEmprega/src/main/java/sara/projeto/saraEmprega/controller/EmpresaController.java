@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.dto.EmpresaRequestDTO;
+import sara.projeto.saraEmprega.ports.EmpresaServicePort;
 import sara.projeto.saraEmprega.service.EmpresaService;
 
 @RestController
 @RequestMapping("/empresa")
-public class EmpresaController extends ContasController<EmpresaRequestDTO, EmpresaService> {
+public class EmpresaController extends ContasController<EmpresaRequestDTO, EmpresaServicePort> {
 
     protected EmpresaController(EmpresaService service) {
         super(service);

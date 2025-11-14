@@ -3,8 +3,6 @@ package sara.projeto.saraEmprega.controller;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
-import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -12,7 +10,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sara.projeto.saraEmprega.dto.UserDTO;
-import sara.projeto.saraEmprega.dto.UserRequestDTO;
 import sara.projeto.saraEmprega.model.User;
 import sara.projeto.saraEmprega.ports.UserServicePort;
 import sara.projeto.saraEmprega.util.Mapper;
@@ -41,7 +38,7 @@ public class UserController {
 		@RequestBody @Valid UserDTO userDTO,
 		Authentication auth
 	) {
-		Jwt jwt = (Jwt) auth.getPrincipal();
+		//Jwt jwt = (Jwt) auth.getPrincipal();
 		User user = Mapper.MapToUser(userDTO);
 		User createdUser = userService.createUser(user);
 		UserDTO userResponseDTO = Mapper.mapToUserRequestDTO(createdUser);

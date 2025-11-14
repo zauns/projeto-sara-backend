@@ -11,6 +11,7 @@ public interface ContaRepositoryPort<T extends Conta> {
     Optional<T> encontrarPorEmail(String email);
     boolean existePorEmail(String email);
     boolean existePorId(UUID id);
-    List<T> encontrarTudo();
-    void deletarPorId(UUID id);
+    List<T> encontrarTodas();
+    void deletar(UUID id);
 }
+                                                                                                                                                            

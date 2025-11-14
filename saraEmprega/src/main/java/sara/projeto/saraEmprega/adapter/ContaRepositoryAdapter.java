@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 import sara.projeto.saraEmprega.model.Conta;
 import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
 
@@ -30,12 +29,12 @@ public abstract class ContaRepositoryAdapter<T extends Conta> implements ContaRe
     }
 
     @Override
-    public List<T> encontrarTudo(){
+    public List<T> encontrarTodas(){
         return getRepositorio().findAll();
     }
 
     @Override
-    public void deletarPorId(UUID id){
+    public void deletar(UUID id){
         getRepositorio().deleteById(id);
     }
 

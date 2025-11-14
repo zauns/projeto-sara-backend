@@ -2,9 +2,9 @@ package sara.projeto.saraEmprega.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
@@ -27,7 +27,7 @@ public abstract class ContaService<T extends Conta> implements ContaServicePort{
 
     @Transactional(readOnly = true)
     public List<ContaResponseDTO> buscarTodasAsContas() {
-        return repositorio().encontrarTudo()
+        return repositorio().encontrarTodas()
             .stream()
             .map(ContaResponseDTO::new) // lambda
             .collect(Collectors.toList());
@@ -35,9 +35,14 @@ public abstract class ContaService<T extends Conta> implements ContaServicePort{
 
     @Transactional
     public void excluirConta(UUID id) {
-        if (!repositorio().existePorId(id)) { //mudar o método com existe porID
+        if (!repositorio().existePorId(id)) {
             throw new RuntimeException("Conta não encontrada");
         }
-        repositorio().deletarPorId(id);
+        repositorio().deletar(id);
+    }
+
+    @Transactional
+    public Optional<Conta> buscarPorEmail(String email){
+        return repositorio().encontrarPorEmail(email).map(contaT -> (Conta) contaT);
     }
 }

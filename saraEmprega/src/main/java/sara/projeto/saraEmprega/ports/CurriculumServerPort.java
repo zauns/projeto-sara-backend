@@ -1,12 +1,12 @@
 package sara.projeto.saraEmprega.ports;
 
 import sara.projeto.saraEmprega.model.Curriculum;
-import sara.projeto.saraEmprega.util.jwt.UserAuthenticated;
+import sara.projeto.saraEmprega.util.jwt.ContaAutenticada;
 
 public interface CurriculumServerPort {
-    public Curriculum getCurriculum();
+    public Curriculum getCurriculum(ContaAutenticada auth);
     public Curriculum setCurriculum(
         Curriculum curriculum,
-        UserAuthenticated Auth
+        ContaAutenticada Auth
     );
 }

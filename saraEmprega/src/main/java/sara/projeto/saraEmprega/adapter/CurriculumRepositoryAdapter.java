@@ -2,7 +2,6 @@ package sara.projeto.saraEmprega.adapter;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import sara.projeto.saraEmprega.exception.UserNotFoundException;
 import sara.projeto.saraEmprega.model.Curriculum;
 import sara.projeto.saraEmprega.ports.CurriculumRepositoryPort;
 import sara.projeto.saraEmprega.repository.CurriculumRepository;
@@ -17,7 +16,7 @@ public class CurriculumRepositoryAdapter implements CurriculumRepositoryPort {
     private CurriculumRepository curriculumRepository ;
 
     public Optional<Curriculum> findByUserID(UUID userId) {
-        return curriculumRepository.findByUserID(userId);
+        return curriculumRepository.findByUserId(userId);
     }
 
     @Override

@@ -13,7 +13,6 @@ import sara.projeto.saraEmprega.model.Curriculum;
 import sara.projeto.saraEmprega.ports.CurriculumServicePort;
 import sara.projeto.saraEmprega.util.Mapper;
 import sara.projeto.saraEmprega.util.Validate;
-import sara.projeto.saraEmprega.util.jwt.UserAuthenticated;
 
 @RestController
 @RequiredArgsConstructor

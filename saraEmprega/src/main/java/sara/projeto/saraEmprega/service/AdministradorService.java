@@ -2,7 +2,6 @@ package sara.projeto.saraEmprega.service;
 
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,11 +10,12 @@ import lombok.RequiredArgsConstructor;
 import sara.projeto.saraEmprega.dto.AdministradorRequestDTO;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.model.Administrador;
+import sara.projeto.saraEmprega.ports.AdministradorServicePort;
 import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
 
 @Service
 @RequiredArgsConstructor
-public class AdministradorService extends ContaService<Administrador> {
+public class AdministradorService extends ContaService<Administrador> implements AdministradorServicePort {
 
     private final ContaRepositoryPort<Administrador> repositorio;
 
@@ -24,6 +24,7 @@ public class AdministradorService extends ContaService<Administrador> {
         return this.repositorio;
     }
 
+    @Override
     @Transactional
     public ContaResponseDTO criar(AdministradorRequestDTO dto) {
         Administrador administrador = new Administrador();
@@ -32,6 +33,7 @@ public class AdministradorService extends ContaService<Administrador> {
         return new ContaResponseDTO(administrador);
     }
 
+    @Override
     @Transactional
     public ContaResponseDTO atualizar(UUID id, AdministradorRequestDTO dto){
         Administrador administrador = repositorio.encontrarPorId(id).orElseThrow(() -> new EntityNotFoundException("Administrador não encontrado"));
@@ -49,5 +51,6 @@ public class AdministradorService extends ContaService<Administrador> {
         administrador.setSenhaHash(dto.senha());
         administrador.setSuperAdmin(dto.isSuperAdmin());
     }
+
 
 }

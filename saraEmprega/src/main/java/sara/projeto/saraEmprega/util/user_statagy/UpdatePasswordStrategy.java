@@ -17,7 +17,7 @@ public class UpdatePasswordStrategy implements UserUpdateStrategy {
     public boolean update(User user, UserDTO dto) {
         if (
             dto.password() != null &&
-            !user.getHashedPassword().equals(dto.password())
+            !user.getSenhaHash().equals(dto.password())
         ) {
             PasswordEncoder encoder = new BCryptPasswordEncoder(
                 encoderStrength

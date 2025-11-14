@@ -2,8 +2,6 @@ package sara.projeto.saraEmprega.service;
 
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -14,12 +12,11 @@ import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.dto.EmpresaRequestDTO;
 import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
-import sara.projeto.saraEmprega.repository.ContaRepository;
-import sara.projeto.saraEmprega.repository.EmpresaRepository;
+import sara.projeto.saraEmprega.ports.EmpresaServicePort;
 
 @Service
 @RequiredArgsConstructor
-public class EmpresaService extends ContaService<Empresa> {
+public class EmpresaService extends ContaService<Empresa> implements EmpresaServicePort {
 
     private final ContaRepositoryPort<Empresa> repositorio;
 
@@ -28,6 +25,7 @@ public class EmpresaService extends ContaService<Empresa> {
         return this.repositorio;
     }
 
+    @Override
     @Transactional
     public ContaResponseDTO criar(EmpresaRequestDTO dto) {
         Empresa empresa = new Empresa();
@@ -36,6 +34,7 @@ public class EmpresaService extends ContaService<Empresa> {
         return new ContaResponseDTO(novaEmpresa);
     }
 
+    @Override
     @Transactional
     public ContaResponseDTO atualizar(UUID id, EmpresaRequestDTO dto) {
         Empresa empresa = repositorio.encontrarPorId(id)

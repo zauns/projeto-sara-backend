@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
-import sara.projeto.saraEmprega.service.ContaService;
+import sara.projeto.saraEmprega.ports.ContaServicePort;
 
 
-public abstract class ContasController<TRequestDTO, TService extends ContaService<?>> {
+public abstract class ContasController<TRequestDTO, TService extends ContaServicePort> {
 
     @Autowired
     protected final TService service;
