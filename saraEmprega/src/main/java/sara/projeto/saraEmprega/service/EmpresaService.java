@@ -54,7 +54,7 @@ public class EmpresaService extends ContaService<Empresa> {
         empresa.setEmail(dto.email());
         empresa.setTelefone(dto.telefone());
         empresa.setEndereco(dto.endereco());
-        empresa.setSenha(dto.senha());
+        empresa.setSenhaHash(dto.senha());
         empresa.setCnpj(dto.cnpj());
         empresa.setBiografia(dto.biografia());
         empresa.setLinks(dto.links());

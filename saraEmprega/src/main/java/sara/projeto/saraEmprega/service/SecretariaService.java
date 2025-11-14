@@ -46,7 +46,7 @@ public class SecretariaService extends ContaService<Secretaria> {
         secretaria.setEmail(dto.email());
         secretaria.setTelefone(dto.telefone());
         secretaria.setEndereco(dto.endereco());
-        secretaria.setSenha(dto.senha());
+        secretaria.setSenhaHash(dto.senha());
         secretaria.setMunicipio(dto.municipio());
     }
 }

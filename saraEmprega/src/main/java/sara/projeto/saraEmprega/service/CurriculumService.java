@@ -16,12 +16,11 @@ import sara.projeto.saraEmprega.util.jwt.UserAuthenticated;
 @AllArgsConstructor
 public class CurriculumService implements CurriculumServicePort {
 
-    private CurriculumRepositoryPort curriculumRepository;
     private UserServicePort userService;
 
     @Override
     public Curriculum getCurriculum(String userMail) {
-        User user = userService.getUserByMail(userMail);
+        User user = userService.findByEmail(userMail);
         if (user.getCurriculum() == null){
             throw new UserNotFoundException("curriculo nao encontrado");
         }
@@ -30,10 +29,10 @@ public class CurriculumService implements CurriculumServicePort {
 
     @Override
     public void setCurriculum(Curriculum curriculum, String mail) {
-        User user = userService.getUserByMail(mail);
+        User user = userService.findByEmail(mail);
         user.setCurriculum(curriculum);
         curriculum.setUser(user);
-        userService.curriculumUpdate(user);
+        userService.updateCurriculum(user);
     }
 
 }

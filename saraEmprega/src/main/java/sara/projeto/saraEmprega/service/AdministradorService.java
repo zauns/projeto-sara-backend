@@ -46,7 +46,7 @@ public class AdministradorService extends ContaService<Administrador> {
         administrador.setEmail(dto.email());
         administrador.setTelefone(dto.telefone());
         administrador.setEndereco(dto.endereco());
-        administrador.setSenha(dto.senha());
+        administrador.setSenhaHash(dto.senha());
         administrador.setSuperAdmin(dto.isSuperAdmin());
     }
 

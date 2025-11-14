@@ -10,6 +10,7 @@ import sara.projeto.saraEmprega.ports.UserServicePort;
 import sara.projeto.saraEmprega.util.jwt.UserAuthenticated;
 import sara.projeto.saraEmprega.util.user_statagy.UpdateContext;
 
+import java.util.Optional;
 import java.util.UUID;
 
 //TODO
@@ -18,35 +19,36 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserService implements UserServicePort {
 
-    UserRepositoryPort userRepository;
-    UpdateContext updateContext;
+    private final UserRepositoryPort userRepository;
+    private final UpdateContext updateContext;
 
     @Override
-    public User getUserByMail(String mail) {
-        return userRepository.findByMail(mail);
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+        .orElseThrow(() -> new RuntimeException("Usuária não encontrada!"));
     }
 
     @Override
-    public User getUserById(UUID id) {
-        return null;
+    public User findById(UUID id) {
+        return userRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Usuária não encontrada!"));
     }
 
 
     @Override
     public User updateUser(UserDTO userDTO, String mail) {
-        User user = userRepository.findByMail(mail);
+        User user = findByEmail(mail);
         updateContext.execute(user, userDTO);
-        userRepository.update(user);
-        return user;
+        return userRepository.save(user);
     }
 
-    public User curriculumUpdate(User user) {
-        return userRepository.update(user);
+    public User updateCurriculum(User user) {
+        return userRepository.save(user);
     }
 
-    public User CreateUser(String claim, User user) {
-        if(claim.contains("ROLE_SECRETARY")){
-            return userRepository.create(user);
+    public User createUser(User user) {
+        if(!userRepository.existsByEmail(user.getEmail())){
+            return userRepository.save(user);
         }
         throw new IllegalArgumentException("usuario mal formatado");
     }

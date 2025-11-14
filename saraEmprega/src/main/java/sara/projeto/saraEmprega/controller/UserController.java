@@ -23,17 +23,17 @@ import sara.projeto.saraEmprega.util.Mapper;
 @RequestMapping("/api/user")
 public class UserController {
 
-	UserServicePort userService;
+	private final UserServicePort userService;
 
 	@PostMapping("/update")
 	public ResponseEntity<UserDTO> updateUser(
-		@RequestBody @Valid UserDTO userDTO,
+		@RequestBody @Valid UserDTO dto,
 		Authentication auth
 	) {
 		Jwt jwt = (Jwt) auth.getPrincipal();
-		User user = userService.updateUser(userDTO, jwt.getSubject());
-		//UserDTO userResponseDTO = Mapper.mapToUserRequestDTO(user);
-		return new ResponseEntity<>(HttpStatus.OK);
+		User user = userService.updateUser(dto, jwt.getSubject());
+		UserDTO updatedUser = Mapper.mapToUserRequestDTO(user);
+		return ResponseEntity.ok(updatedUser);
 	}
 
 	@PostMapping("/create")
@@ -42,12 +42,10 @@ public class UserController {
 		Authentication auth
 	) {
 		Jwt jwt = (Jwt) auth.getPrincipal();
-		User user = userService.CreateUser(
-			jwt.getClaim("scope"),
-			Mapper.MapToUser(userDTO)
-		);
-		UserDTO userResponseDTO = Mapper.mapToUserRequestDTO(user);
-		return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
+		User user = Mapper.MapToUser(userDTO);
+		User createdUser = userService.createUser(user);
+		UserDTO userResponseDTO = Mapper.mapToUserRequestDTO(createdUser);
+		return new ResponseEntity<>(userResponseDTO, HttpStatus.CREATED);
 	}
 
 	@GetMapping("/validate-token")
