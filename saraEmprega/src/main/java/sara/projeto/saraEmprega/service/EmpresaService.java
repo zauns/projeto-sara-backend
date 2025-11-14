@@ -7,49 +7,53 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.transaction.annotation.Transactional;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.dto.EmpresaRequestDTO;
 import sara.projeto.saraEmprega.model.Empresa;
+import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
+import sara.projeto.saraEmprega.repository.ContaRepository;
 import sara.projeto.saraEmprega.repository.EmpresaRepository;
 
 @Service
+@RequiredArgsConstructor
 public class EmpresaService extends ContaService<Empresa> {
 
-    @Autowired
-    private EmpresaRepository empresaRepository;
+    private final ContaRepositoryPort<Empresa> repositorio;
 
     @Override
-    protected JpaRepository<Empresa, UUID> repositorio() {
-        return empresaRepository;
+    protected ContaRepositoryPort<Empresa> repositorio() {
+        return this.repositorio;
     }
 
     @Transactional
     public ContaResponseDTO criar(EmpresaRequestDTO dto) {
         Empresa empresa = new Empresa();
-        mapToEmpresa(dto, empresa);
-        Empresa novaEmpresa = empresaRepository.save(empresa);
+        mapear(dto, empresa);
+        Empresa novaEmpresa = repositorio.salvar(empresa);
         return new ContaResponseDTO(novaEmpresa);
     }
 
     @Transactional
     public ContaResponseDTO atualizar(UUID id, EmpresaRequestDTO dto) {
-        Empresa empresa = empresaRepository.findById(id)
+        Empresa empresa = repositorio.encontrarPorId(id)
             .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + id));
-        mapToEmpresa(dto, empresa);
-        Empresa atualizada = empresaRepository.save(empresa);
+        mapear(dto, empresa);
+        Empresa atualizada = repositorio.salvar(empresa);
         return new ContaResponseDTO(atualizada);
     }
 
     //utilizado em vagas
     @Transactional(readOnly = true)
     public Empresa buscarEmpresaPorId(UUID id) {
-        Empresa empresa = empresaRepository.findById(id)
+        Empresa empresa = repositorio.encontrarPorId(id)
             .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + id));
         return empresa;
     }
 
-    private void mapToEmpresa(EmpresaRequestDTO dto, Empresa empresa) {
+    private void mapear(EmpresaRequestDTO dto, Empresa empresa) {
         empresa.setNome(dto.nome());
         empresa.setEmail(dto.email());
         empresa.setTelefone(dto.telefone());

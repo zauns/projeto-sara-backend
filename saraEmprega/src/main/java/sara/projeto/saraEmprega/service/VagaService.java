@@ -15,7 +15,7 @@ import sara.projeto.saraEmprega.repository.VagaRepository;
 
 @Service
 public class VagaService {
-    
+
     private final VagaRepository vagaRepository;
     private final EmpresaService empresaService;
 
@@ -69,7 +69,7 @@ public class VagaService {
         }
         vagaRepository.deleteById(id);
     }
-    
+
     //ATUALIZAR VAGA
     @Transactional
     public VagaResponseDTO atualizarVaga(
@@ -93,7 +93,7 @@ public class VagaService {
         vaga.setDescricao(dto.descricao());
 
         Empresa empresa = empresaService.buscarEmpresaPorId(dto.empresaId());
-        
+
         vaga.setEmpresa(empresa);
     }
 

@@ -1,35 +1,34 @@
 package sara.projeto.saraEmprega.util.jwt;
 
+import java.util.Collection;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import sara.projeto.saraEmprega.model.Conta;
 import sara.projeto.saraEmprega.util.AuthorityUtils;
-import sara.projeto.saraEmprega.model.Account;
 
-import java.util.Collection;
 @Getter
 @RequiredArgsConstructor
 public class UserAuthenticated implements UserDetails {
 
-    private final Account user;
+    private final Conta user;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return AuthorityUtils.convertRolesToAuthorities(user.getRoles());
-    }
-
-    public String getTypeOf(){
+    public String getTypeOf() {
         return user.getClass().getSimpleName();
     }
 
     @Override
     public String getPassword() {
-        return user.getHashedPassword();
+        return user.getSenhaHash();
     }
 
     @Override
     public String getUsername() {
+        return user.getNome();
+    }
+
+    public String getEmail(){
         return user.getEmail();
     }
 }
