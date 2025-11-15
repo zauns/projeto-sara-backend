@@ -16,7 +16,7 @@ public class Empresa extends Conta{
 
     private String cnpj;
     private String biografia;
-    private boolean isValidada;
+    private boolean isValidada = false;
     private String links;
     
     // Relacionamento One-to-Many com Vaga

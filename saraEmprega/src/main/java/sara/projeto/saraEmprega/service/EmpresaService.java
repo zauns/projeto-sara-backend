@@ -1,7 +1,10 @@
 package sara.projeto.saraEmprega.service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -19,6 +22,7 @@ import sara.projeto.saraEmprega.ports.EmpresaServicePort;
 public class EmpresaService extends ContaService<Empresa> implements EmpresaServicePort {
 
     private final ContaRepositoryPort<Empresa> repositorio;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     protected ContaRepositoryPort<Empresa> repositorio() {
@@ -57,10 +61,29 @@ public class EmpresaService extends ContaService<Empresa> implements EmpresaServ
         empresa.setEmail(dto.email());
         empresa.setTelefone(dto.telefone());
         empresa.setEndereco(dto.endereco());
-        empresa.setSenhaHash(dto.senha());
+        empresa.setSenhaHash(passwordEncoder.encode(dto.senha()));
         empresa.setCnpj(dto.cnpj());
         empresa.setBiografia(dto.biografia());
         empresa.setLinks(dto.links());
+        empresa.setValidada(false);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ContaResponseDTO> getEmpresasNaoValidadas() {
+        return repositorio.findByIsValidadaFalse() 
+            .stream()
+            .map(ContaResponseDTO::new)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public ContaResponseDTO aprovarEmpresa(UUID id) {
+        Empresa empresa = repositorio.encontrarPorId(id)
+            .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada"));
+        
+        empresa.setValidada(true);
+        repositorio.salvar(empresa);
+        return new ContaResponseDTO(empresa);
     }
 
 }

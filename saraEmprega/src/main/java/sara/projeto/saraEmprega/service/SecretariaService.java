@@ -2,6 +2,7 @@ package sara.projeto.saraEmprega.service;
 
 import java.util.UUID;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +19,7 @@ import sara.projeto.saraEmprega.ports.SecretariaServicePort;
 public class SecretariaService extends ContaService<Secretaria> implements SecretariaServicePort {
 
     private final ContaRepositoryPort<Secretaria> repositorio;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     protected ContaRepositoryPort<Secretaria> repositorio() {
@@ -48,8 +50,9 @@ public class SecretariaService extends ContaService<Secretaria> implements Secre
         secretaria.setEmail(dto.email());
         secretaria.setTelefone(dto.telefone());
         secretaria.setEndereco(dto.endereco());
-        secretaria.setSenhaHash(dto.senha());
+        secretaria.setSenhaHash(passwordEncoder.encode(dto.senha()));
         secretaria.setMunicipio(dto.municipio());
+        secretaria.setValidada(false);
     }
 
 }

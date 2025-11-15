@@ -1,9 +1,12 @@
 package sara.projeto.saraEmprega.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -39,6 +42,16 @@ public class EmpresaController extends ContasController<EmpresaRequestDTO, Empre
         return ResponseEntity.ok(contaAtualizada);
     }
 
-    
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    @GetMapping("/pendentes")
+    public ResponseEntity<List<ContaResponseDTO>> buscarPendentes() {
+        return ResponseEntity.ok(service.getEmpresasNaoValidadas());
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    @PutMapping("/aprovar/{id}")
+    public ResponseEntity<ContaResponseDTO> aprovarEmpresa(@PathVariable UUID id) {
+        return ResponseEntity.ok(service.aprovarEmpresa(id));
+    }
 
 }
