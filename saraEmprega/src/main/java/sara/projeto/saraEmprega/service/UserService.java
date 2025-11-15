@@ -33,8 +33,8 @@ public class UserService implements UserServicePort {
     }
 
     @Override
-    public User updateUser(UserDTO userDTO, String mail) {
-        User user = findByEmail(mail);
+    public User updateUser(UserDTO userDTO, UUID id) {
+        User user = findById(id);
         updateContext.execute(user, userDTO);
         return userRepository.save(user);
     }
@@ -55,14 +55,17 @@ public class UserService implements UserServicePort {
         return userRepository.existsByEmail(email);
     }
 
+    @Override
+    public void deleteUserById(UUID id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("Usuário não encontrado"); // ou EntityNotFoundException
+        }
+        userRepository.deleteById(id);
+    }
+
     /*
     @Override
     public void updateUserRoles(UUID id, List<String> roles) {
-
-    }
-
-    @Override
-    public void deleteUserById(UUID id) {
 
     }
 

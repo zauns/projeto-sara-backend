@@ -10,15 +10,15 @@ public interface UserServicePort {
     // --- Consultas ---
     User findByEmail(String email);
     User findById(UUID id);
-    User updateUser(UserDTO userDTO, String email);
+    User updateUser(UserDTO userDTO, UUID id);
     User createUser(User user);
     User updateCurriculum(User user);
     boolean existsByEmail(String email);
+    void deleteUserById(UUID id);
     /*
     void updateUserRoles(UUID id, List<String> roles);
 
     // --- Exclusão ---
-    void deleteUserById(UUID id);
     void deleteUserByMail(String mail);
 
     // --- Verificação / Existência ---

@@ -52,7 +52,6 @@ class SecurityConfiguration {
                 .authorizeHttpRequests((authorize) -> authorize
                     .requestMatchers(HttpMethod.POST, "/empresa").permitAll()
                     .requestMatchers(HttpMethod.POST, "/secretaria").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/user/create").permitAll()
                     .requestMatchers("/token",
                         
                         "/api/public/**",

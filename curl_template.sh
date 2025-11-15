@@ -107,7 +107,7 @@ curl -v -X PUT $BASE_URL/empresa/aprovar/$ID_EMPRESA \
 curl -v -X GET $BASE_URL/secretaria/pendentes \
      -H "Authorization: Bearer $TOKEN_SUPER_ADMIN"
 
-# arovar Secretaria
+# aprovar Secretaria
 curl -v -X PUT $BASE_URL/secretaria/aprovar/$ID_SECRETARIA \
      -H "Authorization: Bearer $TOKEN_SUPER_ADMIN"
 
@@ -180,3 +180,7 @@ curl -v -X PUT $BASE_URL/secretaria/$ID_SECRETARIA \
 # deletar a si mesma, precisa ser validada
 curl -v -X DELETE $BASE_URL/secretaria/$ID_SECRETARIA \
      -H "Authorization: Bearer $TOKEN_SECRETARIA"
+
+
+# Comandos do User
+
