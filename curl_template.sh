@@ -56,7 +56,7 @@ curl -v -X POST $BASE_URL/administrador \
      -H "Content-Type: application/json" \
      -H "Authorization: Bearer $TOKEN_SUPER_ADMIN" \
      -d '{
-           "nome": "Admineutron",
+           "nome": "admineutron",
            "email": "admineutron@sara.com",
            "senha": "senha123",
            "telefone": "12345678",
@@ -79,7 +79,7 @@ curl -v -X PUT $BASE_URL/administrador/$ID_ADMIN_COMUM \
      -H "Content-Type: application/json" \
      -H "Authorization: Bearer $TOKEN_SUPER_ADMIN" \
      -d '{
-           "nome": "Adminilson",
+           "nome": "adminilson",
            "email": "adminilson@sara.com",
            "senha": "novaSenha123",
            "telefone": "87654321",
@@ -114,18 +114,20 @@ curl -v -X PUT $BASE_URL/secretaria/aprovar/$ID_SECRETARIA \
 
 # Comandos da empresa
 
+#Obs: nos testes use este site para criar os cnpjs:https://www.4devs.com.br/gerador_de_cnpj
+
 
 # Envia a solicitação de cadastro de uma empresa
 curl -v -X POST $BASE_URL/empresa \
      -H "Content-Type: application/json" \
      -d '{
-           "nome": "Empresa de Teste (Template)",
-           "email": "template@empresa.com",
+           "nome": "empresa do gera",
+           "email": "empresa@gera.com",
            "senha": "senha123",
            "telefone": "123456789",
-           "endereco": "Rua da Empresa",
+           "endereco": "Rua de cima",
            "cnpj": "92.167.491/0001-88",
-           "biografia": "Uma empresa de teste",
+           "biografia": "uma empresa cheirosa",
            "links": "http://teste.com"
          }'
 
@@ -134,13 +136,13 @@ curl -v -X PUT $BASE_URL/empresa/$ID_EMPRESA \
      -H "Content-Type: application/json" \
      -H "Authorization: Bearer $TOKEN_EMPRESA" \
      -d '{
-           "nome": "Empresa (Nome Atualizado)",
-           "email": "template@empresa.com",
+           "nome": "empresa de geras",
+           "email": "empresa@gera.com",
            "senha": "novaSenha123",
            "telefone": "99999999",
-           "endereco": "Rua Nova",
+           "endereco": "Rua de baixo",
            "cnpj": "92.167.491/0001-88",
-           "biografia": "Biografia nova.",
+           "biografia": "Uma empresa muito cheirosa",
            "links": "http://novolink.com"
          }'
 
@@ -154,12 +156,12 @@ curl -v -X DELETE $BASE_URL/empresa/$ID_EMPRESA \
 curl -v -X POST $BASE_URL/secretaria \
      -H "Content-Type: application/json" \
      -d '{
-           "nome": "Secretaria (Template)",
-           "email": "template@secretaria.com",
+           "nome": "secretaria daqui",
+           "email": "secretaria@daqui.com",
            "senha": "senha123",
            "telefone": "987654321",
-           "endereco": "Rua da Prefeitura",
-           "municipio": "Recife"
+           "endereco": "rua daqui",
+           "municipio": "união"
          }'
 
 # atualizar dados de cadastro, precisa ser validada
@@ -167,12 +169,12 @@ curl -v -X PUT $BASE_URL/secretaria/$ID_SECRETARIA \
      -H "Content-Type: application/json" \
      -H "Authorization: Bearer $TOKEN_SECRETARIA" \
      -d '{
-           "nome": "Secretaria (Nome Atualizado)",
-           "email": "template@secretaria.com",
+           "nome": "secretaria dali",
+           "email": "secretaria@dali.com",
            "senha": "novaSenha123",
            "telefone": "11112222",
-           "endereco": "Rua Nova da Prefeitura",
-           "municipio": "Olinda"
+           "endereco": "rua nova dali",
+           "municipio": "dois irmãos"
          }'
 
 # deletar a si mesma, precisa ser validada
