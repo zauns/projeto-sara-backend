@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -39,5 +40,16 @@ public class AdministradorController extends ContasController<AdministradorReque
             @Valid @RequestBody AdministradorRequestDTO dto) {
         ContaResponseDTO novaAdministracao = service.atualizar(id, dto);
         return ResponseEntity.status(HttpStatus.OK).body(novaAdministracao);
+    }
+
+    @Override
+    @DeleteMapping("/{id}")
+    @PreAuthorize(
+        "hasRole('SUPER_ADMIN') or " +
+        "(hasRole('ADMIN') and authentication.principal.claims['userId'] == #id.toString())"
+    )
+    public ResponseEntity<Void> excluirConta(@PathVariable UUID id) {
+        service.excluirConta(id);
+        return ResponseEntity.noContent().build();
     }
 }
