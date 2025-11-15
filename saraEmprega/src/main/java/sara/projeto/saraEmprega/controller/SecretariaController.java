@@ -36,6 +36,7 @@ public class SecretariaController extends ContasController<SecretariaRequestDTO,
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('SECRETARIA') and authentication.principal.claims['userId'] == #id.toString() or hasRole('SUPER_ADMIN')")
     public ResponseEntity<ContaResponseDTO> atualizar(
             @PathVariable UUID id,
             @Valid @RequestBody SecretariaRequestDTO dto) {

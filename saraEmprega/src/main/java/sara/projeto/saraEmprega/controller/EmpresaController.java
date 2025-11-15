@@ -36,6 +36,7 @@ public class EmpresaController extends ContasController<EmpresaRequestDTO, Empre
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('Empresa') and authentication.principal.claims['userId'] == #id.toString()")
     public ResponseEntity<ContaResponseDTO> atualizar(
             @PathVariable UUID id,
             @Valid @RequestBody EmpresaRequestDTO dto) {
