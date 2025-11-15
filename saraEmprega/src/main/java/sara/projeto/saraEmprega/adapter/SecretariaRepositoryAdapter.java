@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.model.Secretaria;
 import sara.projeto.saraEmprega.ports.SecretariaRepositoryPort;
 import sara.projeto.saraEmprega.repository.SecretariaRepository;
