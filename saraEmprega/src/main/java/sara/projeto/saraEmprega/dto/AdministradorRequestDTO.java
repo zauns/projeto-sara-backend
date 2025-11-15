@@ -2,6 +2,7 @@ package sara.projeto.saraEmprega.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record AdministradorRequestDTO(
         @NotBlank(message = "Nome é obrigatório") String nome,
@@ -9,5 +10,5 @@ public record AdministradorRequestDTO(
         @NotBlank(message = "Senha é obrigatória") String senha,
         @NotBlank(message = "Telefone é obrigatório") String telefone,
         @NotBlank(message = "Endereço é obrigatório") String endereco,
-        @NotBlank(message = "O valor do campo é obrigatório") boolean isSuperAdmin) {
+        @NotNull(message = "O valor do campo é obrigatório") boolean isSuperAdmin) {
 }

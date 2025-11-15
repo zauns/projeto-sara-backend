@@ -2,11 +2,11 @@ package sara.projeto.saraEmprega.service;
 
 import java.util.UUID;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import sara.projeto.saraEmprega.dto.AdministradorRequestDTO;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.model.Administrador;
@@ -14,14 +14,19 @@ import sara.projeto.saraEmprega.ports.AdministradorServicePort;
 import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
 
 @Service
-@RequiredArgsConstructor
 public class AdministradorService extends ContaService<Administrador> implements AdministradorServicePort {
 
     private final ContaRepositoryPort<Administrador> repositorio;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     protected ContaRepositoryPort<Administrador> repositorio() {
         return this.repositorio;
+    }
+
+    public AdministradorService(ContaRepositoryPort<Administrador> repositorio, PasswordEncoder passwordEncoder) {
+        this.repositorio = repositorio;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -48,7 +53,7 @@ public class AdministradorService extends ContaService<Administrador> implements
         administrador.setEmail(dto.email());
         administrador.setTelefone(dto.telefone());
         administrador.setEndereco(dto.endereco());
-        administrador.setSenhaHash(dto.senha());
+        administrador.setSenhaHash(passwordEncoder.encode(dto.senha()));
         administrador.setSuperAdmin(dto.isSuperAdmin());
     }
 

@@ -23,7 +23,8 @@ public class ContaAutenticada implements UserDetails { // transferi pro tipo con
 
     @Override
     public String getPassword() {
-        return conta.getSenhaHash();
+        String hash = conta.getSenhaHash();
+        return (hash != null) ? hash.trim() : null;
     }
 
     @Override
@@ -37,8 +38,8 @@ public class ContaAutenticada implements UserDetails { // transferi pro tipo con
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String role = getTypeOf().toUpperCase();
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
+        String role = getContaAuthority();
+        return Collections.singletonList(new SimpleGrantedAuthority(role));
     }
 
     private String getContaAuthority() {

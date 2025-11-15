@@ -33,8 +33,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 class SecurityConfiguration {
 
-    @Value("${spring.util.encoderStrength}")
-    private int encoderStrong;
+    //@Value("${spring.util.encoderStrength}")
+    //private int encoderStrong;
 
 
     @Value("${jwt.public-key}")
@@ -88,6 +88,6 @@ class SecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(encoderStrong);
+        return new BCryptPasswordEncoder(4);
     }
 }

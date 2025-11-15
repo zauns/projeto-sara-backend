@@ -1,15 +1,13 @@
--- Inserção do usuário
-INSERT INTO users (id, email, hashed_password, first_name)
-VALUES (
-           UUID_TO_BIN(UUID()),
-           'secretaria@pe.com',
-           '$2a$04$UlmabbGv8N9C3U1VDwebh.vnnQypNyeJ2gYHy7ID6rq4o3DjTjgum',
-           'secretariaPernambuco'
-       );
-
--- Inserção da role associada
-INSERT INTO users_roles (user_id, role)
-VALUES (
-           (SELECT id FROM users WHERE email = 'secretaria@pe.com'),
-           'ROLE_SECRETARY'
-       );
+-- Inserção do usuário administrador
+INSERT INTO administrador
+(id, email, senha_hash, nome, is_super_admin, endereco, telefone)
+VALUES
+(
+    UUID_TO_BIN(UUID()), -- Gera um UUID novo
+    'fulanoadmnato@sara.com', -- E-mail para login
+    '$2a$04$7uuQIXKVtnEzGqFZnoPDBeaoYfeoYCgbNzrr2JuYULt9g5WBRRW0G', -- Hash para "admin123"
+    'Fulano',
+    1,
+    'Rua do alto',
+    '123456789'
+);
