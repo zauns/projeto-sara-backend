@@ -15,13 +15,14 @@ import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.dto.EmpresaRequestDTO;
 import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
+import sara.projeto.saraEmprega.ports.EmpresaRepositoryPort;
 import sara.projeto.saraEmprega.ports.EmpresaServicePort;
 
 @Service
 @RequiredArgsConstructor
 public class EmpresaService extends ContaService<Empresa> implements EmpresaServicePort {
 
-    private final ContaRepositoryPort<Empresa> repositorio;
+    private final EmpresaRepositoryPort repositorio;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -70,8 +71,8 @@ public class EmpresaService extends ContaService<Empresa> implements EmpresaServ
 
     @Transactional(readOnly = true)
     public List<ContaResponseDTO> getEmpresasNaoValidadas() {
-        return repositorio.findByIsValidadaFalse() 
-            .stream()
+        // Você precisará adicionar o método findByIsValidadaFalse() no seu EmpresaRepository
+        return repositorio.findByIsValidadaFalse().stream()
             .map(ContaResponseDTO::new)
             .collect(Collectors.toList());
     }

@@ -8,12 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.model.Secretaria;
+import sara.projeto.saraEmprega.ports.SecretariaRepositoryPort;
 import sara.projeto.saraEmprega.repository.SecretariaRepository;
 
 @Component
 @RequiredArgsConstructor
-public class SecretariaRepositoryAdapter extends ContaRepositoryAdapter<Secretaria> {
+public class SecretariaRepositoryAdapter extends ContaRepositoryAdapter<Secretaria> implements SecretariaRepositoryPort {
 
     private final SecretariaRepository repositorio;
 
@@ -40,6 +42,11 @@ public class SecretariaRepositoryAdapter extends ContaRepositoryAdapter<Secretar
     @Override
     public Optional<Secretaria> encontrarPorEmail(String email) {
         return repositorio.findByEmail(email);
+    }
+
+    @Override
+    public List<Secretaria> findByIsValidadaFalse() {
+        return repositorio.findByIsValidadaFalse();
     }
 
 }

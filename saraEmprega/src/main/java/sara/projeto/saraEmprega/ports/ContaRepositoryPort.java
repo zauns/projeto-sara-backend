@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import sara.projeto.saraEmprega.model.Conta;
-import sara.projeto.saraEmprega.model.Empresa;
 
 public interface ContaRepositoryPort<T extends Conta> {
     T salvar(T conta);
@@ -14,6 +13,5 @@ public interface ContaRepositoryPort<T extends Conta> {
     boolean existePorId(UUID id);
     List<T> encontrarTodas();
     void deletar(UUID id);
-    Optional<Empresa> findByIsValidadaFalse();
 }
                                                                                                                                                             

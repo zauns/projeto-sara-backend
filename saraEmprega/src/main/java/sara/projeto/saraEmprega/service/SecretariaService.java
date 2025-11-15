@@ -1,6 +1,8 @@
 package sara.projeto.saraEmprega.service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,13 +14,14 @@ import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.dto.SecretariaRequestDTO;
 import sara.projeto.saraEmprega.model.Secretaria;
 import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
+import sara.projeto.saraEmprega.ports.SecretariaRepositoryPort;
 import sara.projeto.saraEmprega.ports.SecretariaServicePort;
 
 @Service
 @RequiredArgsConstructor
 public class SecretariaService extends ContaService<Secretaria> implements SecretariaServicePort {
 
-    private final ContaRepositoryPort<Secretaria> repositorio;
+    private final SecretariaRepositoryPort repositorio;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -43,6 +46,24 @@ public class SecretariaService extends ContaService<Secretaria> implements Secre
         mapToSecretaria(dto, secretaria);
         Secretaria atualizada = repositorio.salvar(secretaria);
         return new ContaResponseDTO(atualizada);
+    }
+
+    @Transactional
+    public List<ContaResponseDTO> getSecretariasNaoValidadas() {
+        return repositorio.findByIsValidadaFalse()
+            .stream()
+            .map(ContaResponseDTO::new)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public ContaResponseDTO aprovarSecretaria(UUID id) {
+        Secretaria secretaria = repositorio.encontrarPorId(id)
+            .orElseThrow(() -> new EntityNotFoundException("Secretaria não encontrada"));
+        
+        secretaria.setValidada(true);
+        repositorio.salvar(secretaria);
+        return new ContaResponseDTO(secretaria);
     }
 
     private void mapToSecretaria(SecretariaRequestDTO dto, Secretaria secretaria) {
