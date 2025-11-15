@@ -9,6 +9,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import  org.springframework.web.bind.annotation.ExceptionHandler;
 import sara.emprega.msusers.exception.UserNotFoundException;
+import sara.emprega.msusers.exception.VideoNotFoundException;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -33,4 +34,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new RestErrorMessage(HttpStatus.NOT_FOUND, ex.getMessage()));
     }
+
+    @ExceptionHandler(VideoNotFoundException.class)
+    ResponseEntity<RestErrorMessage> VideoNotFoundHandler(VideoNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new RestErrorMessage(HttpStatus.NOT_FOUND, ex.getMessage()));
+    }
+
 }

@@ -2,26 +2,21 @@ package sara.emprega.msusers.ports;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import sara.emprega.msusers.exception.UserNotFoundException;
-import sara.emprega.msusers.model.Curriculum;
-import sara.emprega.msusers.repository.CurriculumRepository;
+import sara.emprega.msusers.model.Document;
+import sara.emprega.msusers.repository.DocumentRepository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 @AllArgsConstructor
+public class CurriculumRepositoryAdapter {
+    private DocumentRepository documentRepository;
 
-public class CurriculumRepositoryAdapter implements CurriculumRepositoryPort {
-    private CurriculumRepository curriculumRepository ;
-
-    public Optional<Curriculum> findByUserID(UUID userId) {
-        return Optional.ofNullable(curriculumRepository.findByUser_Id(UUID.randomUUID()).orElseThrow(()
-                -> new UserNotFoundException("curriculo não encontrado")));
+    public Document saveCurriculum(Document curriculum) {
+        return documentRepository.save(curriculum);
     }
 
-    @Override
-    public Curriculum saveCurriculum(Curriculum curriculum) {
-        return curriculumRepository.save(curriculum);
+    public Optional<Document> loadCurriculumByMail(String mail) {
+        return Optional.ofNullable(documentRepository.findByUserEmail(mail));
     }
 }

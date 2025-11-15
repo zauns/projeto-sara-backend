@@ -2,31 +2,32 @@ package sara.emprega.msusers.model;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.UUID;
 
     @Entity
-    @Table(name = "curriculums")
+    @Table(name = "documents")
     @AllArgsConstructor
     @NoArgsConstructor
     @Getter
     @Setter
     @Builder
-    public class Curriculum {
+    public class Document {
 
         @Id
         @Builder.Default
         private UUID id = UUID.randomUUID();
 
-        @Lob
-        @Column(columnDefinition = "LONGBLOB")
-        private byte[] data;
+        private String pathR2;
+        private String documentName;
+        private String documentType;
 
         @OneToOne
-        @JoinColumn(name = "user_id", referencedColumnName = "id")
+        @JoinColumn
         private User user;
+
+        @ManyToOne
+        @JoinColumn
+        private Module module;
     }
-
-

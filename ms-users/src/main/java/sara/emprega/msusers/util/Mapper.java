@@ -3,10 +3,8 @@ package sara.emprega.msusers.util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.multipart.MultipartFile;
-import sara.emprega.msusers.dto.CurriculumDTO;
 import sara.emprega.msusers.dto.UserDTO;
-import sara.emprega.msusers.model.Curriculum;
+import sara.emprega.msusers.model.Document;
 import sara.emprega.msusers.model.User;
 
 import java.io.IOException;
@@ -17,10 +15,11 @@ public class Mapper {
     @Value("${spring.util.encoderStrength}")
     private int encoderStrong;
 
-    public static Curriculum mapToCurriculum(MultipartFile file) throws IOException {
+    public static Document mapToCurriculum(String fileName) throws IOException {
 
-        return Curriculum.builder()
-                .data(file.getBytes())
+        return Document.builder()
+                .documentType("curriculum")
+                .documentName(fileName)
                 .id(UUID.randomUUID())
                 .build();
     }

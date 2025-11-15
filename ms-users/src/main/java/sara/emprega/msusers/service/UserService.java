@@ -39,7 +39,6 @@ public class UserService implements UserServicePort {
     }
 
     public User curriculumUpdate(User user) {
-        //TODO
         return userRepository.update(user);
     }
 

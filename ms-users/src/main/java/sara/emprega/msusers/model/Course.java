@@ -13,17 +13,18 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class Course {
 
     @Id
     @Builder.Default
     private UUID courseId = UUID.randomUUID();
     String name;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     List<String> tags;
     String description;
     int length;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     List<String> creators;
     int rating;
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)

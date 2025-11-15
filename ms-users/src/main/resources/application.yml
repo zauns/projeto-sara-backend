@@ -1,6 +1,14 @@
 server:
   port: 8080
 
+cloudflare:
+  r2:
+    endpoint: https://9cdcbd46f7ba87af9983bd5f006fad56.r2.cloudflarestorage.com
+    region: auto
+    access-key: 41962b375fb89bd3005309d0ad9ceada
+    secret-key: ed7ec917cb0359c72987a34fc9c06eca359079f7435e74ec7d20b1f00853e655
+    bucket: sara-emprega-pdf
+
 spring:
   util:
     encoderStrength: 4
@@ -14,9 +22,11 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create   # cria as tabelas a cada inicialização
+      ddl-auto: update   # cria as tabelas a cada inicialização
     show-sql: true
     defer-datasource-initialization: true  # garante que o Hibernate cria antes do data.sql
+    properties:
+      hibernate.enable_lazy_load_no_trans: true
 
   sql:
     init:

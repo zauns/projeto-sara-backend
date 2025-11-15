@@ -20,8 +20,6 @@ public class YoutubeService {
     @Value("${youtube.api.key}")
     private String apiKey;
 
-
-
     public int getVideoDuration(String videoUrl) {
         String videoId = YoutubeUtils.extractVideoId(videoUrl);
         YoutubeApiResponse response = youtubeFeignClient.getVideoDetails( "contentDetails", videoId, apiKey );
@@ -38,7 +36,6 @@ public class YoutubeService {
             return 0;
         }
 
-        // Expressão regular para capturar horas, minutos e segundos
         Pattern pattern = Pattern.compile("^PT(?:(\\d+)H)?(?:(\\d+)M)?$");
         Matcher matcher = pattern.matcher(isoDuration);
 

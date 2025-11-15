@@ -3,7 +3,6 @@ package sara.emprega.msusers.ports;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import sara.emprega.msusers.exception.UserNotFoundException;
-import sara.emprega.msusers.model.Curriculum;
 import sara.emprega.msusers.model.User;
 import sara.emprega.msusers.repository.UserRepository;
 
