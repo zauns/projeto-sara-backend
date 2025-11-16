@@ -71,7 +71,6 @@ public class EmpresaService extends ContaService<Empresa> implements EmpresaServ
 
     @Transactional(readOnly = true)
     public List<ContaResponseDTO> getEmpresasNaoValidadas() {
-        // Você precisará adicionar o método findByIsValidadaFalse() no seu EmpresaRepository
         return repositorio.findByIsValidadaFalse().stream()
             .map(ContaResponseDTO::new)
             .collect(Collectors.toList());
