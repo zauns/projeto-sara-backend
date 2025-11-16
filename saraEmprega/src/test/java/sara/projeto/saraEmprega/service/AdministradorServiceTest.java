@@ -1,20 +1,17 @@
 package sara.projeto.saraEmprega.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -48,7 +45,7 @@ public class AdministradorServiceTest {
         adminId = UUID.randomUUID();
         requestDTO = new AdministradorRequestDTO(
                 "Admin Teste",
-                "admin@teste.com",
+                "amor@teste.com",
                 "senha123",
                 "123456789",
                 "Rua Teste",
@@ -77,14 +74,50 @@ public class AdministradorServiceTest {
 
         Assertions.assertNotNull(responseDTO); //assegure que este campo não é Null
         Assertions.assertEquals("Admin Teste", responseDTO.getNome()); //assegure que este campo é igual ao primeiro argumento
-        Assertions.assertEquals("admin@teste.com", responseDTO.getEmail());
+        Assertions.assertEquals("amor@teste.com", responseDTO.getEmail());
 
         verify(repositorio, times(1)).salvar(adminCaptor.capture()); //captura o admin gerado
         Administrador adminSalvo = adminCaptor.getValue();
 
         Assertions.assertNotNull(adminSalvo);
-        assertEquals("Admin Teste", adminSalvo.getNome());
-        assertEquals("hash_com_sucesso", adminSalvo.getSenhaHash()); // verifica se o hash da senha foi feito
-        assertFalse(adminSalvo.isSuperAdmin());
+        Assertions.assertEquals("Admin Teste", adminSalvo.getNome());
+        Assertions.assertEquals("hash_com_sucesso", adminSalvo.getSenhaHash()); // verifica se o hash da senha foi feito
+        Assertions.assertFalse(adminSalvo.isSuperAdmin());
+    }
+
+    @Test
+    void deveAtualizarAdministradorComSucesso() {
+        //exemplo de como queremos os dados no final
+        AdministradorRequestDTO dtoAtualizado = new AdministradorRequestDTO(
+                "Nome Atualizado", "amores2@email.com", "novaSenha", 
+                "9999", "Nova Rua", true
+        );
+
+        //simulação da atualização
+
+        when(repositorio.encontrarPorId(adminId))
+        .thenReturn(Optional.of(administrador));
+        
+        when(passwordEncoder.encode("novaSenha"))
+        .thenReturn("nova_senha_hash");
+
+        when(repositorio.salvar(any(Administrador.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
+        
+        //validação dos dados
+        ArgumentCaptor<Administrador> adminCaptor = ArgumentCaptor.forClass(Administrador.class);
+        ContaResponseDTO response = administradorService.atualizar(adminId, dtoAtualizado);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals("Nome Atualizado", response.getNome());
+        Assertions.assertEquals("amores2@email.com", response.getEmail());
+
+        verify(repositorio, times(1)).salvar(adminCaptor.capture());
+        Administrador adminAtualizado = adminCaptor.getValue();
+
+        Assertions.assertEquals("Nome Atualizado", adminAtualizado.getNome());
+        Assertions.assertEquals("nova_senha_hash", adminAtualizado.getSenhaHash());
+        Assertions.assertTrue(adminAtualizado.isSuperAdmin());
+        Assertions.assertEquals(adminId, adminAtualizado.getId());
     }
 }
