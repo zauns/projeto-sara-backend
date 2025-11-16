@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.lang.foreign.Linker.Option;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -128,6 +129,19 @@ public class EmpresaServiceTest {
         Assertions.assertEquals("10.791.910/0001-93", empresaAtualizada.getCnpj());
         Assertions.assertEquals("Uma nova biografia para uma nova filosofia", empresaAtualizada.getBiografia());
         Assertions.assertEquals("www.novolink.com", empresaAtualizada.getLinks());
+    }
+
+    @Test
+    @DisplayName("Ao passar um id existente, o conteúdo retornado deve ser um ResponseDTO da empresa correspondente")
+    void buscarEmpresaPorIdComSucesso(){
+
+        when(repositorio.encontrarPorId(empresaId))
+        .thenReturn(Optional.of(empresa));
+
+        ContaResponseDTO resultado = empresaService.buscarPorId(empresaId);
+
+        Assertions.assertNotNull(resultado);
+        Assertions.assertEquals(empresaId, resultado.getId());
     }
 
 }
