@@ -120,4 +120,5 @@ public class AdministradorServiceTest {
         Assertions.assertTrue(adminAtualizado.isSuperAdmin());
         Assertions.assertEquals(adminId, adminAtualizado.getId());
     }
+
 }
