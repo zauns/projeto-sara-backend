@@ -27,7 +27,7 @@ import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
 public class AdministradorServiceTest {
 
     @Mock//define uma dependência simulada, no caso as interfaces
-    private ContaRepositoryPort<Administrador> repositorio;
+    private ContaRepositoryPort<Administrador> repositorio; //trocar este tipo para uma porta definida
 
     @Mock
     private PasswordEncoder passwordEncoder;
