@@ -1,31 +1,27 @@
 package sara.projeto.saraEmprega.model;
 
-
 import jakarta.persistence.*;
+import java.util.UUID;
 import lombok.*;
 
-import java.util.UUID;
+@Entity
+@Table(name = "curriculums")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
+public class Curriculum {
 
-    @Entity
-    @Table(name = "curriculums")
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Getter
-    @Setter
-    @Builder
-    public class Curriculum {
+    @Id
+    @Builder.Default
+    private UUID id = UUID.randomUUID();
 
-        @Id
-        @Builder.Default
-        private UUID id = UUID.randomUUID();
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] data;
 
-        @Lob
-        @Column(columnDefinition = "LONGBLOB")
-        private byte[] data;
-
-        @OneToOne
-        @JoinColumn(name = "user_id", referencedColumnName = "id")
-        private User user;
-    }
-
-
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+}

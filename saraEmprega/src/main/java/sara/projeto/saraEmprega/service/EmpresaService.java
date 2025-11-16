@@ -1,63 +1,90 @@
 package sara.projeto.saraEmprega.service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.transaction.annotation.Transactional;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.dto.EmpresaRequestDTO;
 import sara.projeto.saraEmprega.model.Empresa;
-import sara.projeto.saraEmprega.repository.EmpresaRepository;
+import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
+import sara.projeto.saraEmprega.ports.EmpresaRepositoryPort;
+import sara.projeto.saraEmprega.ports.EmpresaServicePort;
 
 @Service
-public class EmpresaService extends ContaService<Empresa> {
+@RequiredArgsConstructor
+public class EmpresaService extends ContaService<Empresa> implements EmpresaServicePort {
 
-    @Autowired
-    private EmpresaRepository empresaRepository;
+    private final EmpresaRepositoryPort repositorio;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    protected JpaRepository<Empresa, UUID> repositorio() {
-        return empresaRepository;
+    protected ContaRepositoryPort<Empresa> repositorio() {
+        return this.repositorio;
     }
 
+    @Override
     @Transactional
     public ContaResponseDTO criar(EmpresaRequestDTO dto) {
         Empresa empresa = new Empresa();
-        mapToEmpresa(dto, empresa);
-        Empresa novaEmpresa = empresaRepository.save(empresa);
+        mapear(dto, empresa);
+        Empresa novaEmpresa = repositorio.salvar(empresa);
         return new ContaResponseDTO(novaEmpresa);
     }
 
+    @Override
     @Transactional
     public ContaResponseDTO atualizar(UUID id, EmpresaRequestDTO dto) {
-        Empresa empresa = empresaRepository.findById(id)
+        Empresa empresa = repositorio.encontrarPorId(id)
             .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + id));
-        mapToEmpresa(dto, empresa);
-        Empresa atualizada = empresaRepository.save(empresa);
+        mapear(dto, empresa);
+        Empresa atualizada = repositorio.salvar(empresa);
         return new ContaResponseDTO(atualizada);
     }
 
     //utilizado em vagas
     @Transactional(readOnly = true)
     public Empresa buscarEmpresaPorId(UUID id) {
-        Empresa empresa = empresaRepository.findById(id)
+        Empresa empresa = repositorio.encontrarPorId(id)
             .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + id));
         return empresa;
     }
 
-    private void mapToEmpresa(EmpresaRequestDTO dto, Empresa empresa) {
+    private void mapear(EmpresaRequestDTO dto, Empresa empresa) {
         empresa.setNome(dto.nome());
         empresa.setEmail(dto.email());
         empresa.setTelefone(dto.telefone());
         empresa.setEndereco(dto.endereco());
-        empresa.setSenha(dto.senha());
+        empresa.setSenhaHash(passwordEncoder.encode(dto.senha()));
         empresa.setCnpj(dto.cnpj());
         empresa.setBiografia(dto.biografia());
         empresa.setLinks(dto.links());
+        empresa.setValidada(false);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ContaResponseDTO> getEmpresasNaoValidadas() {
+        // Você precisará adicionar o método findByIsValidadaFalse() no seu EmpresaRepository
+        return repositorio.findByIsValidadaFalse().stream()
+            .map(ContaResponseDTO::new)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public ContaResponseDTO aprovarEmpresa(UUID id) {
+        Empresa empresa = repositorio.encontrarPorId(id)
+            .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada"));
+        
+        empresa.setValidada(true);
+        repositorio.salvar(empresa);
+        return new ContaResponseDTO(empresa);
     }
 
 }

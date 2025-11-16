@@ -10,7 +10,8 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "3306:3306"
+      - "3307:3306"
+    command: --bind-address=0.0.0.0
     networks:
       - app-network
     volumes:

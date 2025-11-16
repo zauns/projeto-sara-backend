@@ -7,7 +7,9 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+
 import sara.projeto.saraEmprega.ports.TokenServicesPort;
+import sara.projeto.saraEmprega.util.jwt.ContaAutenticada;
 
 import java.time.Instant;
 import java.util.stream.Collectors;
@@ -22,6 +24,9 @@ public class TokenServices implements TokenServicesPort {
         Instant now = Instant.now();
         long expiry = 3600L;
 
+        ContaAutenticada principal = (ContaAutenticada) authentication.getPrincipal();
+        String userId = principal.getConta().getId().toString();
+                            
         String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
@@ -31,6 +36,7 @@ public class TokenServices implements TokenServicesPort {
                 .expiresAt(now.plusSeconds(expiry))
                 .subject(authentication.getName())
                 .claim("scope", scope)
+                .claim("userId", userId)
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }

@@ -2,8 +2,7 @@ package sara.projeto.saraEmprega.service;
 
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,32 +10,40 @@ import jakarta.persistence.EntityNotFoundException;
 import sara.projeto.saraEmprega.dto.AdministradorRequestDTO;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.model.Administrador;
-import sara.projeto.saraEmprega.repository.AdministradorRepository;
+import sara.projeto.saraEmprega.ports.AdministradorServicePort;
+import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
 
 @Service
-public class AdministradorService extends ContaService<Administrador> {
+public class AdministradorService extends ContaService<Administrador> implements AdministradorServicePort {
 
-    @Autowired
-    private AdministradorRepository administradorRepository;
+    private final ContaRepositoryPort<Administrador> repositorio;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    protected JpaRepository<Administrador, UUID> repositorio() {
-        return administradorRepository;
+    protected ContaRepositoryPort<Administrador> repositorio() {
+        return this.repositorio;
     }
 
+    public AdministradorService(ContaRepositoryPort<Administrador> repositorio, PasswordEncoder passwordEncoder) {
+        this.repositorio = repositorio;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
     @Transactional
     public ContaResponseDTO criar(AdministradorRequestDTO dto) {
         Administrador administrador = new Administrador();
         mapToAdministrador(dto, administrador);
-        administradorRepository.save(administrador);
+        repositorio.salvar(administrador);
         return new ContaResponseDTO(administrador);
     }
 
+    @Override
     @Transactional
     public ContaResponseDTO atualizar(UUID id, AdministradorRequestDTO dto){
-        Administrador administrador = administradorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Administrador não encontrado"));
+        Administrador administrador = repositorio.encontrarPorId(id).orElseThrow(() -> new EntityNotFoundException("Administrador não encontrado"));
         mapToAdministrador(dto, administrador);
-        administradorRepository.save(administrador);
+        repositorio.salvar(administrador);
         return new ContaResponseDTO(administrador);
     }
 
@@ -46,8 +53,9 @@ public class AdministradorService extends ContaService<Administrador> {
         administrador.setEmail(dto.email());
         administrador.setTelefone(dto.telefone());
         administrador.setEndereco(dto.endereco());
-        administrador.setSenha(dto.senha());
+        administrador.setSenhaHash(passwordEncoder.encode(dto.senha()));
         administrador.setSuperAdmin(dto.isSuperAdmin());
     }
+
 
 }

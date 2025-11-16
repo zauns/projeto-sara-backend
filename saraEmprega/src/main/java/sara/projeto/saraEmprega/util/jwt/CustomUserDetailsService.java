@@ -1,25 +1,37 @@
 package sara.projeto.saraEmprega.util.jwt;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import sara.projeto.saraEmprega.model.User;
-import sara.projeto.saraEmprega.ports.UserServicePort;
+
+import sara.projeto.saraEmprega.model.Conta;
+import sara.projeto.saraEmprega.model.Empresa;
+import sara.projeto.saraEmprega.model.Secretaria;
+import sara.projeto.saraEmprega.repository.ContaRepository;
 
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserServicePort  userService;
+    private final ContaRepository repositorio;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User toReturn = userService.getUserByMail(username);
-        if(toReturn == null){
-            throw new UsernameNotFoundException(username);
+        Conta toReturn = repositorio.findByEmail(username).orElseThrow(
+            () -> new UsernameNotFoundException("Usuário não encontrado: " + username));
+        if (toReturn instanceof Empresa empresa) {
+            if (!empresa.isValidada()) {
+                throw new LockedException("Conta da empresa '" + username + "' aguardando aprovação.");
+            }
+        } else if (toReturn instanceof Secretaria secretaria) {
+            if (!secretaria.isValidada()) {
+                throw new LockedException("Conta da secretaria '" + username + "' aguardando aprovação.");
+            }
         }
-        return new UserAuthenticated(toReturn);
+        return new ContaAutenticada(toReturn);
     }
 }

@@ -3,21 +3,17 @@ package sara.projeto.saraEmprega.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 
 @Entity
-@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class User extends Account {
-
-    String firstName;
+public class User extends Conta {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Curriculum curriculum;
@@ -29,4 +25,3 @@ public class User extends Account {
         }
     }
 }
-

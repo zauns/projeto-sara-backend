@@ -11,17 +11,18 @@ import sara.projeto.saraEmprega.dto.VagaRequestDTO;
 import sara.projeto.saraEmprega.dto.VagaResponseDTO;
 import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.model.Vaga;
+import sara.projeto.saraEmprega.ports.EmpresaRepositoryPort;
 import sara.projeto.saraEmprega.repository.VagaRepository;
 
 @Service
 public class VagaService {
-    
-    private final VagaRepository vagaRepository;
-    private final EmpresaService empresaService;
 
-    public VagaService(VagaRepository vagaRepository, EmpresaService empresaService) {
+    private final VagaRepository vagaRepository;
+    private final EmpresaRepositoryPort empresaRepository;
+
+    public VagaService(VagaRepository vagaRepository, EmpresaRepositoryPort empresaRepositoy) {
         this.vagaRepository = vagaRepository;
-        this.empresaService = empresaService;
+        this.empresaRepository = empresaRepositoy;
     }
 
     //CRIAR VAGA
@@ -51,7 +52,9 @@ public class VagaService {
 
     @Transactional
     public List<VagaResponseDTO> buscarVagasPorEmpresa(UUID empresaId){
-        empresaService.buscarPorId(empresaId); // Verifica se a empresa existe
+        if (!empresaRepository.existePorId(empresaId)) {
+            throw new EntityNotFoundException("Empresa não encontrada com o ID: " + empresaId);
+        } // Verifica se a empresa existe
 
         return vagaRepository
             .findByEmpresaId(empresaId)
@@ -69,7 +72,7 @@ public class VagaService {
         }
         vagaRepository.deleteById(id);
     }
-    
+
     //ATUALIZAR VAGA
     @Transactional
     public VagaResponseDTO atualizarVaga(
@@ -92,8 +95,9 @@ public class VagaService {
         vaga.setTitulo(dto.titulo());
         vaga.setDescricao(dto.descricao());
 
-        Empresa empresa = empresaService.buscarEmpresaPorId(dto.empresaId());
-        
+        Empresa empresa = empresaRepository.encontrarPorId(dto.empresaId())
+            .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + dto.empresaId()));
+
         vaga.setEmpresa(empresa);
     }
 

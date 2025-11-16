@@ -1,44 +1,69 @@
 package sara.projeto.saraEmprega.service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.dto.SecretariaRequestDTO;
 import sara.projeto.saraEmprega.model.Secretaria;
-import sara.projeto.saraEmprega.repository.SecretariaRepository;
+import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
+import sara.projeto.saraEmprega.ports.SecretariaRepositoryPort;
+import sara.projeto.saraEmprega.ports.SecretariaServicePort;
 
 @Service
-public class SecretariaService extends ContaService<Secretaria> {
+@RequiredArgsConstructor
+public class SecretariaService extends ContaService<Secretaria> implements SecretariaServicePort {
 
-    @Autowired
-    private SecretariaRepository secretariaRepository;
+    private final SecretariaRepositoryPort repositorio;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    protected JpaRepository<Secretaria, UUID> repositorio() {
-        return secretariaRepository;
+    protected ContaRepositoryPort<Secretaria> repositorio() {
+        return repositorio;
     }
 
+    @Override
     @Transactional
     public ContaResponseDTO criar(SecretariaRequestDTO dto) {
         Secretaria secretaria = new Secretaria();
         mapToSecretaria(dto, secretaria);
-        Secretaria novaSecretaria = secretariaRepository.save(secretaria);
+        Secretaria novaSecretaria = repositorio.salvar(secretaria);
         return new ContaResponseDTO(novaSecretaria);
     }
 
+    @Override
     @Transactional
     public ContaResponseDTO atualizar(UUID id, SecretariaRequestDTO dto) {
-        Secretaria secretaria = secretariaRepository.findById(id)
+        Secretaria secretaria = repositorio.encontrarPorId(id)
                 .orElseThrow(() -> new EntityNotFoundException("Secretaria não encontrada com o ID: " + id));
         mapToSecretaria(dto, secretaria);
-        Secretaria atualizada = secretariaRepository.save(secretaria);
+        Secretaria atualizada = repositorio.salvar(secretaria);
         return new ContaResponseDTO(atualizada);
+    }
+
+    @Transactional
+    public List<ContaResponseDTO> getSecretariasNaoValidadas() {
+        return repositorio.findByIsValidadaFalse()
+            .stream()
+            .map(ContaResponseDTO::new)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public ContaResponseDTO aprovarSecretaria(UUID id) {
+        Secretaria secretaria = repositorio.encontrarPorId(id)
+            .orElseThrow(() -> new EntityNotFoundException("Secretaria não encontrada"));
+        
+        secretaria.setValidada(true);
+        repositorio.salvar(secretaria);
+        return new ContaResponseDTO(secretaria);
     }
 
     private void mapToSecretaria(SecretariaRequestDTO dto, Secretaria secretaria) {
@@ -46,7 +71,9 @@ public class SecretariaService extends ContaService<Secretaria> {
         secretaria.setEmail(dto.email());
         secretaria.setTelefone(dto.telefone());
         secretaria.setEndereco(dto.endereco());
-        secretaria.setSenha(dto.senha());
+        secretaria.setSenhaHash(passwordEncoder.encode(dto.senha()));
         secretaria.setMunicipio(dto.municipio());
+        secretaria.setValidada(false);
     }
+
 }

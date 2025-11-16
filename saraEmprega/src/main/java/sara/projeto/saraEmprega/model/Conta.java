@@ -6,11 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Getter
 @Setter
+@SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class Conta {
@@ -24,7 +26,7 @@ public abstract class Conta {
     @Column(unique = true)
     private String email;
 
-    private String senha;
+    private String senhaHash;
     private String endereco;
     private String telefone;
 }

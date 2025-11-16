@@ -10,6 +10,6 @@ import java.util.UUID;
 @Repository
 public interface CurriculumRepository extends JpaRepository<Curriculum, UUID> {
 
-    Optional<Curriculum> findByUser_Id(UUID userId);
+    Optional<Curriculum> findByUserId(UUID userId);
 
 }

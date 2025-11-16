@@ -28,12 +28,12 @@ public class Mapper {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(4);
         return User.builder()
                 .email(userDTO.email())
-                .firstName(userDTO.name())
-                .hashedPassword(passwordEncoder.encode(userDTO.password()))
+                .nome(userDTO.name())
+                .senhaHash(passwordEncoder.encode(userDTO.password()))
                 .build();
     }
 
     public static UserDTO mapToUserRequestDTO(User user){
-        return new UserDTO(user.getFirstName(), user.getEmail(),  user.getHashedPassword());
+        return new UserDTO(user.getNome(), user.getEmail(),  user.getSenhaHash());
     }
 }

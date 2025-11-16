@@ -1,9 +1,13 @@
 package sara.projeto.saraEmprega.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,11 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.dto.EmpresaRequestDTO;
+import sara.projeto.saraEmprega.ports.EmpresaServicePort;
 import sara.projeto.saraEmprega.service.EmpresaService;
 
 @RestController
 @RequestMapping("/empresa")
-public class EmpresaController extends ContasController<EmpresaRequestDTO, EmpresaService> {
+public class EmpresaController extends ContasController<EmpresaRequestDTO, EmpresaServicePort> {
 
     protected EmpresaController(EmpresaService service) {
         super(service);
@@ -31,6 +36,7 @@ public class EmpresaController extends ContasController<EmpresaRequestDTO, Empre
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('EMPRESA') and authentication.principal.claims['userId'] == #id.toString() or hasRole('SUPER_ADMIN')")
     public ResponseEntity<ContaResponseDTO> atualizar(
             @PathVariable UUID id,
             @Valid @RequestBody EmpresaRequestDTO dto) {
@@ -38,6 +44,24 @@ public class EmpresaController extends ContasController<EmpresaRequestDTO, Empre
         return ResponseEntity.ok(contaAtualizada);
     }
 
-    
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    @GetMapping("/pendentes")
+    public ResponseEntity<List<ContaResponseDTO>> buscarPendentes() {
+        return ResponseEntity.ok(service.getEmpresasNaoValidadas());
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    @PutMapping("/aprovar/{id}")
+    public ResponseEntity<ContaResponseDTO> aprovarEmpresa(@PathVariable UUID id) {
+        return ResponseEntity.ok(service.aprovarEmpresa(id));
+    }
+
+    @Override
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('EMPRESA') and authentication.principal.claims['userId'] == #id.toString()")
+    public ResponseEntity<Void> excluirConta(@PathVariable UUID id) {
+        service.excluirConta(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

@@ -11,8 +11,8 @@ import java.security.interfaces.RSAPublicKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,14 +27,16 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 class SecurityConfiguration {
 
-    @Value("${spring.util.encoderStrength}")
-    private int encoderStrong;
+    //@Value("${spring.util.encoderStrength}")
+    //private int encoderStrong;
 
 
     @Value("${jwt.public-key}")
@@ -48,16 +50,22 @@ class SecurityConfiguration {
         throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/token",
-                            "/api/public/**",
-                            "/health",
-                            "/actuator/health",
-                            "/actuator/info"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                    .requestMatchers(HttpMethod.POST, "/empresa").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/secretaria").permitAll()
+                    .requestMatchers("/token",
+                        
+                        "/api/public/**",
+                        "/health",
+                        "/actuator/health",
+                        "/actuator/info"
+            
+                    ).permitAll()
+                    .anyRequest().authenticated()
                 )
                 .csrf((csrf) -> csrf.disable())
-                .oauth2ResourceServer((jwt) -> jwt.jwt(Customizer.withDefaults()))
+                .oauth2ResourceServer(oauth2 -> oauth2
+                    .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling((exceptions) -> exceptions
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
@@ -87,7 +95,18 @@ class SecurityConfiguration {
     }
 
     @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        grantedAuthoritiesConverter.setAuthorityPrefix("");
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("scope");
+
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        return jwtAuthenticationConverter;
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(encoderStrong);
+        return new BCryptPasswordEncoder(4);
     }
 }
