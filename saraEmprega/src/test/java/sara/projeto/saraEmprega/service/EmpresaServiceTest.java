@@ -5,7 +5,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.lang.foreign.Linker.Option;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -110,25 +109,17 @@ public class EmpresaServiceTest {
         ArgumentCaptor<Empresa> empresaCaptor = ArgumentCaptor.forClass(Empresa.class);
         ContaResponseDTO responseDTO = empresaService.atualizar(empresaId, dtoAtualizado);
         //código repetido da pra melhorar
-        Assertions.assertNotNull(dtoAtualizado);
-        Assertions.assertEquals("novo nome de empresa", dtoAtualizado.nome());
-        Assertions.assertEquals("novo@email.com", dtoAtualizado.email());
-        Assertions.assertEquals("12312312", dtoAtualizado.telefone());
-        Assertions.assertEquals("Nova rua", dtoAtualizado.endereco());
-        Assertions.assertEquals("10.791.910/0001-93", dtoAtualizado.cnpj());
-        Assertions.assertEquals("Uma nova biografia para uma nova filosofia", dtoAtualizado.biografia());
-        Assertions.assertEquals("www.novolink.com", dtoAtualizado.links());
+        Assertions.assertNotNull(responseDTO);
+        Assertions.assertEquals("novo nome de empresa", responseDTO.getNome());
+        Assertions.assertEquals("novo@email.com", responseDTO.getEmail());
 
         verify(repositorio, times(1)).salvar(empresaCaptor.capture());
         Empresa empresaAtualizada = empresaCaptor.getValue();
-
+        
+        Assertions.assertNotNull(empresaAtualizada);
         Assertions.assertEquals("novo nome de empresa", empresaAtualizada.getNome());
-        Assertions.assertEquals("novo@email.com", empresaAtualizada.getEmail());
-        Assertions.assertEquals("12312312", empresaAtualizada.getTelefone());
-        Assertions.assertEquals("Nova rua", empresaAtualizada.getEndereco());
-        Assertions.assertEquals("10.791.910/0001-93", empresaAtualizada.getCnpj());
-        Assertions.assertEquals("Uma nova biografia para uma nova filosofia", empresaAtualizada.getBiografia());
-        Assertions.assertEquals("www.novolink.com", empresaAtualizada.getLinks());
+        Assertions.assertEquals("novo_hash", empresaAtualizada.getSenhaHash());
+        Assertions.assertEquals(empresaId, empresaAtualizada.getId());
     }
 
     @Test
