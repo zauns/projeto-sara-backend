@@ -2,10 +2,17 @@
 server:
   port: ${SERVER_PORT:8080}
 
+cloudflare:
+  r2:
+    endpoint: https://9cdcbd46f7ba87af9983bd5f006fad56.r2.cloudflarestorage.com
+    region: auto
+    access-key: 41962b375fb89bd3005309d0ad9ceada
+    secret-key: ed7ec917cb0359c72987a34fc9c06eca359079f7435e74ec7d20b1f00853e655
+    bucket: sara-emprega-pdf
+
 spring:
   application:
     name: sara-emprega
-
   util:
     encoderStrength: 4
 
@@ -55,3 +62,8 @@ logging:
   level:
     org.hibernate.SQL: DEBUG
     org.springframework.jdbc.datasource: DEBUG
+
+youtube:
+  api:
+    key: AIzaSyA4KNeM3jYrDEIWT78-9NU42QmfgG8-UZM
+    url: https://www.googleapis.com/youtube/v3/videos
