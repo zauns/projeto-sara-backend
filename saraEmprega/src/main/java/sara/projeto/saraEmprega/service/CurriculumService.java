@@ -15,22 +15,25 @@ import sara.projeto.saraEmprega.ports.UserServicePort;
 public class CurriculumService implements CurriculumServicePort {
 
     private UserServicePort userService;
+    private R2Service r2Service;
+    private DocumentRepositoryPort documentRepository;
 
     @Override
-    public Curriculum getCurriculum(String userMail) {
-        User user = userService.findByEmail(userMail);
-        if (user.getCurriculum() == null){
-            throw new UserNotFoundException("curriculo nao encontrado");
+    public byte[] getCurriculum(String userMail) {
+        User user = userService.getUserByMail(userMail);
+        if (user.getDocument() == null){
+                throw new UserNotFoundException("curriculo nao encontrado");
         }
-        return user.getCurriculum();
+        return r2Service.download(user.getDocument().getPathR2());
     }
 
     @Override
-    public void setCurriculum(Curriculum curriculum, String mail) {
-        User user = userService.findByEmail(mail);
-        user.setCurriculum(curriculum);
-        curriculum.setUser(user);
-        userService.updateCurriculum(user);
+    public Document saveCurriculum(Document document, String mail, MultipartFile file) throws IOException {
+        User user = userService.getUserByMail(mail);
+        String key = r2Service.upload(user.getId(),document.getDocumentType(),file, document.getDocumentName());
+        document.setPathR2(key);
+        document.setUser(user);
+        userService.curriculumUpdate(user);
+        return documentRepository.saveDocument(document);
     }
-
 }

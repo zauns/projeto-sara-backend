@@ -16,12 +16,12 @@ import lombok.experimental.SuperBuilder;
 public class User extends Conta {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Curriculum curriculum;
+    private Document document;
 
-    public void setCurriculum(Curriculum curriculum) {
-        this.curriculum = curriculum;
-        if (curriculum != null) {
-            curriculum.setUser(this);
+    public void setDocument(Document doc) {
+        this.document = doc;
+        if (document != null) {
+            document.setUser(this);
         }
     }
 }
