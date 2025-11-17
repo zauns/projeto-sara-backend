@@ -12,7 +12,6 @@ import java.util.Optional;
 public class DocumentRepositoryPort {
     private final DocumentRepository documentRepository;
 
-
     public Document saveDocument(Document document) {
         return documentRepository.save(document);
     }

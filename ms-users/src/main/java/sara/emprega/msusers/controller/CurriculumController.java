@@ -25,8 +25,7 @@ public class CurriculumController {
     @PostMapping()
     public ResponseEntity<CurriculumDTO> saveCurriculum(@RequestParam("file") MultipartFile file
             ,Authentication auth, @RequestParam("name") String fileName) throws IOException {
-            System.out.println("chegou no endpoint");
-            System.out.println(file.getName());
+
             Validate.validatePDF(file);
             Document document = Mapper.mapToCurriculum(fileName);
             Jwt jwt = (Jwt) auth.getPrincipal();

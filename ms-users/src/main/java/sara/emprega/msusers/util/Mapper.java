@@ -24,6 +24,14 @@ public class Mapper {
                 .build();
     }
 
+    public static Document mapToContentPDF(String fileName) throws IOException {
+        return Document.builder()
+                .documentType("content")
+                .documentName(fileName)
+                .id(UUID.randomUUID())
+                .build();
+    }
+
     public static User MapToUser(UserDTO userDTO) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(4);
         return User.builder()
