@@ -238,7 +238,7 @@ No vscode existe uma extensão chamada [**container tools**](https://open-vsx.or
 3. Abra o arquivo `docker-compose`.
 4. A extensão irá exibir um botão para iniciar cada serviço, 
 
-### [![Exemplo]](demo-vscode.mp4)
+### [**Exemplo**](https://davyusow.github.io/builds-demo-sara-emprega/)
 
 > Aviso! ao clicar em `Run All Services` o docker-compose irá iniciar o build completo, no exemplo do vídeo eu cancelei e fiz o `docker up -d` para apenas iniciar, pois o projeto já estava compilado.
 
@@ -252,7 +252,7 @@ O Intellij também existe um plugin para lidar com dockers e docker compose, por
 4. Instale o plugin.
 5. Clique para rodar o docker compose.
 
-### [![Exemplo]](demo-intellij.mp4)
+### [**Exemplo**]([demo-intellij.mp4](https://davyusow.github.io/builds-demo-sara-emprega/))
 
 > Semelhante ao vscode, no vídeo o projeto já estava compilado, na primeira vez vai levar mais tempo por conta de precisar instalar as dependências
 
