@@ -33,3 +33,4 @@ projeto-sara-frontend/
 .env
 /jwtkeys/
 saraEmprega/jwtkeys/*
+curl_testes.sh
