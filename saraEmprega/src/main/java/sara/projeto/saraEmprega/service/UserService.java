@@ -1,71 +1,63 @@
-package sara.projeto.saraEmprega.service;
+package sara.emprega.msusers.service;
 
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sara.projeto.saraEmprega.dto.UserDTO;
-import sara.projeto.saraEmprega.model.User;
-import sara.projeto.saraEmprega.ports.UserRepositoryPort;
-import sara.projeto.saraEmprega.ports.UserServicePort;
-import sara.projeto.saraEmprega.util.user_statagy.UpdateContext;
+import sara.emprega.msusers.dto.UserDTO;
+import sara.emprega.msusers.model.User;
+import sara.emprega.msusers.ports.UserRepositoryPort;
+import sara.emprega.msusers.ports.UserServicePort;
+import sara.emprega.msusers.util.user_concurrency.strategy.UserUpdateContext;
+import sara.emprega.msusers.util.user_strategy.UpdateContext;
+import java.util.UUID;
 
+//TODO
 @Service
 @Transactional
 @AllArgsConstructor
 public class UserService implements UserServicePort {
 
-    private final UserRepositoryPort userRepository;
-    private final UpdateContext updateContext;
+    UserRepositoryPort userRepository;
+    UpdateContext updateContext;
 
     @Override
-    public User findByEmail(String email) {
-        return userRepository
-            .findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("Usuária não encontrada!"));
+    public User getUserByMail(String mail) {
+        return userRepository.findByMail(mail);
     }
 
     @Override
-    public User findById(UUID id) {
-        return userRepository
-            .findById(id)
-            .orElseThrow(() -> new RuntimeException("Usuária não encontrada!"));
+    public User getUserById(UUID id) {
+        return null;
     }
 
     @Override
-    public User updateUser(UserDTO userDTO, UUID id) {
-        User user = findById(id);
+    public User updateUser(UserDTO userDTO, String mail) {
+        User user = userRepository.findByMail(mail);
         updateContext.execute(user, userDTO);
-        return userRepository.save(user);
+        userRepository.update(user);
+        return user;
     }
 
-    public User updateCurriculum(User user) {
-        return userRepository.save(user);
+    public User curriculumUpdate(User user) {
+        return userRepository.update(user);
     }
 
-    public User createUser(User user) {
-        if (!userRepository.existsByEmail(user.getEmail())) {
-            return userRepository.save(user);
+    public User CreateUser(String claim, User user) {
+        if(claim.contains("ROLE_SECRETARY")){
+            return userRepository.create(user);
         }
         throw new IllegalArgumentException("usuario mal formatado");
     }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
-    @Override
-    public void deleteUserById(UUID id) {
-        if (!userRepository.existsById(id)) {
-            throw new RuntimeException("Usuário não encontrado"); // ou EntityNotFoundException
-        }
-        userRepository.deleteById(id);
-    }
+}
 
     /*
     @Override
     public void updateUserRoles(UUID id, List<String> roles) {
+
+    }
+
+    @Override
+    public void deleteUserById(UUID id) {
 
     }
 
@@ -79,4 +71,5 @@ public class UserService implements UserServicePort {
         return false;
     }
 */
-}
+
+
