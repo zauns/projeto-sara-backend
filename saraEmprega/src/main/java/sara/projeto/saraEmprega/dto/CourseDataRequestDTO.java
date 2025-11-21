@@ -1,4 +1,4 @@
-package sara.emprega.msusers.dto;
+package sara.projeto.saraEmprega.dto;
 
 import java.util.List;
 

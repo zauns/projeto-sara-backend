@@ -1,4 +1,4 @@
-package sara.emprega.msusers.service;
+package sara.projeto.saraEmprega.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

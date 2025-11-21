@@ -1,4 +1,4 @@
-package sara.emprega.msusers.controller;
+package sara.projeto.saraEmprega.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -7,11 +7,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import sara.emprega.msusers.dto.CurriculumDTO;
-import sara.emprega.msusers.model.Document;
-import sara.emprega.msusers.ports.curriculum.CurriculumServicePort;
-import sara.emprega.msusers.util.Mapper;
-import sara.emprega.msusers.util.Validate;
+import sara.projeto.saraEmprega.dto.CurriculumDTO;
+import sara.projeto.saraEmprega.model.Document;
+import sara.projeto.saraEmprega.ports.curriculum.CurriculumServicePort;
+import sara.projeto.saraEmprega.util.Mapper;
+import sara.projeto.saraEmprega.util.Validate;
 
 import java.io.IOException;
 

@@ -1,6 +1,7 @@
 package sara.projeto.saraEmprega.util.user_statagy;
 
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import sara.projeto.saraEmprega.dto.UserDTO;

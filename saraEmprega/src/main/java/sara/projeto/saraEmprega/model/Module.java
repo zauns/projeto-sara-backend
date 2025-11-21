@@ -1,11 +1,11 @@
-package sara.emprega.msusers.model;
+package sara.projeto.saraEmprega.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sara.emprega.msusers.util.youtube.CourseEpisode;
+import sara.projeto.saraEmprega.util.youtube.CourseEpisode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

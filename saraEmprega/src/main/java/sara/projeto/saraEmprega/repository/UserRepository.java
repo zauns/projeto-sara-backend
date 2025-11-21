@@ -9,7 +9,7 @@ import sara.projeto.saraEmprega.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-    Optional<User> findById(UUID id);
-    Optional<User> findByEmail(String username);
+    Optional<User> findById(UUID id); //esse método Precisa retornar um Optional
+    User findByEmail(String username);
     boolean existsByEmail(String email);
 }

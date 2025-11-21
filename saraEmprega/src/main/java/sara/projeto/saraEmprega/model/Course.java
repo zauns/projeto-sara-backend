@@ -1,11 +1,20 @@
-package sara.emprega.msusers.model;
-
-import jakarta.persistence.*;
-import lombok.*;
+package sara.projeto.saraEmprega.model;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @Entity
@@ -28,5 +37,7 @@ public class Course {
     List<String> creators;
     int rating;
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @Builder.Default
     private List<Module> modules = new ArrayList<>();
 }

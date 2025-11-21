@@ -1,4 +1,4 @@
-package sara.emprega.msusers.exception;
+package sara.projeto.saraEmprega.exception;
 
 public class VideoNotFoundException extends RuntimeException {
     public VideoNotFoundException(String message) {

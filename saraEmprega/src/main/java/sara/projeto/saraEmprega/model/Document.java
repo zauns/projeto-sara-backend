@@ -1,4 +1,4 @@
-package sara.emprega.msusers.model;
+package sara.projeto.saraEmprega.model;
 
 
 import jakarta.persistence.*;

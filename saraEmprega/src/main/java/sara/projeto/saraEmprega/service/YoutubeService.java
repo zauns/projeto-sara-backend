@@ -1,12 +1,11 @@
-package sara.emprega.msusers.service;
+package sara.projeto.saraEmprega.service;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import sara.emprega.msusers.util.youtube.YoutubeApiResponse;
-import sara.emprega.msusers.util.youtube.YoutubeFeignClient;
-import sara.emprega.msusers.util.youtube.YoutubeUtils;
+import sara.projeto.saraEmprega.util.youtube.YoutubeApiResponse;
+import sara.projeto.saraEmprega.util.youtube.YoutubeFeignClient;
+import sara.projeto.saraEmprega.util.youtube.YoutubeUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,4 +48,3 @@ public class YoutubeService {
     }
 
 }
-

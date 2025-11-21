@@ -1,11 +1,9 @@
-package sara.emprega.msusers.ports;
+package sara.projeto.saraEmprega.ports;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import sara.emprega.msusers.model.Document;
-import sara.emprega.msusers.repository.DocumentRepository;
-
-import java.util.Optional;
+import sara.projeto.saraEmprega.model.Document;
+import sara.projeto.saraEmprega.repository.DocumentRepository;
 
 @Component
 @AllArgsConstructor

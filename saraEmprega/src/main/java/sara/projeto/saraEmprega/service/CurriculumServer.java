@@ -15,7 +15,8 @@ public class CurriculumServer implements CurriculumServerPort {
 
     @Override
     public Curriculum getCurriculum(ContaAutenticada auth) {
-        return curriculumService.getCurriculum(auth.getEmail());
+        //return curriculumService.getCurriculum(auth.getEmail());
+        return null;
     }
 
     @Override

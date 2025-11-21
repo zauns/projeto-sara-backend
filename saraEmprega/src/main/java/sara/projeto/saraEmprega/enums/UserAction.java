@@ -1,4 +1,4 @@
-package sara.emprega.msusers.enums;
+package sara.projeto.saraEmprega.enums;
 
 public enum UserAction {
 

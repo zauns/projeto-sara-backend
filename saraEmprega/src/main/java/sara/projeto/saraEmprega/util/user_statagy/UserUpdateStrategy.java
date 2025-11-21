@@ -1,5 +1,6 @@
 package sara.projeto.saraEmprega.util.user_statagy;
 
+
 import sara.projeto.saraEmprega.dto.UserDTO;
 import sara.projeto.saraEmprega.model.User;
 

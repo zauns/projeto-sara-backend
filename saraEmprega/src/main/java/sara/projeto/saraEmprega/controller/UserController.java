@@ -1,4 +1,4 @@
-package sara.emprega.msusers.controller;
+package sara.projeto.saraEmprega.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -8,15 +8,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import sara.emprega.msusers.dto.UserDTO;
-import sara.emprega.msusers.enums.UserAction;
-import sara.emprega.msusers.model.User;
-import sara.emprega.msusers.ports.UserServicePort;
-import sara.emprega.msusers.util.Mapper;
-import sara.emprega.msusers.util.jwt.UserAuthenticated;
-import sara.emprega.msusers.util.user_concurrency.UserProcessor;
-import sara.emprega.msusers.util.user_concurrency.abstractions.UserOperationCreate;
-import sara.emprega.msusers.util.user_concurrency.abstractions.UserOperationUpdate;
+import sara.projeto.saraEmprega.dto.UserDTO;
+import sara.projeto.saraEmprega.enums.UserAction;
+import sara.projeto.saraEmprega.util.Mapper;
+import sara.projeto.saraEmprega.util.user_concurrency.UserProcessor;
+import sara.projeto.saraEmprega.util.user_concurrency.abstractions.UserOperationCreate;
+import sara.projeto.saraEmprega.util.user_concurrency.abstractions.UserOperationUpdate;
 
 @Validated
 @RestController

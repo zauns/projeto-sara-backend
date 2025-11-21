@@ -1,4 +1,4 @@
-package sara.projeto.saraEmprega.config.security;
+package sara.projeto.saraEmprega.config;
 
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -53,12 +53,12 @@ class SecurityConfiguration {
                     .requestMatchers(HttpMethod.POST, "/empresa").permitAll()
                     .requestMatchers(HttpMethod.POST, "/secretaria").permitAll()
                     .requestMatchers("/token",
-                        
+
                         "/api/public/**",
                         "/health",
                         "/actuator/health",
                         "/actuator/info"
-            
+
                     ).permitAll()
                     .anyRequest().authenticated()
                 )

@@ -19,15 +19,20 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         return repository.save(user);
     }
 
-    @Override
-    public Optional<User> findById(UUID id) {
-        return repository.findById(id);
-    }
+    // @Override
+    // public Optional<User> findById(UUID id) {
+    //     return repository.findById(id);
+    // }
+
+    // @Override
+    // public Optional<User> findByEmail(String email) {
+    //     return repository.findByEmail(email);
+    // }
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        return repository.findByEmail(email);
-    }
+	public Optional<User> getUserById(UUID id) {
+	    return repository.findById(id);
+	}
 
     @Override
     public boolean existsByEmail(String email) {
@@ -43,4 +48,20 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     public boolean existsById(UUID id) {
         return repository.existsById(id);
     }
+
+	@Override
+	public User getUserByEmail(String email) {
+	    return repository.findByEmail(email);
+	}
+
+	@Override
+	public User update(User user) {
+	    return repository.save(user);
+	}
+
+	@Override
+	public User create(User user) {
+	    return repository.save(user);
+	}
+
 }
