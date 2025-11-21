@@ -2,22 +2,18 @@ package sara.projeto.saraEmprega.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-
-import java.util.UUID;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.dto.UserDTO;
-import sara.projeto.saraEmprega.model.User;
-import sara.projeto.saraEmprega.ports.UserServicePort;
+import sara.projeto.saraEmprega.enums.UserAction;
 import sara.projeto.saraEmprega.util.Mapper;
+import sara.projeto.saraEmprega.util.user_concurrency.UserProcessor;
+import sara.projeto.saraEmprega.util.user_concurrency.abstractions.UserOperationCreate;
+import sara.projeto.saraEmprega.util.user_concurrency.abstractions.UserOperationUpdate;
 
 @Validated
 @RestController
@@ -25,54 +21,28 @@ import sara.projeto.saraEmprega.util.Mapper;
 @RequestMapping("/api/user")
 public class UserController {
 
-	private final UserServicePort userService;
+    UserProcessor processor;
 
-	@PutMapping("/me")
-	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<UserDTO> updateUser(
-		@RequestBody @Valid UserDTO dto,
-		Authentication auth
-	) {
-		Jwt jwt = (Jwt) auth.getPrincipal();
-		UUID userId = UUID.fromString(jwt.getClaimAsString("userId"));
-		User user = userService.updateUser(dto, userId);
-		UserDTO updatedUser = Mapper.mapToUserRequestDTO(user);
-		return ResponseEntity.ok(updatedUser);
-	}
+    @PostMapping("/update")
+    public ResponseEntity<UserDTO> updateUser(@RequestBody @Valid UserDTO userDTO, Authentication auth){
+        Jwt jwt = (Jwt) auth.getPrincipal();
+        UserOperationUpdate operationUpdate = new UserOperationUpdate(UserAction.UPDATE_USER,jwt.getSubject(),userDTO);
+        processor.addToQueue(operationUpdate);
+        return new ResponseEntity<>(userDTO,HttpStatus.OK);
+    }
 
-	@PostMapping("/create")
-	@PreAuthorize("hasRole('SECRETARIA') or hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
-	public ResponseEntity<UserDTO> createUser(
-		@RequestBody @Valid UserDTO userDTO
-	) {
-		User user = Mapper.MapToUser(userDTO);
-		User createdUser = userService.createUser(user);
-		UserDTO userResponseDTO = Mapper.mapToUserRequestDTO(createdUser);
-		return new ResponseEntity<>(userResponseDTO, HttpStatus.CREATED);
-	}
+    @PostMapping("/create")
+    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO userDTO, Authentication auth){
+        Jwt jwt = (Jwt) auth.getPrincipal();
+        UserOperationCreate operationCreate = new UserOperationCreate(UserAction.CREATE_USER,jwt.getSubject()
+                ,Mapper.MapToUser(userDTO),jwt.getClaim("scope"));
+        processor.addToQueue(operationCreate);
+        return new ResponseEntity<>(userDTO,HttpStatus.OK);
+    }
 
-	@GetMapping("/me")
-	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<ContaResponseDTO> getMe(Authentication auth) {
-		Jwt jwt = (Jwt) auth.getPrincipal();
-		UUID userId = UUID.fromString(jwt.getClaimAsString("userId"));
-		
-		User user = userService.findById(userId);
-		return ResponseEntity.ok(new ContaResponseDTO(user));
-	}
+    @GetMapping("/validate-token")
+    public ResponseEntity<String> validateToken(Authentication auth) {
+        return ResponseEntity.ok("Token válido para: " + auth.getName());
+    }
 
-	@DeleteMapping("/me")
-	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<Void> deleteMe(Authentication auth) {
-		Jwt jwt = (Jwt) auth.getPrincipal();
-		UUID userId = UUID.fromString(jwt.getClaimAsString("userId"));
-
-		userService.deleteUserById(userId);
-		return ResponseEntity.noContent().build();
-	}
-
-	@GetMapping("/validate-token")
-	public ResponseEntity<String> validateToken(Authentication auth) {
-		return ResponseEntity.ok("Token válido para: " + auth.getName());
-	}
 }

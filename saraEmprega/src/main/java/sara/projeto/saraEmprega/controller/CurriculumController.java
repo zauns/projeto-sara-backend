@@ -1,7 +1,7 @@
 package sara.projeto.saraEmprega.controller;
 
-import java.io.IOException;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -9,37 +9,44 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sara.projeto.saraEmprega.dto.CurriculumDTO;
-import sara.projeto.saraEmprega.model.Curriculum;
-import sara.projeto.saraEmprega.ports.CurriculumServicePort;
+import sara.projeto.saraEmprega.model.Document;
+import sara.projeto.saraEmprega.ports.curriculum.CurriculumServicePort;
 import sara.projeto.saraEmprega.util.Mapper;
 import sara.projeto.saraEmprega.util.Validate;
 
+import java.io.IOException;
+
+@AllArgsConstructor
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("api/curriculum")
 public class CurriculumController {
 
-    private final CurriculumServicePort curriculumService;
+    CurriculumServicePort curriculumService;
 
-    @PostMapping
-    public ResponseEntity<CurriculumDTO> saveCurriculum(
-        @RequestParam("file") MultipartFile file,
-        Authentication auth
-    ) throws IOException {
-        Validate.validatePDF(file);
-        Curriculum curriculum = Mapper.mapToCurriculum(file);
-        Jwt jwt = (Jwt) auth.getPrincipal();
-        curriculumService.setCurriculum(curriculum, jwt.getSubject());
-        return ResponseEntity.ok().body(new CurriculumDTO(curriculum.getData()));
-    }
+    @PostMapping()
+    public ResponseEntity<CurriculumDTO> saveCurriculum(@RequestParam("file") MultipartFile file
+            ,Authentication auth, @RequestParam("name") String fileName) throws IOException {
+
+            Validate.validatePDF(file);
+            Document document = Mapper.mapToCurriculum(fileName);
+            Jwt jwt = (Jwt) auth.getPrincipal();
+            curriculumService.saveCurriculum(document, jwt.getSubject(),file);
+            return ResponseEntity.ok().body(new CurriculumDTO(document.getPathR2(),document.getDocumentName()
+                    , document.getDocumentType()));
+        }
 
     @GetMapping
-    public ResponseEntity<CurriculumDTO> getCurriculum(Authentication auth) {
+    public ResponseEntity<byte[]> getCurriculum(Authentication auth) {
+
         Jwt jwt = (Jwt) auth.getPrincipal();
-        Curriculum curriculum = curriculumService.getCurriculum(jwt.getSubject());
-        CurriculumDTO curriculumDTO = new CurriculumDTO(curriculum.getData());
+        byte[] doc = curriculumService.getCurriculum(jwt.getSubject());
+
+        //CurriculumDTO curriculumDTO = new CurriculumDTO(document.getPathR2(),document.getDocumentName()
+        //        , document.getDocumentType());
+
         return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION,"inline; filename=\"curriculo.pdf\"")
-            .body(curriculumDTO);
+                .header(HttpHeaders.CONTENT_DISPOSITION
+                        , "inline; filename=\"curriculo.pdf\"")
+                .body(doc);
     }
 }

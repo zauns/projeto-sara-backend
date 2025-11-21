@@ -1,6 +1,8 @@
 package sara.projeto.saraEmprega.dto;
 
 public record CurriculumDTO(
-        byte[] data
+        String pathR2,
+        String documentName,
+        String documentType
 ) {
 }
