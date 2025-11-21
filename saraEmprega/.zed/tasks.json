@@ -1,0 +1,20 @@
+[
+    {
+        "label": "Rodar Teste da Classe Atual",
+        "command": "mvn test -Dtest=$(basename $ZED_FILE .java)",
+        "use_new_terminal": true,
+        "allow_concurrent_runs": false
+    },
+    {
+        "label": "Resetar o Docker",
+        "command": "dokcer-compose down; docker-compose up --build -d",
+        "use_new_terminal": true,
+        "allow_concurrent_runs": false
+    },
+    {
+        "label": "Resetar o Back-end",
+        "command": "dokcer-compose down; docker-compose build backend; docker-compose up -d",
+        "use_new_terminal": true,
+        "allow_concurrent_runs": false
+    }
+]
