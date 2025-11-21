@@ -5,8 +5,8 @@ import sara.projeto.saraEmprega.util.jwt.ContaAutenticada;
 
 public interface CurriculumServerPort {
     public Curriculum getCurriculum(ContaAutenticada auth);
-    public Curriculum setCurriculum(
-        Curriculum curriculum,
-        ContaAutenticada Auth
-    );
+    // public Curriculum setCurriculum(
+    //     Curriculum curriculum,
+    //     ContaAutenticada Auth
+    // );
 }

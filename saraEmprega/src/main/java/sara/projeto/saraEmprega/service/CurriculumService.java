@@ -8,16 +8,15 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import sara.projeto.saraEmprega.exception.UserNotFoundException;
-import sara.projeto.saraEmprega.model.Curriculum;
 import sara.projeto.saraEmprega.model.Document;
 import sara.projeto.saraEmprega.model.User;
-import sara.projeto.saraEmprega.ports.CurriculumServicePort;
+import sara.projeto.saraEmprega.ports.curriculum.CurriculumServicePort;
 import sara.projeto.saraEmprega.ports.DocumentRepositoryPort;
 import sara.projeto.saraEmprega.ports.UserServicePort;
 
 @Transactional
-@Service
 @AllArgsConstructor
+@Service
 public class CurriculumService implements CurriculumServicePort {
 
     private UserServicePort userService;
@@ -42,9 +41,4 @@ public class CurriculumService implements CurriculumServicePort {
         return documentRepository.saveDocument(document);
     }
 
-	@Override
-	public void setCurriculum(Curriculum curriculum, String mail) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'setCurriculum'");
-	}
 }

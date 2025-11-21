@@ -11,7 +11,6 @@ import java.util.UUID;
 
 @Component
 @AllArgsConstructor
-
 public class CurriculumRepositoryAdapter implements CurriculumRepositoryPort {
     private CurriculumRepository curriculumRepository ;
 

@@ -19,13 +19,13 @@ public class CurriculumServer implements CurriculumServerPort {
         return null;
     }
 
-    @Override
-    public Curriculum setCurriculum(
-        Curriculum curriculum,
-        ContaAutenticada auth
-    ) {
-        curriculumService.setCurriculum(curriculum, auth.getEmail());
-        return curriculum;
-    }
+    // @Override
+    // public Curriculum setCurriculum(
+    //     Curriculum curriculum,
+    //     ContaAutenticada auth
+    // ) {
+    //     curriculumService.setCurriculum(curriculum, auth.getEmail());
+    //     return curriculum;
+    // }
 
 }
