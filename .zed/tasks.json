@@ -7,13 +7,19 @@
     },
     {
         "label": "Resetar o Docker",
-        "command": "dokcer-compose down; docker-compose up --build -d",
+        "command": "docker-compose down; docker-compose up --build -d",
         "use_new_terminal": true,
         "allow_concurrent_runs": false
     },
     {
         "label": "Resetar o Back-end",
-        "command": "dokcer-compose down; docker-compose build backend; docker-compose up -d",
+        "command": "docker-compose down; docker-compose build backend; docker-compose up -d",
+        "use_new_terminal": true,
+        "allow_concurrent_runs": false
+    },
+    {
+        "label": "Iniciar o Docker sem build",
+        "command": "docker-compose down; docker-compose up -d",
         "use_new_terminal": true,
         "allow_concurrent_runs": false
     }
