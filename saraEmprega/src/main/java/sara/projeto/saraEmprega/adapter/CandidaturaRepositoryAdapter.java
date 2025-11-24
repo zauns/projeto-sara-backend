@@ -46,5 +46,10 @@ public class CandidaturaRepositoryAdapter implements CandidaturaRepositoryPort {
     public List<Candidatura> findByStatus(StatusCandidatura status) {
         return candidaturaRepository.findByStatus(status);
     }
+    
+    @Override
+    public boolean existsByVagaIdAndUserIdAndStatusNotIn(UUID vagaId, UUID userId, List<StatusCandidatura> excludedStatuses) {
+        return candidaturaRepository.existsByVagaIdAndUserIdAndStatusNotIn(vagaId, userId, excludedStatuses);
+    }
 }
     

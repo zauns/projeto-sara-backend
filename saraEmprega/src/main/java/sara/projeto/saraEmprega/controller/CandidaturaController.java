@@ -1,6 +1,7 @@
 package sara.projeto.saraEmprega.controller;
 
-//TODO: Implementar controller de candidatura
+@RestController
+@RequestMapping("/candidaturas")
 public class CandidaturaController {
 
 }

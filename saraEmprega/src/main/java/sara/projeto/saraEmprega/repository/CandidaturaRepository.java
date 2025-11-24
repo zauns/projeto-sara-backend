@@ -12,4 +12,5 @@ public interface CandidaturaRepository extends JpaRepository<Candidatura, UUID> 
     List<Candidatura> findByVagaId(UUID vagaId);
     List<Candidatura> findByUserId(UUID userId);
     List<Candidatura> findByStatus(StatusCandidatura status);
+    boolean existsByVagaIdAndUserIdAndStatusNotIn(UUID vagaId, UUID userId, List<StatusCandidatura> excludedStatuses);
 }
