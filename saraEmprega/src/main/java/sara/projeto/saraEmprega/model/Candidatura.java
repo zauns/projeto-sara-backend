@@ -15,7 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Table(name = "candidaturas")
 public class Candidatura {
-    
+
     @Id
     @GeneratedValue
     private UUID id;
@@ -29,7 +29,7 @@ public class Candidatura {
 
     //Relacionamento Many-to-One com User
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = true) // candidatura pode existir sem usuário para manter histórico, mas na criação deve ter usuário
     private User user; // Usuário que fez a candidatura
     
 }

@@ -1,6 +1,8 @@
 package sara.projeto.saraEmprega.model;
 
 import jakarta.persistence.*;
+
+import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,4 +29,8 @@ public class Vaga {
     @ManyToOne
     @JoinColumn(name = "empresa_id", nullable = false) // coluna com chave estrangeira
     private Empresa empresa; // Empresa que oferece a vaga
+
+    //Relacionamento com Candidatura
+    @OneToMany(mappedBy = "vaga", fetch = FetchType.LAZY) 
+    private Set<Candidatura> candidaturas;
 }

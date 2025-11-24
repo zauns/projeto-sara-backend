@@ -1,8 +1,8 @@
 package sara.projeto.saraEmprega.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
+import java.util.Set;
+
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -17,6 +17,9 @@ public class User extends Conta {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Document document;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY) 
+    private Set<Candidatura> candidaturas;
 
     public void setDocument(Document doc) {
         this.document = doc;
