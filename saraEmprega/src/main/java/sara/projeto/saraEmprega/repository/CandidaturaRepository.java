@@ -5,9 +5,11 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import sara.projeto.saraEmprega.enums.StatusCandidatura;
 import sara.projeto.saraEmprega.model.Candidatura;
 
 public interface CandidaturaRepository extends JpaRepository<Candidatura, UUID> {
     List<Candidatura> findByVagaId(UUID vagaId);
     List<Candidatura> findByUserId(UUID userId);
+    List<Candidatura> findByStatus(StatusCandidatura status);
 }

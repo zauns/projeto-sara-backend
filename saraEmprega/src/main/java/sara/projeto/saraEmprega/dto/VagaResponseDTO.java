@@ -15,12 +15,14 @@ public class VagaResponseDTO {
     private UUID id;
     private String titulo;
     private String descricao;
+    private boolean isAtiva;
     private EmpresaResponseDTO empresa;
 
     public VagaResponseDTO(Vaga vaga) {
         this.id = vaga.getId();
         this.titulo = vaga.getTitulo();
         this.descricao = vaga.getDescricao();
+        this.isAtiva = vaga.isAtiva();
         this.empresa = new EmpresaResponseDTO(vaga.getEmpresa());
     }
 }

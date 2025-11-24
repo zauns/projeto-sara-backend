@@ -21,6 +21,7 @@ public class Vaga {
 
     private String titulo;
     private String descricao;
+    private boolean isAtiva; // Indica se a vaga está ativa ou não
      
     // Relacionamento Many-to-One com Empresa
     @ManyToOne

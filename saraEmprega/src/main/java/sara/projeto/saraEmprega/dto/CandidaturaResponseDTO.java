@@ -12,6 +12,7 @@ import sara.projeto.saraEmprega.model.Candidatura;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CandidaturaResponseDTO {
+    
     private VagaResponseDTO vaga;
     private ContaResponseDTO user;
     private StatusCandidatura status;
