@@ -1,8 +1,8 @@
 package sara.projeto.saraEmprega.enums;
 
 public enum StatusCandidatura {
-    Pendente,
-    EmAnalise,
-    Aprovada,
-    Rejeitada;
+    PENDENTE,
+    EM_ANALISE,
+    APROVADA,
+    REJEITADA;
 }

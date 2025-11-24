@@ -15,4 +15,5 @@ public interface CandidaturaRepositoryPort {
     List<Candidatura> findByStatus(StatusCandidatura status);
     boolean existsById(UUID id);
     void delete(UUID id);
+    boolean existsByVagaIdAndUserIdAndStatusNotIn(UUID vagaId, UUID userId, List<StatusCandidatura> statusExcluir);
 }
