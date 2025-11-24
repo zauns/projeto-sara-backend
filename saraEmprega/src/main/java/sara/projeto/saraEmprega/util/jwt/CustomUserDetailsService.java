@@ -13,6 +13,27 @@ import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.model.Secretaria;
 import sara.projeto.saraEmprega.repository.ContaRepository;
 
+/**
+ * Serviço customizado para carregar detalhes do usuário durante a autenticação
+ *
+ * Este serviço é chamado automaticamente pelo Spring Security durante o login
+ * para buscar os dados do usuário baseado no username (email) fornecido.
+ *
+ * Fluxo de autenticação:
+ * Usuário envia email e senha no login
+ * Spring Security chama este serviço passando o email como username
+ * Busca a conta no repositório pelo email
+ * Verifica se contas de Empresa/Secretaria estão validadas
+ * Retorna ContaAutenticada se tudo estiver OK
+ * Spring Security compara a senha e cria a autenticação
+ *
+ * Validações específicas:
+ * Empresas e Secretarias precisam estar validadas (isValidada = true)
+ * Usuários e Administradores não precisam de validação adicional
+ * Contas não validadas lançam LockedException (conta bloqueada)
+ *
+ * O username usado é o email da conta, não o nome
+ */
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {

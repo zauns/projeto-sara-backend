@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sara.projeto.saraEmprega.dto.CurriculumDTO;
 import sara.projeto.saraEmprega.model.Document;
-import sara.projeto.saraEmprega.ports.curriculum.CurriculumServicePort;
+import sara.projeto.saraEmprega.ports.CurriculumServicePort;
 import sara.projeto.saraEmprega.util.Mapper;
 import sara.projeto.saraEmprega.util.Validate;
 

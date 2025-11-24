@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import sara.projeto.saraEmprega.exception.UserNotFoundException;
 import sara.projeto.saraEmprega.model.Document;
 import sara.projeto.saraEmprega.model.User;
-import sara.projeto.saraEmprega.ports.curriculum.CurriculumServicePort;
+import sara.projeto.saraEmprega.ports.CurriculumServicePort;
 import sara.projeto.saraEmprega.ports.DocumentRepositoryPort;
 import sara.projeto.saraEmprega.ports.UserServicePort;
 
