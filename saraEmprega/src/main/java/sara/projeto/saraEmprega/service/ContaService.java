@@ -12,6 +12,27 @@ import sara.projeto.saraEmprega.model.Conta;
 import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
 import sara.projeto.saraEmprega.ports.ContaServicePort;
 
+/**
+ * Serviço base abstrato para operações com entidades Conta
+ *
+ * Como usar:
+ * Estenda esta classe em seu serviço específico (UserService, EmpresaService, etc)
+ * Implemente o método abstrato repositorio() retornando o repositório específico
+ * Adicione métodos específicos do tipo na classe filha
+ *
+ * Exemplo:
+ * public class UserService extends ContaService<User> {
+ *     protected ContaRepositoryPort<User> repositorio() {
+ *         return userRepository;
+ *     }
+ * }
+ *
+ * Esta classe já fornece implementações padrão para:
+ * Buscar por ID
+ * Listar todas as contas
+ * Excluir conta
+ * Buscar por email
+ */
 @Service
 public abstract class ContaService<T extends Conta> implements ContaServicePort{
 

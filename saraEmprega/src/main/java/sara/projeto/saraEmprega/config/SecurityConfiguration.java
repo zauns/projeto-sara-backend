@@ -52,6 +52,40 @@ class SecurityConfiguration {
     @Value("${jwt.private-key}")
     RSAPrivateKey priv;
 
+    /**
+     * Configura a cadeia de filtros de segurança para a aplicação SaraEmprega.
+     *
+     *   Autorização de endpoints públicos:
+     *   Permite acesso não autenticado a:
+     *
+     *   Criação de empresas e secretarias (POST /empresa, POST /secretaria)
+     *   Endpoint de autenticação (/token)
+     *   Endpoints públicos da API (/api/public/**)
+     *   Endpoints de health check e informações (/health, /actuator/health, /actuator/info)
+     *
+     *   Proteção de recursos: Todos os demais endpoints exigem autenticação
+     *   Configuração JWT: Configura o servidor de recursos OAuth2 para usar JWT
+     *   com um conversor personalizado de autenticação
+     *   Sessões stateless: Define a aplicação como sem estado (stateless),
+     *       não mantendo sessões no servidor
+     *   Proteção CSRF: Desabilita CSRF para APIs REST stateless
+     *   Tratamento de exceções: Configura handlers específicos para tokens bearer
+     *       inválidos e acesso negado
+     *
+     * Fluxo de segurança:
+     * 1. Cliente envia credenciais para /token → recebe JWT<br>
+     * 2. Cliente envia JWT no header Authorization: Bearer {token}<br>
+     * 3. Servidor valida JWT e converte para Authentication object<br>
+     * 4. Authorization checks baseados nas roles do usuário autenticado</p>
+     *
+     * Esta configuração é automaticamente aplicada pelo Spring Security na inicialização
+     * da aplicação, definindo o comportamento de segurança para todos os endpoints.
+     *
+     * @param http o objeto HttpSecurity para configurar a segurança web
+     * @return SecurityFilterChain configurado para a aplicação
+     * @throws Exception se ocorrer erro durante a configuração
+     *
+     */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http)
         throws Exception {

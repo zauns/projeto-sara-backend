@@ -1,4 +1,4 @@
-package sara.projeto.saraEmprega.ports.curriculum;
+package sara.projeto.saraEmprega.ports;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;

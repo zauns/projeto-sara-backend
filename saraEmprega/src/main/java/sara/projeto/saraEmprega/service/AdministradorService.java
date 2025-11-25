@@ -57,5 +57,4 @@ public class AdministradorService extends ContaService<Administrador> implements
         administrador.setSuperAdmin(dto.isSuperAdmin());
     }
 
-
 }
