@@ -50,6 +50,24 @@ public class VagaController {
       return ResponseEntity.ok(vagas);
     }
 
+    //BUSCA POR TAGS (FILTROS)
+    
+    @GetMapping("/buscar/por-tag")
+    public ResponseEntity<List<VagaResponseDTO>> buscarVagasPorUmaTag(
+        @RequestParam String tag
+    ) {
+        List<VagaResponseDTO> vagas = vagaService.buscarVagasPorUmaTag(tag);
+        return ResponseEntity.ok(vagas);
+    }
+
+    @GetMapping("/buscar/multiplas-tags")
+    public ResponseEntity<List<VagaResponseDTO>> buscarVagasPorMultiplasTags(
+        @RequestParam List<String> tags 
+    ) {
+        List<VagaResponseDTO> vagas = vagaService.buscarVagasPorMultiplasTags(tags);
+        return ResponseEntity.ok(vagas);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<VagaResponseDTO> atualizarVaga(
         @PathVariable UUID id,

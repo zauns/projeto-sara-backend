@@ -17,22 +17,21 @@ import sara.projeto.saraEmprega.repository.VagaRepository;
 @Service
 public class VagaService {
 
-    private final VagaRepository vagaRepository;
+    private final VagaRepositoryPort vagaRepositoryPort;
     private final EmpresaRepositoryPort empresaRepository;
 
-    public VagaService(VagaRepository vagaRepository, EmpresaRepositoryPort empresaRepositoy) {
-        this.vagaRepository = vagaRepository;
-        this.empresaRepository = empresaRepositoy;
+    public VagaService(VagaRepositoryPort vagaRepositoryPort, EmpresaRepositoryPort empresaRepository) {
+        this.vagaRepositoryPort = vagaRepositoryPort;
+        this.empresaRepository = empresaRepository;
     }
 
     //CRIAR VAGA
     @Transactional
     public VagaResponseDTO criarVaga(VagaRequestDTO dto){
         Vaga vaga = new Vaga();
-        vaga.setIsAtiva(true);
         mapToVaga(dto, vaga);
 
-        Vaga vagaSalva = vagaRepository.save(vaga);
+        Vaga vagaSalva = vagaRepositoryPort.save(vaga);
         return new VagaResponseDTO(vagaSalva);
     }
 
@@ -88,6 +87,42 @@ public class VagaService {
         return new VagaResponseDTO(vagaAtualizada);
     }
 
+    //Buscar por 1 tag
+    @Transactional(readOnly = true)
+    public List<VagaResponseDTO> buscarVagasPorUmaTag(String tag) {
+        if (tag == null || tag.isBlank()) {
+            return buscarTodasAsVagas(); 
+        }
+
+        return vagaRepositoryPort
+            .findByTagsContaining(tag) 
+            .stream()
+            .map(VagaResponseDTO::new)
+            .toList();
+    }
+
+    //Buscar por multiplas tags
+    @Transactional(readOnly = true)
+    public List<VagaResponseDTO> buscarVagasPorMultiplasTags(List<String> tags) {
+        if (tags == null || tags.isEmpty()) {
+            return buscarTodasAsVagas(); 
+        }
+
+        List<String> tagsLimpa = tags.stream()
+            .filter(tag -> tag != null && !tag.isBlank())
+            .toList();
+            
+        if (tagsLimpa.isEmpty()) {
+            return buscarTodasAsVagas();
+        }
+
+        return vagaRepositoryPort
+            .findByTagsIn(tagsLimpa) 
+            .stream()
+            .map(VagaResponseDTO::new)
+            .toList();
+    }
+
     //FUNÇÕES AUXILIARES
     private void mapToVaga(
         VagaRequestDTO dto,
@@ -96,6 +131,7 @@ public class VagaService {
         vaga.setTitulo(dto.titulo());
         vaga.setDescricao(dto.descricao());
         vaga.setTags(dto.tags());
+        vaga.setIsAtiva(dto.isAtiva());
         Empresa empresa = empresaRepository.encontrarPorId(dto.empresaId())
             .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + dto.empresaId()));
 
