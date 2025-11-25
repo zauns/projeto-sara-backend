@@ -114,7 +114,7 @@ class SecurityConfiguration {
     SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
         http
-                .cors(Customizer.withDefaults()) //libera o acesso do nevegador
+                .cors(Customizer.withDefaults()) // libera o acesso do nevegador
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(HttpMethod.POST, "/empresa").permitAll()
                         .requestMatchers(HttpMethod.POST, "/secretaria").permitAll()
@@ -125,10 +125,9 @@ class SecurityConfiguration {
                                 "/actuator/health",
                                 "/actuator/info"
 
-                    ).permitAll()
-                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    .anyRequest().authenticated()
-                )
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .anyRequest().authenticated())
                 .csrf((csrf) -> csrf.disable())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
@@ -141,12 +140,15 @@ class SecurityConfiguration {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource (){
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        configuration.setAllowedOriginPatterns(List.of("*"));
+
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
