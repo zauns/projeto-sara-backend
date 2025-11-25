@@ -1,43 +1,47 @@
 package sara.projeto.saraEmprega.controller;
 
-import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import sara.projeto.saraEmprega.dto.UserDTO;
-import sara.projeto.saraEmprega.enums.UserAction;
-import sara.projeto.saraEmprega.util.Mapper;
-import sara.projeto.saraEmprega.util.user_concurrency.UserProcessor;
-import sara.projeto.saraEmprega.util.user_concurrency.abstractions.UserOperationCreate;
-import sara.projeto.saraEmprega.util.user_concurrency.abstractions.UserOperationUpdate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
+import sara.projeto.saraEmprega.dto.ContaResponseDTO;
+import sara.projeto.saraEmprega.dto.UserRequestDTO;
+import sara.projeto.saraEmprega.ports.UserServicePort;
 
 @Validated
 @RestController
-@AllArgsConstructor
 @RequestMapping("/api/user")
-public class UserController {
+public class UserController extends ContasController<UserRequestDTO, UserServicePort> {
 
-    UserProcessor processor;
+    // private final UserProcessor processor;
+    private final UserServicePort userService;
 
-    @PostMapping("/update")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody @Valid UserDTO userDTO, Authentication auth){
-        Jwt jwt = (Jwt) auth.getPrincipal();
-        UserOperationUpdate operationUpdate = new UserOperationUpdate(UserAction.UPDATE_USER,jwt.getSubject(),userDTO);
-        processor.addToQueue(operationUpdate);
-        return new ResponseEntity<>(userDTO,HttpStatus.OK);
+    protected UserController(UserServicePort service) {
+        super(service);
+        // this.processor = processor;
+		this.userService = service;
+    }
+
+    @PostMapping("/{id}") //post pelo id
+    public ResponseEntity<ContaResponseDTO> updateUser(@PathVariable UUID id, @RequestBody @Valid UserRequestDTO userDTO) {
+        ContaResponseDTO updatedUser = userService.update(id, userDTO);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO userDTO, Authentication auth){
-        Jwt jwt = (Jwt) auth.getPrincipal();
-        UserOperationCreate operationCreate = new UserOperationCreate(UserAction.CREATE_USER,jwt.getSubject()
-                ,Mapper.MapToUser(userDTO),jwt.getClaim("scope"));
-        processor.addToQueue(operationCreate);
-        return new ResponseEntity<>(userDTO,HttpStatus.OK);
+    public ResponseEntity<ContaResponseDTO> createUser(@RequestBody @Valid UserRequestDTO userDTO) {
+        ContaResponseDTO novoUsuario = userService.create(userDTO);
+        return new ResponseEntity<>(novoUsuario, HttpStatus.OK);
     }
 
     @GetMapping("/validate-token")

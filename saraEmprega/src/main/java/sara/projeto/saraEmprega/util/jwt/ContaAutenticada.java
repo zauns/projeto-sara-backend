@@ -11,6 +11,27 @@ import org.springframework.security.core.userdetails.UserDetails;
 import sara.projeto.saraEmprega.model.Administrador;
 import sara.projeto.saraEmprega.model.Conta;
 
+/**
+ * Implementação de UserDetails para autenticação com contas do sistema
+ *
+ * Esta classe adapta qualquer entidade que estenda Conta para o sistema
+ * de autenticação do Spring Security.
+ *
+ * Funcionamento:
+ * - Encapsula uma Conta (User, Empresa, Secretaria, Administrador)
+ * - Determina as roles/autoridades baseadas no tipo específico da conta
+ * - Fornece os dados necessários para o processo de autenticação
+ *
+ * Mapeamento de roles:
+ * - Administrador (isSuperAdmin = true) → ROLE_SUPER_ADMIN
+ * - Administrador (isSuperAdmin = false) → ROLE_ADMIN
+ * - Empresa → ROLE_EMPRESA
+ * - Secretaria → ROLE_SECRETARIA
+ * - User → ROLE_USER
+ *
+ * Todas as contas são consideradas ativas por padrão (isEnabled = true)
+ * Contas de Empresa/Secretaria podem ser bloqueadas via isValidada no serviço
+ */
 @Getter
 @RequiredArgsConstructor
 public class ContaAutenticada implements UserDetails { // transferi pro tipo conta para abrangir todos os usuários
