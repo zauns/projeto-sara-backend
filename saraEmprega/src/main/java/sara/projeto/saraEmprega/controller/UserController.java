@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,18 +24,6 @@ import sara.projeto.saraEmprega.ports.UserServicePort;
 @RestController
 @RequestMapping("/api/user")
 @CrossOrigin(originPatterns = "http://localhost:3000")
-public class UserController {
-
-    UserProcessor processor;
-    UserServicePort userService;
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ContaResponseDTO> getUserById(@PathVariable UUID id) {
-        return userService.getUserById(id)
-                .map(user -> new ContaResponseDTO(user))
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
 public class UserController extends ContasController<UserRequestDTO, UserServicePort> {
 
     // private final UserProcessor processor;
