@@ -17,6 +17,7 @@ public class VagaResponseDTO {
     private String descricao;
     private boolean isAtiva;
     private EmpresaResponseDTO empresa;
+    private List<String> tags;
 
     public VagaResponseDTO(Vaga vaga) {
         this.id = vaga.getId();
@@ -24,5 +25,6 @@ public class VagaResponseDTO {
         this.descricao = vaga.getDescricao();
         this.isAtiva = vaga.isAtiva();
         this.empresa = new EmpresaResponseDTO(vaga.getEmpresa());
+        this.tags = vaga.getTags();
     }
 }

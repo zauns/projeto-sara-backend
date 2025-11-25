@@ -12,4 +12,6 @@ public interface VagaRepositoryPort {
     List<Vaga> findByEmpresaId(UUID empresaId);
     boolean existsById(UUID id);
     void delete(UUID id);
+    List<Vaga> findByTagsIn(List<String> tags);
+    List<Vaga> findByTagsContaining(String tag);
 }

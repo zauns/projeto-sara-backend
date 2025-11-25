@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Getter
@@ -33,4 +35,10 @@ public class Vaga {
     //Relacionamento com Candidatura
     @OneToMany(mappedBy = "vaga", fetch = FetchType.LAZY) 
     private Set<Candidatura> candidaturas;
+
+    //Tags
+    @ElementCollection 
+    @CollectionTable(name = "vaga_tags", joinColumns = @JoinColumn(name = "vaga_id"))
+    @Column(name = "tag")
+    private List<String> tags = new ArrayList<>();
 }

@@ -29,6 +29,7 @@ public class VagaService {
     @Transactional
     public VagaResponseDTO criarVaga(VagaRequestDTO dto){
         Vaga vaga = new Vaga();
+        vaga.setIsAtiva(true);
         mapToVaga(dto, vaga);
 
         Vaga vagaSalva = vagaRepository.save(vaga);
@@ -94,7 +95,7 @@ public class VagaService {
     ) {
         vaga.setTitulo(dto.titulo());
         vaga.setDescricao(dto.descricao());
-
+        vaga.setTags(dto.tags());
         Empresa empresa = empresaRepository.encontrarPorId(dto.empresaId())
             .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + dto.empresaId()));
 
