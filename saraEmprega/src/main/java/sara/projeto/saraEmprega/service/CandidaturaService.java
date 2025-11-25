@@ -67,7 +67,6 @@ public class CandidaturaService implements CandidaturaServicePort {
         
         Candidatura candidatura = buscarCandidatura(id);
         
-        // 🛡️ VERIFICAÇÃO DE AUTORIZAÇÃO: Empresa dona da vaga ou Admin/SuperAdmin
         verificarAutorizacaoEmpresa(candidatura.getVaga().getId());
 
         candidatura.setStatus(status);
@@ -82,7 +81,6 @@ public class CandidaturaService implements CandidaturaServicePort {
 
         Candidatura candidatura = buscarCandidatura(candidaturaId);
         
-        // 🛡️ VERIFICAÇÃO DE AUTORIZAÇÃO: Candidato dono da candidatura ou SuperAdmin
         verificarAutorizacaoCandidato(candidatura.getUser().getId());
 
         if (candidatura.getStatus() != StatusCandidatura.PENDENTE) {
@@ -123,7 +121,6 @@ public class CandidaturaService implements CandidaturaServicePort {
     @Transactional(readOnly = true)
     public List<CandidaturaResponseDTO> buscarPorVagaId(UUID vagaId) {
         
-        // 🛡️ VERIFICAÇÃO DE AUTORIZAÇÃO: Empresa dona da vaga ou Admin/SuperAdmin
         verificarAutorizacaoEmpresa(vagaId);
         
         return candidaturaRepositoryPort.findByVagaId(vagaId)
