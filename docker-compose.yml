@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
     env_file: ./.env
     environment:
-      DB_HOST: database
+      DB_HOST: ${DB_HOST}
       DB_PORT: 3306
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
