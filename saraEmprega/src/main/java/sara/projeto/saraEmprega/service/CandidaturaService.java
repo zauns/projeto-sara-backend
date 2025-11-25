@@ -21,7 +21,6 @@ import sara.projeto.saraEmprega.ports.CandidaturaServicePort;
 import sara.projeto.saraEmprega.ports.UserRepositoryPort;
 import sara.projeto.saraEmprega.ports.VagaRepositoryPort;
 
-// TODO: Implementar os métodos da interface
 @Service
 @RequiredArgsConstructor
 public class CandidaturaService implements CandidaturaServicePort {
