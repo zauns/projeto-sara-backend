@@ -11,10 +11,11 @@ public interface CandidaturaServicePort {
 
     CandidaturaResponseDTO criar(CandidaturaRequestDTO dto); 
     CandidaturaResponseDTO atualizarStatus(UUID id, StatusCandidatura status);
-    CandidaturaResponseDTO desistir(UUID candidaturaId, UUID userId); 
+    CandidaturaResponseDTO desistir(UUID candidaturaId); 
     CandidaturaResponseDTO buscarPorId(UUID id);
     List<CandidaturaResponseDTO> buscarPorUserId(UUID userId);
     List<CandidaturaResponseDTO> buscarPorVagaId(UUID vagaId);
     List<CandidaturaResponseDTO> buscarPorStatus(StatusCandidatura status);
+    List<CandidaturaResponseDTO> buscarMinhasCandidaturas();
     
 }

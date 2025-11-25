@@ -7,23 +7,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import sara.projeto.saraEmprega.dto.VagaRequestDTO;
 import sara.projeto.saraEmprega.dto.VagaResponseDTO;
 import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.model.Vaga;
 import sara.projeto.saraEmprega.ports.EmpresaRepositoryPort;
 import sara.projeto.saraEmprega.ports.VagaRepositoryPort;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt; 
+import org.springframework.security.access.AccessDeniedException;
 
 @Service
+@RequiredArgsConstructor
 public class VagaService {
 
     private final VagaRepositoryPort vagaRepositoryPort;
     private final EmpresaRepositoryPort empresaRepository;
 
-    public VagaService(VagaRepositoryPort vagaRepositoryPort, EmpresaRepositoryPort empresaRepository) {
-        this.vagaRepositoryPort = vagaRepositoryPort;
-        this.empresaRepository = empresaRepository;
-    }
 
     //CRIAR VAGA
     @Transactional
@@ -123,6 +124,36 @@ public class VagaService {
             .toList();
     }
 
+    //ALTERAR ISATIVA
+    @Transactional
+    public VagaResponseDTO mudarStatusAtivacao(UUID id, boolean isAtiva) {
+        Vaga vaga = buscarVaga(id); 
+
+        // Define o novo status
+        vaga.setAtiva(isAtiva);
+
+        // Salva e retorna o DTO
+        Vaga vagaAtualizada = vagaRepositoryPort.save(vaga);
+        return new VagaResponseDTO(vagaAtualizada);
+    }
+
+    //PESQUISAR VAGAS (POR TERMO PRESENTE NO TÍTULO OU DESCRIÇÃO)
+    @Transactional(readOnly = true)
+    public List<VagaResponseDTO> buscarVagasPorTermo(String termo) {
+        if (termo == null || termo.isBlank()) {
+            return buscarTodasAsVagas();
+        }
+        
+        // Remove espaços desnecessários e usa o termo para ambas as buscas
+        String termoLimpo = termo.trim();
+
+        return vagaRepositoryPort
+            .findByTituloContainingIgnoreCaseOrDescricaoContainingIgnoreCase(termoLimpo, termoLimpo)
+            .stream()
+            .map(VagaResponseDTO::new)
+            .toList();
+    }
+
     //FUNÇÕES AUXILIARES
     private void mapToVaga(
         VagaRequestDTO dto,
@@ -146,5 +177,34 @@ public class VagaService {
                         "Vaga com id " + id + " não encontrada"
                     )
             );
+    }
+
+    private void verificarPropriedade(Vaga vaga) {
+        UUID empresaIdVaga = vaga.getEmpresa().getId();
+        UUID empresaIdLogada = getEmpresaIdLogada();
+
+        // Lança exceção se o ID da vaga for diferente do ID do usuário logado
+        if (!empresaIdVaga.equals(empresaIdLogada)) {
+            throw new AccessDeniedException("Acesso negado: Você não tem permissão para alterar esta vaga.");
+        }
+    }
+
+    private UUID getEmpresaIdLogada() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        if (!(principal instanceof Jwt)) {
+            // Este caso só deve ser atingido se o @PreAuthorize falhar
+            throw new AccessDeniedException("Usuário não autenticado via token JWT válido.");
+        }
+        
+        Jwt jwt = (Jwt) principal;
+        
+        String empresaIdString = jwt.getClaimAsString("userId");
+        
+        if (empresaIdString == null) {
+             throw new AccessDeniedException("Token JWT não possui a claim 'userId' necessária.");
+        }
+        
+        return UUID.fromString(empresaIdString);
     }
 }

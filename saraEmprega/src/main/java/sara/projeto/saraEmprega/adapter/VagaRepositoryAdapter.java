@@ -55,4 +55,9 @@ public class VagaRepositoryAdapter implements VagaRepositoryPort {
     public List<Vaga> findByTagsContaining(String tag) {
         return vagaRepository.findAllByTagsContaining(tag);
     }
+
+    @Override
+    public List<Vaga> findByTituloContainingIgnoreCaseOrDescricaoContainingIgnoreCase(String termoTitulo, String termoDescricao) {
+        return vagaRepository.findByTituloContainingIgnoreCaseOrDescricaoContainingIgnoreCase(termoTitulo, termoDescricao);
+    }
 }
