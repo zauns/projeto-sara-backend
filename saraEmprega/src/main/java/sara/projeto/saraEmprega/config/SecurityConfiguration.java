@@ -6,8 +6,12 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,43 +39,63 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 @EnableMethodSecurity
 class SecurityConfiguration {
 
-    //@Value("${spring.util.encoderStrength}")
-    //private int encoderStrong;
+    // @Value("${spring.util.encoderStrength}")
+    // private int encoderStrong;
 
+    @Value("${JWT_PUBLIC_KEY_CONTENT}")
+    private String key;
 
-    @Value("${jwt.public-key}")
-    RSAPublicKey key;
+    @Value("${JWT_PRIVATE_KEY_CONTENT}")
+    private String priv;
 
-    @Value("${jwt.private-key}")
-    RSAPrivateKey priv;
+    // 2. Converter String -> RSAPublicKey
+    @Bean
+    public RSAPublicKey jwtPublicKey() throws Exception {
+        byte[] keyBytes = Base64.getDecoder().decode(key);
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        return (RSAPublicKey) keyFactory.generatePublic(spec);
+    }
+
+    // 3. Converter String -> RSAPrivateKey
+    @Bean
+    public RSAPrivateKey jwtPrivateKey() throws Exception {
+        byte[] keyBytes = Base64.getDecoder().decode(priv);
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        return (RSAPrivateKey) keyFactory.generatePrivate(spec);
+    }
 
     /**
      * Configura a cadeia de filtros de segurança para a aplicação SaraEmprega.
      *
-     *   Autorização de endpoints públicos:
-     *   Permite acesso não autenticado a:
+     * Autorização de endpoints públicos:
+     * Permite acesso não autenticado a:
      *
-     *   Criação de empresas e secretarias (POST /empresa, POST /secretaria)
-     *   Endpoint de autenticação (/token)
-     *   Endpoints públicos da API (/api/public/**)
-     *   Endpoints de health check e informações (/health, /actuator/health, /actuator/info)
+     * Criação de empresas e secretarias (POST /empresa, POST /secretaria)
+     * Endpoint de autenticação (/token)
+     * Endpoints públicos da API (/api/public/**)
+     * Endpoints de health check e informações (/health, /actuator/health,
+     * /actuator/info)
      *
-     *   Proteção de recursos: Todos os demais endpoints exigem autenticação
-     *   Configuração JWT: Configura o servidor de recursos OAuth2 para usar JWT
-     *   com um conversor personalizado de autenticação
-     *   Sessões stateless: Define a aplicação como sem estado (stateless),
-     *       não mantendo sessões no servidor
-     *   Proteção CSRF: Desabilita CSRF para APIs REST stateless
-     *   Tratamento de exceções: Configura handlers específicos para tokens bearer
-     *       inválidos e acesso negado
+     * Proteção de recursos: Todos os demais endpoints exigem autenticação
+     * Configuração JWT: Configura o servidor de recursos OAuth2 para usar JWT
+     * com um conversor personalizado de autenticação
+     * Sessões stateless: Define a aplicação como sem estado (stateless),
+     * não mantendo sessões no servidor
+     * Proteção CSRF: Desabilita CSRF para APIs REST stateless
+     * Tratamento de exceções: Configura handlers específicos para tokens bearer
+     * inválidos e acesso negado
      *
      * Fluxo de segurança:
      * 1. Cliente envia credenciais para /token → recebe JWT<br>
      * 2. Cliente envia JWT no header Authorization: Bearer {token}<br>
      * 3. Servidor valida JWT e converte para Authentication object<br>
-     * 4. Authorization checks baseados nas roles do usuário autenticado</p>
+     * 4. Authorization checks baseados nas roles do usuário autenticado
+     * </p>
      *
-     * Esta configuração é automaticamente aplicada pelo Spring Security na inicialização
+     * Esta configuração é automaticamente aplicada pelo Spring Security na
+     * inicialização
      * da aplicação, definindo o comportamento de segurança para todos os endpoints.
      *
      * @param http o objeto HttpSecurity para configurar a segurança web
@@ -81,30 +105,27 @@ class SecurityConfiguration {
      */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http)
-        throws Exception {
+            throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                    .requestMatchers(HttpMethod.POST, "/empresa").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/secretaria").permitAll()
-                    .requestMatchers("/token",
+                        .requestMatchers(HttpMethod.POST, "/empresa").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/secretaria").permitAll()
+                        .requestMatchers("/token",
 
-                        "/api/public/**",
-                        "/health",
-                        "/actuator/health",
-                        "/actuator/info"
+                                "/api/public/**",
+                                "/health",
+                                "/actuator/health",
+                                "/actuator/info"
 
-                    ).permitAll()
-                    .anyRequest().authenticated()
-                )
+                        ).permitAll()
+                        .anyRequest().authenticated())
                 .csrf((csrf) -> csrf.disable())
                 .oauth2ResourceServer(oauth2 -> oauth2
-                    .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                )
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling((exceptions) -> exceptions
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
-                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
-                );
+                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
         // @formatter:on
         return http.build();
     }
@@ -115,16 +136,15 @@ class SecurityConfiguration {
     }
 
     @Bean
-    JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(this.key).build();
+    JwtDecoder jwtDecoder() throws Exception {
+        return NimbusJwtDecoder.withPublicKey(jwtPublicKey()).build();
     }
 
     @Bean
-    JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(this.key).privateKey(this.priv).build();
+    JwtEncoder jwtEncoder() throws Exception {
+        JWK jwk = new RSAKey.Builder(jwtPublicKey()).privateKey(jwtPrivateKey()).build();
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(
-            new JWKSet(jwk)
-        );
+                new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
     }
 
