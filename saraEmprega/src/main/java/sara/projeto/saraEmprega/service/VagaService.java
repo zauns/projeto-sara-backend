@@ -5,6 +5,9 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt; 
+import org.springframework.security.access.AccessDeniedException;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +17,6 @@ import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.model.Vaga;
 import sara.projeto.saraEmprega.ports.EmpresaRepositoryPort;
 import sara.projeto.saraEmprega.ports.VagaRepositoryPort;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt; 
-import org.springframework.security.access.AccessDeniedException;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +55,7 @@ public class VagaService {
     public List<VagaResponseDTO> buscarVagasPorEmpresa(UUID empresaId){
         if (!empresaRepository.existePorId(empresaId)) {
             throw new EntityNotFoundException("Empresa não encontrada com o ID: " + empresaId);
-        } // Verifica se a empresa existe
+        }
 
         return vagaRepositoryPort
             .findByEmpresaId(empresaId)
@@ -66,12 +66,11 @@ public class VagaService {
 
     @Transactional
     public void excluirVaga(UUID id){
-        if(!vagaRepositoryPort.existsById(id)){
-            throw new EntityNotFoundException(
-                "Vaga não encontrada com o ID: " + id
-            );
-        }
-        vagaRepositoryPort.delete(id);
+        Vaga vaga = buscarVaga(id); // Busca a vaga para ter o objeto
+
+        verificarPropriedade(vaga);
+
+        vagaRepositoryPort.delete(vaga.getId());
     }
 
     //ATUALIZAR VAGA
@@ -81,7 +80,11 @@ public class VagaService {
         VagaRequestDTO dto
     ) {
         Vaga vaga = buscarVaga(id);
+
+        verificarPropriedade(vaga);
+
         mapToVaga(dto, vaga);
+        
         Vaga vagaAtualizada = vagaRepositoryPort.save(
             vaga
         );
@@ -129,6 +132,8 @@ public class VagaService {
     public VagaResponseDTO mudarStatusAtivacao(UUID id, boolean isAtiva) {
         Vaga vaga = buscarVaga(id); 
 
+        verificarPropriedade(vaga);
+
         // Define o novo status
         vaga.setAtiva(isAtiva);
 
@@ -163,10 +168,13 @@ public class VagaService {
         vaga.setDescricao(dto.descricao());
         vaga.setTags(dto.tags());
         vaga.setAtiva(dto.isAtiva());
-        Empresa empresa = empresaRepository.encontrarPorId(dto.empresaId())
-            .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + dto.empresaId()));
-
-        vaga.setEmpresa(empresa);
+        
+        // Garante que a empresa é configurada apenas na criação ou se a empresa mudar (o que deve ser raro)
+        if (vaga.getEmpresa() == null || !vaga.getEmpresa().getId().equals(dto.empresaId())) {
+             Empresa empresa = empresaRepository.encontrarPorId(dto.empresaId())
+                .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + dto.empresaId()));
+             vaga.setEmpresa(empresa);
+        }
     }
 
     private Vaga buscarVaga(UUID id) {
