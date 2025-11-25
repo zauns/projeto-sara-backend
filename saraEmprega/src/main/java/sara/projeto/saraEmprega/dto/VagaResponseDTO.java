@@ -1,4 +1,5 @@
 package sara.projeto.saraEmprega.dto;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

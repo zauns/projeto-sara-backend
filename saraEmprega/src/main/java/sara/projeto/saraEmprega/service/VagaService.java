@@ -12,7 +12,7 @@ import sara.projeto.saraEmprega.dto.VagaResponseDTO;
 import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.model.Vaga;
 import sara.projeto.saraEmprega.ports.EmpresaRepositoryPort;
-import sara.projeto.saraEmprega.repository.VagaRepository;
+import sara.projeto.saraEmprega.ports.VagaRepositoryPort;
 
 @Service
 public class VagaService {
@@ -43,7 +43,7 @@ public class VagaService {
 
     @Transactional(readOnly = true)
     public List<VagaResponseDTO> buscarTodasAsVagas(){
-        return vagaRepository
+        return vagaRepositoryPort
             .findAll()
             .stream()
             .map(VagaResponseDTO::new)
@@ -56,7 +56,7 @@ public class VagaService {
             throw new EntityNotFoundException("Empresa não encontrada com o ID: " + empresaId);
         } // Verifica se a empresa existe
 
-        return vagaRepository
+        return vagaRepositoryPort
             .findByEmpresaId(empresaId)
             .stream()
             .map(VagaResponseDTO::new)
@@ -65,12 +65,12 @@ public class VagaService {
 
     @Transactional
     public void excluirVaga(UUID id){
-        if(!vagaRepository.existsById(id)){
+        if(!vagaRepositoryPort.existsById(id)){
             throw new EntityNotFoundException(
                 "Vaga não encontrada com o ID: " + id
             );
         }
-        vagaRepository.deleteById(id);
+        vagaRepositoryPort.delete(id);
     }
 
     //ATUALIZAR VAGA
@@ -81,7 +81,7 @@ public class VagaService {
     ) {
         Vaga vaga = buscarVaga(id);
         mapToVaga(dto, vaga);
-        Vaga vagaAtualizada = vagaRepository.save(
+        Vaga vagaAtualizada = vagaRepositoryPort.save(
             vaga
         );
         return new VagaResponseDTO(vagaAtualizada);
@@ -131,7 +131,7 @@ public class VagaService {
         vaga.setTitulo(dto.titulo());
         vaga.setDescricao(dto.descricao());
         vaga.setTags(dto.tags());
-        vaga.setIsAtiva(dto.isAtiva());
+        vaga.setAtiva(dto.isAtiva());
         Empresa empresa = empresaRepository.encontrarPorId(dto.empresaId())
             .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + dto.empresaId()));
 
@@ -139,7 +139,7 @@ public class VagaService {
     }
 
     private Vaga buscarVaga(UUID id) {
-        return vagaRepository
+        return vagaRepositoryPort
             .findById(id)
             .orElseThrow(() ->
                     new EntityNotFoundException(

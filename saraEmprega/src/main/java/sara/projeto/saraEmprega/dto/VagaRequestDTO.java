@@ -9,5 +9,6 @@ public record VagaRequestDTO(
     @NotBlank(message = "Descrição é obrigatória") String descricao,
     @NotNull(message = "O ID da Empresa é obrigatório") 
     UUID empresaId,
-    List<String> tags
+    List<String> tags,
+    @NotNull(message = "O status da vaga é obrigatório") Boolean isAtiva
 ) {}
