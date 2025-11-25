@@ -16,7 +16,7 @@ RUN apk update && \
 ARG JAR_FILE=target/saraEmprega-0.0.1-SNAPSHOT.jar
 COPY --from=build /app/${JAR_FILE} app.jar
 
-COPY jwtkeys ./jwtkeys
+#COPY jwtkeys ./jwtkeys
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
