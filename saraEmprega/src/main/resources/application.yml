@@ -1,6 +1,6 @@
 # --- Configuração do Servidor ---
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${SERVER_PORT}
 
 cloudflare:
   r2:
@@ -17,7 +17,7 @@ spring:
     encoderStrength: 4
 
   datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:sara_emprega}?useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useSSL=false&allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DB_USER}
     password: ${DB_PASSWORD}
@@ -55,8 +55,8 @@ management:
       show-details: always
 
 jwt:
-  public-key: ${JWT_PUBLIC_KEY_PATH}
-  private-key: ${JWT_PRIVATE_KEY_PATH}
+  public-key: ${JWT_PUBLIC_KEY_CONTENT}
+  private-key: ${JWT_PRIVATE_KEY_CONTENT}
 
 logging:
   level:

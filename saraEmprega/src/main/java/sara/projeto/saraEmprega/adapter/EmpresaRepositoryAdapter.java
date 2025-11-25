@@ -26,7 +26,7 @@ public class EmpresaRepositoryAdapter extends ContaRepositoryAdapter<Empresa> im
     public Optional<Empresa> encontrarPorEmail(String email) {
         return repositorio.findByEmail(email);
     }
-    
+
     @Override
     public Empresa salvar(Empresa conta) {
         return super.salvar(conta);
@@ -46,5 +46,5 @@ public class EmpresaRepositoryAdapter extends ContaRepositoryAdapter<Empresa> im
     public List<Empresa> findByIsValidadaFalse() {
         return repositorio.findByIsValidadaFalse();
     }
-    
+
 }
