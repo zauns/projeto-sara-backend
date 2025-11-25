@@ -93,7 +93,7 @@ public class CandidaturaService implements CandidaturaServicePort {
     @Override
     @Transactional(readOnly = true)
     public List<CandidaturaResponseDTO> buscarPorUserId(UUID userId) {
-        if(!userRepositoryPort.existsById(userId)) {
+        if(!userRepositoryPort.existePorId(userId)) {
             throw new EntityNotFoundException("Usuário não encontrado com o ID: " + userId);
         }
         return candidaturaRepositoryPort.findByUserId(userId)
@@ -130,7 +130,7 @@ public class CandidaturaService implements CandidaturaServicePort {
         Vaga vaga = vagaRepositoryPort.findById(dto.vagaId())
             .orElseThrow(() -> new IllegalArgumentException("Vaga não encontrada com o ID: " + dto.vagaId()));
         
-        User user = userRepositoryPort.getUserById(dto.userId())
+        User user = userRepositoryPort.encontrarPorId(dto.userId())
             .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado com o ID: " + dto.userId()));
 
         if (!vaga.isAtiva()) {
