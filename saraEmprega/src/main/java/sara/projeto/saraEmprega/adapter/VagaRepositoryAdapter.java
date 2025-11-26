@@ -45,4 +45,19 @@ public class VagaRepositoryAdapter implements VagaRepositoryPort {
     public void delete(UUID id) {
         vagaRepository.deleteById(id);
     }
+
+    @Override
+    public List<Vaga> findByTagsIn(List<String> tags) {
+        return vagaRepository.findAllByTagsIn(tags);
+    }
+
+    @Override
+    public List<Vaga> findByTagsContaining(String tag) {
+        return vagaRepository.findAllByTagsContaining(tag);
+    }
+
+    @Override
+    public List<Vaga> findByTituloContainingIgnoreCaseOrDescricaoContainingIgnoreCase(String termoTitulo, String termoDescricao) {
+        return vagaRepository.findByTituloContainingIgnoreCaseOrDescricaoContainingIgnoreCase(termoTitulo, termoDescricao);
+    }
 }

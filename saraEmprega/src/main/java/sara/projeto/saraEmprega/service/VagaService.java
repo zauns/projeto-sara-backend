@@ -5,25 +5,26 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt; 
+import org.springframework.security.access.AccessDeniedException;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import sara.projeto.saraEmprega.dto.VagaRequestDTO;
 import sara.projeto.saraEmprega.dto.VagaResponseDTO;
 import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.model.Vaga;
 import sara.projeto.saraEmprega.ports.EmpresaRepositoryPort;
-import sara.projeto.saraEmprega.repository.VagaRepository;
+import sara.projeto.saraEmprega.ports.VagaRepositoryPort;
 
 @Service
+@RequiredArgsConstructor
 public class VagaService {
 
-    private final VagaRepository vagaRepository;
+    private final VagaRepositoryPort vagaRepositoryPort;
     private final EmpresaRepositoryPort empresaRepository;
 
-    public VagaService(VagaRepository vagaRepository, EmpresaRepositoryPort empresaRepositoy) {
-        this.vagaRepository = vagaRepository;
-        this.empresaRepository = empresaRepositoy;
-    }
 
     //CRIAR VAGA
     @Transactional
@@ -31,7 +32,7 @@ public class VagaService {
         Vaga vaga = new Vaga();
         mapToVaga(dto, vaga);
 
-        Vaga vagaSalva = vagaRepository.save(vaga);
+        Vaga vagaSalva = vagaRepositoryPort.save(vaga);
         return new VagaResponseDTO(vagaSalva);
     }
 
@@ -43,7 +44,7 @@ public class VagaService {
 
     @Transactional(readOnly = true)
     public List<VagaResponseDTO> buscarTodasAsVagas(){
-        return vagaRepository
+        return vagaRepositoryPort
             .findAll()
             .stream()
             .map(VagaResponseDTO::new)
@@ -54,9 +55,9 @@ public class VagaService {
     public List<VagaResponseDTO> buscarVagasPorEmpresa(UUID empresaId){
         if (!empresaRepository.existePorId(empresaId)) {
             throw new EntityNotFoundException("Empresa não encontrada com o ID: " + empresaId);
-        } // Verifica se a empresa existe
+        }
 
-        return vagaRepository
+        return vagaRepositoryPort
             .findByEmpresaId(empresaId)
             .stream()
             .map(VagaResponseDTO::new)
@@ -65,12 +66,11 @@ public class VagaService {
 
     @Transactional
     public void excluirVaga(UUID id){
-        if(!vagaRepository.existsById(id)){
-            throw new EntityNotFoundException(
-                "Vaga não encontrada com o ID: " + id
-            );
-        }
-        vagaRepository.deleteById(id);
+        Vaga vaga = buscarVaga(id); // Busca a vaga para ter o objeto
+
+        verificarPropriedade(vaga);
+
+        vagaRepositoryPort.delete(vaga.getId());
     }
 
     //ATUALIZAR VAGA
@@ -80,11 +80,83 @@ public class VagaService {
         VagaRequestDTO dto
     ) {
         Vaga vaga = buscarVaga(id);
+
+        verificarPropriedade(vaga);
+
         mapToVaga(dto, vaga);
-        Vaga vagaAtualizada = vagaRepository.save(
+        
+        Vaga vagaAtualizada = vagaRepositoryPort.save(
             vaga
         );
         return new VagaResponseDTO(vagaAtualizada);
+    }
+
+    //Buscar por 1 tag
+    @Transactional(readOnly = true)
+    public List<VagaResponseDTO> buscarVagasPorUmaTag(String tag) {
+        if (tag == null || tag.isBlank()) {
+            return buscarTodasAsVagas(); 
+        }
+
+        return vagaRepositoryPort
+            .findByTagsContaining(tag) 
+            .stream()
+            .map(VagaResponseDTO::new)
+            .toList();
+    }
+
+    //Buscar por multiplas tags
+    @Transactional(readOnly = true)
+    public List<VagaResponseDTO> buscarVagasPorMultiplasTags(List<String> tags) {
+        if (tags == null || tags.isEmpty()) {
+            return buscarTodasAsVagas(); 
+        }
+
+        List<String> tagsLimpa = tags.stream()
+            .filter(tag -> tag != null && !tag.isBlank())
+            .toList();
+            
+        if (tagsLimpa.isEmpty()) {
+            return buscarTodasAsVagas();
+        }
+
+        return vagaRepositoryPort
+            .findByTagsIn(tagsLimpa) 
+            .stream()
+            .map(VagaResponseDTO::new)
+            .toList();
+    }
+
+    //ALTERAR ISATIVA
+    @Transactional
+    public VagaResponseDTO mudarStatusAtivacao(UUID id, boolean isAtiva) {
+        Vaga vaga = buscarVaga(id); 
+
+        verificarPropriedade(vaga);
+
+        // Define o novo status
+        vaga.setAtiva(isAtiva);
+
+        // Salva e retorna o DTO
+        Vaga vagaAtualizada = vagaRepositoryPort.save(vaga);
+        return new VagaResponseDTO(vagaAtualizada);
+    }
+
+    //PESQUISAR VAGAS (POR TERMO PRESENTE NO TÍTULO OU DESCRIÇÃO)
+    @Transactional(readOnly = true)
+    public List<VagaResponseDTO> buscarVagasPorTermo(String termo) {
+        if (termo == null || termo.isBlank()) {
+            return buscarTodasAsVagas();
+        }
+        
+        // Remove espaços desnecessários e usa o termo para ambas as buscas
+        String termoLimpo = termo.trim();
+
+        return vagaRepositoryPort
+            .findByTituloContainingIgnoreCaseOrDescricaoContainingIgnoreCase(termoLimpo, termoLimpo)
+            .stream()
+            .map(VagaResponseDTO::new)
+            .toList();
     }
 
     //FUNÇÕES AUXILIARES
@@ -94,20 +166,53 @@ public class VagaService {
     ) {
         vaga.setTitulo(dto.titulo());
         vaga.setDescricao(dto.descricao());
-
-        Empresa empresa = empresaRepository.encontrarPorId(dto.empresaId())
-            .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + dto.empresaId()));
-
-        vaga.setEmpresa(empresa);
+        vaga.setTags(dto.tags());
+        vaga.setAtiva(dto.isAtiva());
+        
+        // Garante que a empresa é configurada apenas na criação ou se a empresa mudar (o que deve ser raro)
+        if (vaga.getEmpresa() == null || !vaga.getEmpresa().getId().equals(dto.empresaId())) {
+             Empresa empresa = empresaRepository.encontrarPorId(dto.empresaId())
+                .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + dto.empresaId()));
+             vaga.setEmpresa(empresa);
+        }
     }
 
     private Vaga buscarVaga(UUID id) {
-        return vagaRepository
+        return vagaRepositoryPort
             .findById(id)
             .orElseThrow(() ->
                     new EntityNotFoundException(
                         "Vaga com id " + id + " não encontrada"
                     )
             );
+    }
+
+    private void verificarPropriedade(Vaga vaga) {
+        UUID empresaIdVaga = vaga.getEmpresa().getId();
+        UUID empresaIdLogada = getEmpresaIdLogada();
+
+        // Lança exceção se o ID da vaga for diferente do ID do usuário logado
+        if (!empresaIdVaga.equals(empresaIdLogada)) {
+            throw new AccessDeniedException("Acesso negado: Você não tem permissão para alterar esta vaga.");
+        }
+    }
+
+    private UUID getEmpresaIdLogada() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        if (!(principal instanceof Jwt)) {
+            // Este caso só deve ser atingido se o @PreAuthorize falhar
+            throw new AccessDeniedException("Usuário não autenticado via token JWT válido.");
+        }
+        
+        Jwt jwt = (Jwt) principal;
+        
+        String empresaIdString = jwt.getClaimAsString("userId");
+        
+        if (empresaIdString == null) {
+             throw new AccessDeniedException("Token JWT não possui a claim 'userId' necessária.");
+        }
+        
+        return UUID.fromString(empresaIdString);
     }
 }

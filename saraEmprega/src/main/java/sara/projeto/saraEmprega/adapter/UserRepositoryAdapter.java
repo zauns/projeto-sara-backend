@@ -7,11 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import sara.projeto.saraEmprega.model.User;
+import sara.projeto.saraEmprega.ports.UserRepositoryPort;
 import sara.projeto.saraEmprega.repository.UserRepository;
 
 @Component
 @RequiredArgsConstructor
-public class UserRepositoryAdapter extends ContaRepositoryAdapter<User> {
+public class UserRepositoryAdapter extends ContaRepositoryAdapter<User> implements UserRepositoryPort{
 
     //adicione novas funções caso não existam em ContaRepositoryAdapter
 
