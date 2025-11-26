@@ -12,8 +12,12 @@ import java.util.UUID;
 
 public class Mapper {
 
-    @Value("${spring.util.encoderStrength}")
-    private int encoderStrong;
+    private static int encoderStrength;
+
+        @Value("${spring.util.encoderStrength:4}")
+        public void setEncoderStrength(int strength) {
+            encoderStrength = strength;
+        }
 
     public static Document mapToCurriculum(String fileName) throws IOException {
 

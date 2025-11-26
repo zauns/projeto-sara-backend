@@ -57,16 +57,15 @@ public class UserService extends ContaService<User> implements UserServicePort {
 
     @Transactional
     public User getUserByMail(String email) {
-        Optional<User> userOptional = repositorio.encontrarPorEmail(email);
-        User user = userOptional.get();
-        return user;
+        return repositorio.encontrarPorEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com email: " + email));
     }
 
     private void mapToUser(UserRequestDTO dto, User user) {
-            user.setNome(dto.name());
-            user.setEmail(dto.email());
-            user.setSenhaHash(passwordEncoder.encode(dto.password()));
-            // Adicione outros campos se necessário
+        user.setNome(dto.name());
+        user.setEmail(dto.email());
+        user.setSenhaHash(passwordEncoder.encode(dto.password()));
+        // Adicione outros campos se necessário
     }
 }
 

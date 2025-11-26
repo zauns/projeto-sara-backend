@@ -11,33 +11,40 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3307:3306"
-    command: --bind-address=0.0.0.0
+    command:
+      - --bind-address=0.0.0.0
+      - --performance-schema=OFF
+      - --default-authentication-plugin=mysql_native_password
     networks:
       - app-network
     volumes:
       - db-data:/var/lib/mysql
+      - ./mysql-custom.cnf:/etc/mysql/conf.d/custom.cnf:ro
     healthcheck:
-        test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
-        timeout: 20s
-        retries: 10
-        start_period: 40s
-        interval: 10s
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+      interval: 10s
 
   backend:
     build:
       context: ./saraEmprega
       dockerfile: sara_backend.dockerfile
+      cache_from:
+        - sara-emprega-backend:latest
     container_name: sara-emprega-backend
     restart: unless-stopped
     env_file: ./.env
     environment:
-      DB_HOST: ${DB_HOST}
+      DB_HOST: database
       DB_PORT: 3306
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       JWT_PUBLIC_KEY_CONTENT: ${JWT_PUBLIC_KEY_CONTENT}
       JWT_PRIVATE_KEY_CONTENT: ${JWT_PRIVATE_KEY_CONTENT}
+      JAVA_OPTS: "-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom"
     ports:
       - "8080:8080"
     networks:
@@ -46,16 +53,20 @@ services:
       database:
         condition: service_healthy
     healthcheck:
-        test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
-        timeout: 30s
-        retries: 10
-        start_period: 120s
-        interval: 20s
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      timeout: 20s
+      retries: 5
+      start_period: 60s
+      interval: 15s
+    volumes:
+      - maven-cache:/root/.m2
 
   frontend:
     build:
       context: ./projeto-sara-frontend
       dockerfile: sara_frontend.dockerfile
+      cache_from:
+        - sara-emprega-frontend:latest
     container_name: sara-emprega-frontend
     restart: unless-stopped
     ports:
@@ -63,8 +74,9 @@ services:
     networks:
       - app-network
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
+    volumes:
+      - npm-cache:/home/node/.npm
 
 networks:
   app-network:
@@ -72,4 +84,8 @@ networks:
 
 volumes:
   db-data:
+    driver: local
+  maven-cache:
+    driver: local
+  npm-cache:
     driver: local
