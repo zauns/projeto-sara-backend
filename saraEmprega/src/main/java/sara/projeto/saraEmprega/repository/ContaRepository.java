@@ -5,6 +5,6 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import sara.projeto.saraEmprega.model.Conta;
 
-public interface ContaRepository extends JpaRepository<Conta, UUID> {
-    Optional<Conta> findByEmail(String email);
+public interface ContaRepository<T extends Conta > extends JpaRepository<T, UUID> {
+    Optional<T> findByEmail(String email);
 }
