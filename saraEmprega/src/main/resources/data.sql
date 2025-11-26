@@ -5,7 +5,7 @@ VALUES
 (
     UUID_TO_BIN(UUID()),
     'fulanoadmnato@sara.com',
-    '$2a$04$7uuQIXKVtnEzGqFZnoPDBeaoYfeoYCgbNzrr2JuYULt9g5WBRRW0G',
+    '$2a$04$7uuQIXKVtnEzGqFZnoPDBeaoYfeoYCgbNzrr2JuYULt9g5WBRRW0G', -- admin123
     'Fulano Super Admin',
     1,
     'Rua do Alto, 100',
@@ -19,7 +19,7 @@ VALUES
 (
     UUID_TO_BIN(UUID()),
     'secretaria@daqui.com',
-    '$2a$04$7uuQIXKVtnEzGqFZnoPDBeaoYfeoYCgbNzrr2JuYULt9g5WBRRW0G',
+    '$2a$04$7uuQIXKVtnEzGqFZnoPDBeaoYfeoYCgbNzrr2JuYULt9g5WBRRW0G', -- admin123
     'Secretaria Padrão',
     'Rua da Secretaria, 200',
     'Recife',
@@ -34,7 +34,7 @@ VALUES
 (
     UUID_TO_BIN(UUID()),
     'empresa@sara.com',
-    '$2a$04$pSTzM3acOzgvkRtzwy4fMOgjqziA5g8M/6j9HugC/57zp9bJ/8Qyq',
+    '$2a$04$pSTzM3acOzgvkRtzwy4fMOgjqziA5g8M/6j9HugC/57zp9bJ/8Qyq', -- senha123
     'Empresa Padrão Ltda',
     'Av. Empresarial, 300',
     '8133334444',
@@ -46,12 +46,12 @@ VALUES
 
 -- 4. Inserção do USER (Candidato)
 INSERT INTO `user`
-(id, email, senha_hash, nome, endereco, telefone, tipo)
+(id, email, senha_hash, nome, endereco, telefone)
 VALUES
 (
     UUID_TO_BIN(UUID()),
     'candidato.padrao@email.com',
-    '$2a$04$7uuQIXKVtnEzGqFZnoPDBeaoYfeoYCgbNzrr2JuYULt9g5WBRRW0G',
+    '$2a$04$7uuQIXKVtnEzGqFZnoPDBeaoYfeoYCgbNzrr2JuYULt9g5WBRRW0G', -- admin123
     'Candidato Padrão',
     'Rua do Candidato, 500',
     '81988887777'
