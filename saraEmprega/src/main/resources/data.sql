@@ -49,7 +49,7 @@ VALUES
 
 -- 4. Inserção do USER (Candidato)
 INSERT INTO `user`
-(id, email, senha_hash, nome, endereco, telefone, cpf, data_nascimento, tipo)
+(id, email, senha_hash, nome, endereco, telefone, data_nascimento, tipo)
 VALUES
 (
     UUID_TO_BIN(UUID()),
@@ -58,7 +58,6 @@ VALUES
     'Candidato Padrão',
     'Rua do Candidato, 500',
     '81988887777',
-    '47204963023',
     '2000-01-01',
     'CANDIDATO'
 );
