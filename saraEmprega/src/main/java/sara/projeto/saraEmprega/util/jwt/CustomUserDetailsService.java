@@ -38,16 +38,12 @@ import sara.projeto.saraEmprega.repository.ContaRepository;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final ContaRepository repositorio;
+    private final ContaRepository<Conta> repositorio;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Conta toReturn = repositorio.findByEmail(username)
-            .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
-
-        // Log para debug
-        System.out.println("Usuário encontrado: " + username + ", Tipo: " + toReturn.getClass().getSimpleName());
-
+        Conta toReturn = repositorio.findByEmail(username).orElseThrow(
+            () -> new UsernameNotFoundException("Usuário não encontrado: " + username));
         if (toReturn instanceof Empresa empresa) {
             if (!empresa.isValidada()) {
                 throw new LockedException("Conta da empresa '" + username + "' aguardando aprovação.");
