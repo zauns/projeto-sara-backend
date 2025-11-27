@@ -14,4 +14,5 @@ public interface SecretariaServicePort extends ContaServicePort {
     List<ContaResponseDTO> getSecretariasNaoValidadas();
 
     ContaResponseDTO aprovarSecretaria(UUID id);
+    SecretariaRequestDTO getDados(UUID id);
 }

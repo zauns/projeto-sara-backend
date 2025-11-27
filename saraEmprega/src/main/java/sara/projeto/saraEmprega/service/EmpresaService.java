@@ -77,10 +77,16 @@ public class EmpresaService extends ContaService<Empresa> implements EmpresaServ
     }
 
     @Transactional
+    public EmpresaRequestDTO getDados(UUID id){
+        Empresa empresa = repositorio.encontrarPorId(id).get();
+        return EmpresaRequestDTO.converter(empresa);
+    }
+
+    @Transactional
     public ContaResponseDTO aprovarEmpresa(UUID id) {
         Empresa empresa = repositorio.encontrarPorId(id)
             .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada"));
-        
+
         empresa.setValidada(true);
         repositorio.salvar(empresa);
         return new ContaResponseDTO(empresa);

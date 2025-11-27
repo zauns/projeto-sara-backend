@@ -47,6 +47,13 @@ public class AdministradorService extends ContaService<Administrador> implements
         return new ContaResponseDTO(administrador);
     }
 
+    @Transactional
+    public AdministradorRequestDTO getDados(UUID id){
+        Administrador administrador = repositorio.encontrarPorId(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Administrador não encontrado"));
+                    return AdministradorRequestDTO.converter(administrador);
+    }
+
 
     private void mapToAdministrador(AdministradorRequestDTO dto, Administrador administrador) {
         administrador.setNome(dto.nome());

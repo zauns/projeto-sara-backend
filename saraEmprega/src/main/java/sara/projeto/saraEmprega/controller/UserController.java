@@ -53,4 +53,11 @@ public class UserController extends ContasController<UserRequestDTO, UserService
         return ResponseEntity.ok("Token válido para: " + auth.getName());
     }
 
+    @GetMapping("/dados/{id}")
+    @PreAuthorize("hasRole('SECRETARIA') or hasRole('USER')")
+    public ResponseEntity<UserRequestDTO> getDados(@PathVariable UUID id){
+        UserRequestDTO user = service.getDados(id);
+        return ResponseEntity.ok(user);
+    }
+
 }

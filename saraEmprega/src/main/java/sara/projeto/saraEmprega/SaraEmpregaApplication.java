@@ -9,6 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 public class SaraEmpregaApplication {
 
     public static void main(String[] args) {
+        System.out.println("Yei Abriu!:");
         SpringApplication.run(SaraEmpregaApplication.class, args);
     }
 }

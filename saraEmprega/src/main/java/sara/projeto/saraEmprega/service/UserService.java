@@ -1,6 +1,5 @@
 package sara.projeto.saraEmprega.service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,7 +53,13 @@ public class UserService extends ContaService<User> implements UserServicePort {
         repositorio.salvar(user);
         return new ContaResponseDTO(user);
     }
-
+    
+    @Transactional
+    public UserRequestDTO getDados(UUID id) {
+        User user = repositorio.encontrarPorId(id).get();
+        return UserRequestDTO.converter(user);
+    }
+    
     @Transactional
     public User getUserByMail(String email) {
         return repositorio.encontrarPorEmail(email)
@@ -67,6 +72,7 @@ public class UserService extends ContaService<User> implements UserServicePort {
         user.setSenhaHash(passwordEncoder.encode(dto.password()));
         // Adicione outros campos se necessário
     }
+
 }
 
 /*

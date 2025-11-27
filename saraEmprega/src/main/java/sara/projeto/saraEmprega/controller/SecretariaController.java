@@ -56,6 +56,13 @@ public class SecretariaController extends ContasController<SecretariaRequestDTO,
         return ResponseEntity.ok(service.aprovarSecretaria(id));
     }
 
+    @GetMapping("/dados/{id}")
+    @PreAuthorize("hasRole('SECRETARIA') and authentication.principal.claims['userId'] == #id.toString()")
+    public ResponseEntity<SecretariaRequestDTO> getDados(@PathVariable UUID id){
+        SecretariaRequestDTO secretaria = service.getDados(id);
+        return ResponseEntity.ok(secretaria);
+    }
+
     @Override
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('SECRETARIA') and authentication.principal.claims['userId'] == #id.toString()")

@@ -9,7 +9,6 @@ import com.nimbusds.jose.proc.SecurityContext;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Arrays;
 import java.util.List;
 
 import java.security.spec.PKCS8EncodedKeySpec;

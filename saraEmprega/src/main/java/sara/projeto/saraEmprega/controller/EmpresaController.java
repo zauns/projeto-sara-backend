@@ -64,4 +64,11 @@ public class EmpresaController extends ContasController<EmpresaRequestDTO, Empre
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/dados/{id}")
+    @PreAuthorize("hasRole('EMPRESA') and authentication.principal.claims['userId'] == #id.toString()")
+    public ResponseEntity<EmpresaRequestDTO> getDados(@PathVariable UUID id){
+        EmpresaRequestDTO empresa = service.getDados(id);
+        return ResponseEntity.ok(empresa);
+    }
+
 }

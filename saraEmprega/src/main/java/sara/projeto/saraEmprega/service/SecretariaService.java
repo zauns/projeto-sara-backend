@@ -66,6 +66,12 @@ public class SecretariaService extends ContaService<Secretaria> implements Secre
         return new ContaResponseDTO(secretaria);
     }
 
+    @Transactional
+    public SecretariaRequestDTO getDados(UUID id){
+        Secretaria secretaria = repositorio.encontrarPorId(id).get();
+        return SecretariaRequestDTO.converter(secretaria);
+    }
+
     private void mapToSecretaria(SecretariaRequestDTO dto, Secretaria secretaria) {
         secretaria.setNome(dto.nome());
         secretaria.setEmail(dto.email());

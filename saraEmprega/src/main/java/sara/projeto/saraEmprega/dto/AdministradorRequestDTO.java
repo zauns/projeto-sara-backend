@@ -3,6 +3,7 @@ package sara.projeto.saraEmprega.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import sara.projeto.saraEmprega.model.Administrador;
 
 public record AdministradorRequestDTO(
         @NotBlank(message = "Nome é obrigatório") String nome,
@@ -11,4 +12,13 @@ public record AdministradorRequestDTO(
         @NotBlank(message = "Telefone é obrigatório") String telefone,
         @NotBlank(message = "Endereço é obrigatório") String endereco,
         @NotNull(message = "O valor do campo é obrigatório") boolean isSuperAdmin) {
+    public static AdministradorRequestDTO converter(Administrador admin) {
+        return new AdministradorRequestDTO(
+                admin.getNome(),
+                admin.getEmail(),
+                null, // Senha vazia/null na leitura
+                admin.getTelefone(),
+                admin.getEndereco(),
+                admin.isSuperAdmin());
+    }
 }
