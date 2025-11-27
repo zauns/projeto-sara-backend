@@ -21,7 +21,7 @@ TOKEN_SECRETARIA="<cole_o_token_da_secretaria_aqui>"
 # Login
 
 
-# Login Super Admin 
+# Login Super Admin
 curl -s -X POST $BASE_URL/token \
      -H "Content-Type: application/json" \
      -d '{
@@ -182,5 +182,20 @@ curl -v -X DELETE $BASE_URL/secretaria/$ID_SECRETARIA \
      -H "Authorization: Bearer $TOKEN_SECRETARIA"
 
 
-# Comandos do User
+## usuários padrões:
 
+curl -v -X POST http://localhost:8080/token \
+  -H "Content-Type: application/json" \
+  -d '{"username": "fulanoadmnato@sara.com", "password": "admin123"}'
+
+curl -v -X POST http://localhost:8080/token \
+  -H "Content-Type: application/json" \
+  -d '{"username": "secretaria@daqui.com", "password": "admin123"}'
+
+curl -v -X POST http://localhost:8080/token \
+  -H "Content-Type: application/json" \
+  -d '{"username": "empresa@sara.com", "password": "senha123"}'
+
+curl -v -X POST http://localhost:8080/token \
+  -H "Content-Type: application/json" \
+  -d '{"username": "candidato.padrao@email.com", "password": "admin123"}'

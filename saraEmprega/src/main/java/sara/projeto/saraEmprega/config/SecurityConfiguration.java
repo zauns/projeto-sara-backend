@@ -9,6 +9,9 @@ import com.nimbusds.jose.proc.SecurityContext;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Arrays;
+import java.util.List;
+
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
@@ -17,6 +20,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,6 +35,9 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
@@ -107,6 +114,7 @@ class SecurityConfiguration {
     SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
         http
+                .cors(Customizer.withDefaults()) // libera o acesso do nevegador
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(HttpMethod.POST, "/empresa").permitAll()
                         .requestMatchers(HttpMethod.POST, "/secretaria").permitAll()
@@ -118,6 +126,7 @@ class SecurityConfiguration {
                                 "/actuator/info"
 
                         ).permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated())
                 .csrf((csrf) -> csrf.disable())
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -128,6 +137,23 @@ class SecurityConfiguration {
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
         // @formatter:on
         return http.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // Configure origens específicas em produção
+        configuration.setAllowedOriginPatterns(List.of("*")); // Em produção, especifique os domínios
+
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
+        configuration.setExposedHeaders(List.of("Authorization", "Content-Disposition"));
+        configuration.setAllowCredentials(true); // Importante para cookies/auth
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean

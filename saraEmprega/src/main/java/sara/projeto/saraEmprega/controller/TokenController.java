@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import sara.projeto.saraEmprega.ports.TokenServicesPort;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/token")
+@CrossOrigin(origins = "http://localhost:3000") // libera o acesso com o front-end
 public class TokenController {
 
 	private final TokenServicesPort tokenServices;

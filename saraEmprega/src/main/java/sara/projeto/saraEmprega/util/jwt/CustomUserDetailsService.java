@@ -38,7 +38,7 @@ import sara.projeto.saraEmprega.repository.ContaRepository;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final ContaRepository repositorio;
+    private final ContaRepository<Conta> repositorio;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

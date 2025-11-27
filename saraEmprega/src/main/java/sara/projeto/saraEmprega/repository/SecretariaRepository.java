@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import sara.projeto.saraEmprega.model.Secretaria;
 
-public interface SecretariaRepository extends JpaRepository<Secretaria, UUID> {
+public interface SecretariaRepository extends ContaRepository<Secretaria> {
     Optional<Secretaria> findByEmail(String email);
     List<Secretaria> findByIsValidadaFalse();
 }

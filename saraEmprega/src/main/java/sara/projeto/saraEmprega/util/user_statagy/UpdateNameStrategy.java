@@ -8,7 +8,7 @@ public class UpdateNameStrategy implements UserUpdateStrategy {
     @Override
     public boolean update(User user, UserDTO dto) {
         if (dto.name() != null && !dto.name().equals(user.getNome())) {
-            user.setEmail(dto.name());
+            user.setNome(dto.name());
             return true;
         }
         return false;
