@@ -41,7 +41,7 @@ public class UserServiceTestFullCoverage {
     @BeforeEach
     void setUp() {
         userId = UUID.randomUUID();
-        requestDTO = new UserRequestDTO("User Teste", "user@teste.com", "senha123");
+        requestDTO = new UserRequestDTO("User Teste", "user@teste.com", "senha123", "1239123123", "Um endereço gentil");
 
         user = new User();
         user.setId(userId);
@@ -81,7 +81,7 @@ public class UserServiceTestFullCoverage {
         when(passwordEncoder.encode("senha123")).thenReturn(null);
         when(repositorio.salvar(any(User.class))).thenAnswer(i -> i.getArgument(0));
 
-        UserRequestDTO dto = new UserRequestDTO("ABC", "a@a.com", "senha123");
+        UserRequestDTO dto = new UserRequestDTO("ABC", "a@a.com", "senha123", "123213123", "Um endereço ainda mais gentil");
 
         ContaResponseDTO res = userService.create(dto);
 
@@ -102,7 +102,7 @@ public class UserServiceTestFullCoverage {
     @Test
     void update_DeveAtualizarComSucesso() {
 
-        UserRequestDTO dto = new UserRequestDTO("Novo", "novo@mail.com", "newpwd");
+        UserRequestDTO dto = new UserRequestDTO("Novo", "novo@mail.com", "newpwd", "123123563", "um lugar insano");
 
         when(repositorio.encontrarPorId(userId)).thenReturn(Optional.of(user));
         when(passwordEncoder.encode("newpwd")).thenReturn("newHash");
@@ -128,7 +128,7 @@ public class UserServiceTestFullCoverage {
     @Test
     void update_ComSenhaEncoderNula() {
 
-        UserRequestDTO dto = new UserRequestDTO("A", "b@c.com", "123");
+        UserRequestDTO dto = new UserRequestDTO("A", "b@c.com", "123", "3812983912" , "um lugar peculiar");
 
         when(repositorio.encontrarPorId(userId)).thenReturn(Optional.of(user));
         when(passwordEncoder.encode("123")).thenReturn(null);

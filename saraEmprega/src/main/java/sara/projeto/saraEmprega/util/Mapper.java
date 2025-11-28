@@ -3,7 +3,7 @@ package sara.projeto.saraEmprega.util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import sara.projeto.saraEmprega.dto.UserDTO;
+import sara.projeto.saraEmprega.dto.UserRequestDTO;
 import sara.projeto.saraEmprega.model.Document;
 import sara.projeto.saraEmprega.model.User;
 
@@ -14,10 +14,10 @@ public class Mapper {
 
     private static int encoderStrength;
 
-        @Value("${spring.util.encoderStrength:4}")
-        public void setEncoderStrength(int strength) {
-            encoderStrength = strength;
-        }
+    @Value("${spring.util.encoderStrength:4}")
+    public void setEncoderStrength(int strength) {
+        encoderStrength = strength;
+    }
 
     public static Document mapToCurriculum(String fileName) throws IOException {
 
@@ -36,7 +36,7 @@ public class Mapper {
                 .build();
     }
 
-    public static User MapToUser(UserDTO userDTO) {
+    public static User MapToUser(UserRequestDTO userDTO) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(4);
         return User.builder()
                 .email(userDTO.email())
@@ -45,7 +45,13 @@ public class Mapper {
                 .build();
     }
 
-    public static UserDTO mapToUserRequestDTO(User user){
-        return new UserDTO(user.getNome(), user.getEmail(),  user.getSenhaHash());
+    public static UserRequestDTO mapToUserRequestDTO(User user) {
+        return new UserRequestDTO(
+            user.getNome(),
+            user.getEmail(),
+            user.getSenhaHash(),
+            user.getTelefone(),
+            user.getEndereco()
+        );
     }
 }

@@ -18,10 +18,11 @@ public record EmpresaRequestDTO(
         @URL(message = "Links em formato inválido") String links // pode ser opcional colocar
 ) {
     public static EmpresaRequestDTO converter(Empresa empresa){
-        return new EmpresaRequestDTO(empresa.getNome(),
+        return new EmpresaRequestDTO(
+            empresa.getNome(),
             empresa.getEmail(),
-            null
-            , empresa.getTelefone(),
+            null,
+            empresa.getTelefone(),
             empresa.getEndereco(),
             empresa.getCnpj(),
             empresa.getBiografia(),
