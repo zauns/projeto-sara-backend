@@ -8,7 +8,7 @@ import sara.projeto.saraEmprega.model.Administrador;
 public record AdministradorRequestDTO(
         @NotBlank(message = "Nome é obrigatório") String nome,
         @NotBlank(message = "Email é obrigatório") @Email(message = "Email inválido") String email,
-        @NotBlank(message = "Senha é obrigatória") String senha,
+        String senha,
         @NotBlank(message = "Telefone é obrigatório") String telefone,
         @NotBlank(message = "Endereço é obrigatório") String endereco,
         @NotNull(message = "O valor do campo é obrigatório") boolean isSuperAdmin) {
