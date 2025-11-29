@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +36,7 @@ public class UserController extends ContasController<UserRequestDTO, UserService
 		this.userService = service;
     }
 
-    @PostMapping("/{id}") //post pelo id
+    @PutMapping("/{id}") //post pelo id
     public ResponseEntity<ContaResponseDTO> updateUser(@PathVariable UUID id, @RequestBody @Valid UserRequestDTO userDTO) {
         ContaResponseDTO updatedUser = userService.update(id, userDTO);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
