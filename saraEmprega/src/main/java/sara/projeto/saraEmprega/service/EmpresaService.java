@@ -17,13 +17,14 @@ import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
 import sara.projeto.saraEmprega.ports.EmpresaRepositoryPort;
 import sara.projeto.saraEmprega.ports.EmpresaServicePort;
+import sara.projeto.saraEmprega.util.Mapper;
 
 @Service
 @RequiredArgsConstructor
 public class EmpresaService extends ContaService<Empresa> implements EmpresaServicePort {
 
     private final EmpresaRepositoryPort repositorio;
-    private final PasswordEncoder passwordEncoder;
+    private final Mapper mapper;
 
     @Override
     protected ContaRepositoryPort<Empresa> repositorio() {
@@ -34,7 +35,7 @@ public class EmpresaService extends ContaService<Empresa> implements EmpresaServ
     @Transactional
     public ContaResponseDTO criar(EmpresaRequestDTO dto) {
         Empresa empresa = new Empresa();
-        mapear(dto, empresa);
+        empresa = mapper.empresaParaEntidade(dto);
         Empresa novaEmpresa = repositorio.salvar(empresa);
         return new ContaResponseDTO(novaEmpresa);
     }
@@ -43,41 +44,29 @@ public class EmpresaService extends ContaService<Empresa> implements EmpresaServ
     @Transactional
     public ContaResponseDTO atualizar(UUID id, EmpresaRequestDTO dto) {
         Empresa empresa = repositorio.encontrarPorId(id)
-            .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + id));
-        mapear(dto, empresa);
+                .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + id));
+        mapper.atualizaEmpresaDeDTO(dto, empresa);
         Empresa atualizada = repositorio.salvar(empresa);
         return new ContaResponseDTO(atualizada);
     }
 
-    //utilizado em vagas
+    // utilizado em vagas
     @Transactional(readOnly = true)
     public Empresa buscarEmpresaPorId(UUID id) {
         Empresa empresa = repositorio.encontrarPorId(id)
-            .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com o ID: " + id));
         return empresa;
-    }
-
-    private void mapear(EmpresaRequestDTO dto, Empresa empresa) {
-        empresa.setNome(dto.nome());
-        empresa.setEmail(dto.email());
-        empresa.setTelefone(dto.telefone());
-        empresa.setEndereco(dto.endereco());
-        empresa.setSenhaHash(passwordEncoder.encode(dto.senha()));
-        empresa.setCnpj(dto.cnpj());
-        empresa.setBiografia(dto.biografia());
-        empresa.setLinks(dto.links());
-        empresa.setValidada(false);
     }
 
     @Transactional(readOnly = true)
     public List<ContaResponseDTO> getEmpresasNaoValidadas() {
         return repositorio.findByIsValidadaFalse().stream()
-            .map(ContaResponseDTO::new)
-            .collect(Collectors.toList());
+                .map(ContaResponseDTO::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public EmpresaRequestDTO getDados(UUID id){
+    public EmpresaRequestDTO getDados(UUID id) {
         Empresa empresa = repositorio.encontrarPorId(id).get();
         return EmpresaRequestDTO.converter(empresa);
     }
@@ -85,7 +74,7 @@ public class EmpresaService extends ContaService<Empresa> implements EmpresaServ
     @Transactional
     public ContaResponseDTO aprovarEmpresa(UUID id) {
         Empresa empresa = repositorio.encontrarPorId(id)
-            .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada"));
 
         empresa.setValidada(true);
         repositorio.salvar(empresa);

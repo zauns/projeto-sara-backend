@@ -2,7 +2,6 @@ package sara.projeto.saraEmprega.service;
 
 import java.util.UUID;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,9 +12,9 @@ import sara.projeto.saraEmprega.dto.UserRequestDTO;
 import sara.projeto.saraEmprega.model.User;
 import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
 import sara.projeto.saraEmprega.ports.UserServicePort;
+import sara.projeto.saraEmprega.util.Mapper;
 import sara.projeto.saraEmprega.util.user_statagy.UpdateContext;
 
-//TODO
 @Service
 @Transactional
 @AllArgsConstructor
@@ -23,7 +22,7 @@ public class UserService extends ContaService<User> implements UserServicePort {
 
     private final ContaRepositoryPort<User> repositorio;
     private final UpdateContext updateContext;
-    private final PasswordEncoder passwordEncoder;
+    private final Mapper mapper;
 
     @Override
     protected ContaRepositoryPort<User> repositorio() {
@@ -39,7 +38,7 @@ public class UserService extends ContaService<User> implements UserServicePort {
     @Transactional
     public ContaResponseDTO create(UserRequestDTO dto) {
         User user = new User();
-        mapToUser(dto, user);
+        user = mapper.userParaEntidade(dto);
         repositorio.salvar(user);
         return new ContaResponseDTO(user);
     }
@@ -49,7 +48,7 @@ public class UserService extends ContaService<User> implements UserServicePort {
     public ContaResponseDTO update(UUID id, UserRequestDTO dto) {
         User user = repositorio.encontrarPorId(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
-        mapToUser(dto, user);
+        mapper.atualizaUserDeDTO(dto, user);
         repositorio.salvar(user);
         return new ContaResponseDTO(user);
     }
@@ -64,13 +63,6 @@ public class UserService extends ContaService<User> implements UserServicePort {
     public User getUserByMail(String email) {
         return repositorio.encontrarPorEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado com email: " + email));
-    }
-
-    private void mapToUser(UserRequestDTO dto, User user) {
-        user.setNome(dto.name());
-        user.setEmail(dto.email());
-        user.setSenhaHash(passwordEncoder.encode(dto.password()));
-        // Adicione outros campos se necessário
     }
 
 }
