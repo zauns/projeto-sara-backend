@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,22 +37,12 @@ public class UserController extends ContasController<UserRequestDTO, UserService
 		this.userService = service;
     }
 
-    @PutMapping("/{id}") //post pelo id
-    public ResponseEntity<ContaResponseDTO> updateUser(@PathVariable UUID id, @RequestBody @Valid UserRequestDTO userDTO) {
-        ContaResponseDTO updatedUser = userService.update(id, userDTO);
-        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
-    }
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('SECRETARIA')")
     public ResponseEntity<ContaResponseDTO> createUser(@RequestBody @Valid UserRequestDTO userDTO) {
         ContaResponseDTO novoUsuario = userService.create(userDTO);
         return new ResponseEntity<>(novoUsuario, HttpStatus.OK);
-    }
-
-    @GetMapping("/validate-token")
-    public ResponseEntity<String> validateToken(Authentication auth) {
-        return ResponseEntity.ok("Token válido para: " + auth.getName());
     }
 
     @GetMapping("/dados/{id}")
@@ -61,4 +52,22 @@ public class UserController extends ContasController<UserRequestDTO, UserService
         return ResponseEntity.ok(user);
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('USER') and authentication.principal.claims['userId'] == #id.toString()")
+    public ResponseEntity<ContaResponseDTO> updateUser(@PathVariable UUID id, @RequestBody @Valid UserRequestDTO userDTO) {
+        ContaResponseDTO updatedUser = userService.update(id, userDTO);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    @GetMapping("/validate-token")
+    public ResponseEntity<String> validateToken(Authentication auth) {
+        return ResponseEntity.ok("Token válido para: " + auth.getName());
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER') and authentication.principal.claims['userId'] == #id.toString()")
+    public ResponseEntity<Void> excluirConta(@PathVariable UUID id){
+        service.excluirConta(id);
+        return ResponseEntity.noContent().build();
+    }
 }

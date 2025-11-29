@@ -10,7 +10,6 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.persistence.EntityNotFoundException;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;

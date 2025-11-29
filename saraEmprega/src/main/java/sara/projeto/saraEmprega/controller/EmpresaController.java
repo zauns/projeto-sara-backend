@@ -35,6 +35,19 @@ public class EmpresaController extends ContasController<EmpresaRequestDTO, Empre
         return ResponseEntity.status(HttpStatus.CREATED).body(novaEmpresa);
     }
 
+    @GetMapping("/dados/{id}")
+    @PreAuthorize("hasRole('EMPRESA') and authentication.principal.claims['userId'] == #id.toString()")
+    public ResponseEntity<EmpresaRequestDTO> getDados(@PathVariable UUID id){
+        EmpresaRequestDTO empresa = service.getDados(id);
+        return ResponseEntity.ok(empresa);
+    }
+
+    @GetMapping("/pendentes")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    public ResponseEntity<List<ContaResponseDTO>> buscarPendentes() {
+        return ResponseEntity.ok(service.getEmpresasNaoValidadas());
+    }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('EMPRESA') and authentication.principal.claims['userId'] == #id.toString() or hasRole('SUPER_ADMIN')")
     public ResponseEntity<ContaResponseDTO> atualizar(
@@ -42,12 +55,6 @@ public class EmpresaController extends ContasController<EmpresaRequestDTO, Empre
             @Valid @RequestBody EmpresaRequestDTO dto) {
         ContaResponseDTO contaAtualizada = service.atualizar(id, dto);
         return ResponseEntity.ok(contaAtualizada);
-    }
-
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
-    @GetMapping("/pendentes")
-    public ResponseEntity<List<ContaResponseDTO>> buscarPendentes() {
-        return ResponseEntity.ok(service.getEmpresasNaoValidadas());
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
@@ -64,11 +71,5 @@ public class EmpresaController extends ContasController<EmpresaRequestDTO, Empre
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/dados/{id}")
-    @PreAuthorize("hasRole('EMPRESA') and authentication.principal.claims['userId'] == #id.toString()")
-    public ResponseEntity<EmpresaRequestDTO> getDados(@PathVariable UUID id){
-        EmpresaRequestDTO empresa = service.getDados(id);
-        return ResponseEntity.ok(empresa);
-    }
 
 }

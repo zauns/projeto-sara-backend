@@ -16,7 +16,4 @@ public class Secretaria extends Conta {
     private String municipio;
     private boolean isValidada = false;
 
-    public void gerarRelatorio() {
-        System.out.println("Teste: \n" + this.toString());
-    }
 }

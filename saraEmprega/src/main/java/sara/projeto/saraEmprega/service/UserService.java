@@ -13,7 +13,6 @@ import sara.projeto.saraEmprega.model.User;
 import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
 import sara.projeto.saraEmprega.ports.UserServicePort;
 import sara.projeto.saraEmprega.util.Mapper;
-import sara.projeto.saraEmprega.util.user_statagy.UpdateContext;
 
 @Service
 @Transactional
@@ -21,7 +20,6 @@ import sara.projeto.saraEmprega.util.user_statagy.UpdateContext;
 public class UserService extends ContaService<User> implements UserServicePort {
 
     private final ContaRepositoryPort<User> repositorio;
-    private final UpdateContext updateContext;
     private final Mapper mapper;
 
     @Override

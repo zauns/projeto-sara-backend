@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 import sara.projeto.saraEmprega.dto.LoginRequestDTO;
 import sara.projeto.saraEmprega.ports.TokenServicesPort;
 
@@ -22,9 +24,7 @@ public class TokenController {
 	private final AuthenticationManager authenticationManager;
 
 	@PostMapping
-	public ResponseEntity<String> token(
-		@RequestBody LoginRequestDTO loginRequest
-	) {
+	public ResponseEntity<String> token(@RequestBody @Valid LoginRequestDTO loginRequest) {
 		var authentication = authenticationManager.authenticate(
 			new UsernamePasswordAuthenticationToken(
 				loginRequest.username(),

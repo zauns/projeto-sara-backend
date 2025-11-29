@@ -28,15 +28,22 @@ public class AdministradorController extends ContasController<AdministradorReque
         super(administradorService);
     }
 
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<ContaResponseDTO> criar(@Valid @RequestBody AdministradorRequestDTO dto) {
         ContaResponseDTO novaAdministracao = service.criar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaAdministracao);
     }
 
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @GetMapping("/dados/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN') or (hasRole('ADMIN') and authentication.principal.claims['userId'] == #id.toString())")
+    public ResponseEntity<AdministradorRequestDTO> getDados(@PathVariable UUID id) {
+        AdministradorRequestDTO admin = service.getDados(id);
+        return ResponseEntity.ok(admin);
+    }
+
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<ContaResponseDTO> atualizar(@PathVariable UUID id,
             @Valid @RequestBody AdministradorRequestDTO dto) {
         ContaResponseDTO novaAdministracao = service.atualizar(id, dto);
@@ -49,12 +56,5 @@ public class AdministradorController extends ContasController<AdministradorReque
     public ResponseEntity<Void> excluirConta(@PathVariable UUID id) {
         service.excluirConta(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/dados/{id}")
-    @PreAuthorize("hasRole('SUPER_ADMIN') or (hasRole('ADMIN') and authentication.principal.claims['userId'] == #id.toString())")
-    public ResponseEntity<AdministradorRequestDTO> getDados(@PathVariable UUID id) {
-        AdministradorRequestDTO admin = service.getDados(id);
-        return ResponseEntity.ok(admin);
     }
 }
