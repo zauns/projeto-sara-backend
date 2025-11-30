@@ -9,11 +9,10 @@ import com.nimbusds.jose.proc.SecurityContext;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.List;
-
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,14 +30,14 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
 @Configuration
 @EnableWebSecurity
@@ -111,29 +110,35 @@ class SecurityConfiguration {
      */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http)
-            throws Exception {
+        throws Exception {
         http
-                .cors(Customizer.withDefaults()) // libera o acesso do nevegador
-                .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(HttpMethod.POST, "/empresa").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/secretaria").permitAll()
-                        .requestMatchers("/token",
-
-                                "/api/public/**",
-                                "/health",
-                                "/actuator/health",
-                                "/actuator/info"
-
-                        ).permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .anyRequest().authenticated())
-                .csrf((csrf) -> csrf.disable())
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
-                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling((exceptions) -> exceptions
-                        .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
-                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
+            .cors(Customizer.withDefaults()) // libera o acesso do nevegador
+            .authorizeHttpRequests(authorize ->
+                authorize
+                    .requestMatchers(HttpMethod.POST, "/empresa").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/secretaria").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/vagas/**").permitAll()
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                    .requestMatchers("/token","/api/public/**","/health","/actuator/health","/actuator/info").permitAll()
+                    .anyRequest()
+                    .authenticated()
+            )
+            .csrf(csrf -> csrf.disable())
+            .oauth2ResourceServer(oauth2 ->
+                oauth2.jwt(jwt ->
+                    jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
+                )
+            )
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .exceptionHandling(exceptions ->
+                exceptions
+                    .authenticationEntryPoint(
+                        new BearerTokenAuthenticationEntryPoint()
+                    )
+                    .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
+            );
         // @formatter:on
         return http.build();
     }
@@ -145,18 +150,27 @@ class SecurityConfiguration {
         // Configure origens específicas em produção
         configuration.setAllowedOriginPatterns(List.of("*")); // Em produção, especifique os domínios
 
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
-        configuration.setExposedHeaders(List.of("Authorization", "Content-Disposition"));
+        configuration.setAllowedMethods(
+            List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
+        );
+        configuration.setAllowedHeaders(
+            List.of("Authorization", "Content-Type", "X-Requested-With")
+        );
+        configuration.setExposedHeaders(
+            List.of("Authorization", "Content-Disposition")
+        );
         configuration.setAllowCredentials(true); // Importante para cookies/auth
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source =
+            new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(
+        AuthenticationConfiguration config
+    ) throws Exception {
         return config.getAuthenticationManager();
     }
 
@@ -167,20 +181,27 @@ class SecurityConfiguration {
 
     @Bean
     JwtEncoder jwtEncoder() throws Exception {
-        JWK jwk = new RSAKey.Builder(jwtPublicKey()).privateKey(jwtPrivateKey()).build();
+        JWK jwk = new RSAKey.Builder(jwtPublicKey())
+            .privateKey(jwtPrivateKey())
+            .build();
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(
-                new JWKSet(jwk));
+            new JWKSet(jwk)
+        );
         return new NimbusJwtEncoder(jwks);
     }
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter =
+            new JwtGrantedAuthoritiesConverter();
         grantedAuthoritiesConverter.setAuthorityPrefix("");
         grantedAuthoritiesConverter.setAuthoritiesClaimName("scope");
 
-        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        JwtAuthenticationConverter jwtAuthenticationConverter =
+            new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(
+            grantedAuthoritiesConverter
+        );
         return jwtAuthenticationConverter;
     }
 
