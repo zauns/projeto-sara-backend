@@ -1,7 +1,6 @@
 package sara.projeto.saraEmprega.service;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -13,16 +12,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import static org.mockito.Mockito.doAnswer;
 
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.dto.EmpresaRequestDTO;
 import sara.projeto.saraEmprega.model.Empresa;
 import sara.projeto.saraEmprega.ports.EmpresaRepositoryPort;
+import sara.projeto.saraEmprega.util.Mapper;
 
 @ExtendWith(MockitoExtension.class)
 public class EmpresaServiceTest {
@@ -31,7 +30,7 @@ public class EmpresaServiceTest {
     private EmpresaRepositoryPort repositorio;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private Mapper mapper;
 
     @InjectMocks
     private EmpresaService empresaService;
@@ -62,72 +61,58 @@ public class EmpresaServiceTest {
     @DisplayName("A empresa deve ser criada sem problemas com os campos formatados")
     void criarEmpresaComSucesso() {
 
-        when(passwordEncoder.encode("senha"))
-                .thenReturn("senha_hash");
+        Empresa empresaMapeada = new Empresa();
+        empresaMapeada.setNome("Empresa legal");
+        empresaMapeada.setEmail("empresa@muitolegal.com");
+        empresaMapeada.setValidada(false);
 
-        when(repositorio.salvar(any(Empresa.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        ArgumentCaptor<Empresa> empresaCaptor = ArgumentCaptor.forClass(Empresa.class);
+        when(mapper.empresaParaEntidade(requestDTO)).thenReturn(empresaMapeada);
+        when(repositorio.salvar(any(Empresa.class))).thenAnswer(i -> i.getArgument(0));
 
         ContaResponseDTO responseDTO = empresaService.criar(requestDTO);
 
-        Assertions.assertNotNull(responseDTO);
         Assertions.assertEquals("Empresa legal", responseDTO.getNome());
-        Assertions.assertEquals("empresa@muitolegal.com", responseDTO.getEmail());
+        Assertions.assertEquals("Empresa", responseDTO.getTipoConta());
 
-        verify(repositorio, times(1)).salvar(empresaCaptor.capture());
-        Empresa empresaSalva = empresaCaptor.getValue();
-
-        Assertions.assertNotNull(empresaSalva);
-        Assertions.assertEquals("Empresa legal", empresaSalva.getNome());
-        Assertions.assertEquals("senha_hash", empresaSalva.getSenhaHash());
-        Assertions.assertFalse(empresaSalva.isValidada());
+        verify(mapper).empresaParaEntidade(requestDTO);
+        verify(repositorio).salvar(empresaMapeada);
     }
 
     @Test
     @DisplayName("A empresa deve ser atualizada sem problemas")
     void deveAtualizarEmpresaComSucesso() {
         EmpresaRequestDTO dtoAtualizado = new EmpresaRequestDTO(
-                "novo nome de empresa",
+                "Novo Nome",
                 "novo@email.com",
-                "nova senha",
-                "12312312",
-                "Nova rua",
-                "10.791.910/0001-93",
-                "Uma nova biografia para uma nova filosofia",
-                "www.novolink.com");
+                "senha",
+                "123",
+                "Rua",
+                "CNPJ",
+                "Bio",
+                "Link");
 
-        when(repositorio.encontrarPorId(empresaId))
-                .thenReturn(Optional.of(empresa));
+        when(repositorio.encontrarPorId(empresaId)).thenReturn(Optional.of(empresa));
+        when(repositorio.salvar(any(Empresa.class))).thenAnswer(i -> i.getArgument(0));
 
-        when(passwordEncoder.encode("nova senha"))
-                .thenReturn("novo_hash");
+        doAnswer(invocation -> {
+            Empresa e = invocation.getArgument(1);
+            e.setNome("Novo Nome");
+            return null;
+        }).when(mapper).atualizaEmpresaDeDTO(dtoAtualizado, empresa);
 
-        when(repositorio.salvar(any(Empresa.class)))
-                .then(invocation -> invocation.getArgument(0));
-
-        ArgumentCaptor<Empresa> empresaCaptor = ArgumentCaptor.forClass(Empresa.class);
         ContaResponseDTO responseDTO = empresaService.atualizar(empresaId, dtoAtualizado);
-        //código repetido da pra melhorar
-        Assertions.assertNotNull(responseDTO);
-        Assertions.assertEquals("novo nome de empresa", responseDTO.getNome());
-        Assertions.assertEquals("novo@email.com", responseDTO.getEmail());
 
-        verify(repositorio, times(1)).salvar(empresaCaptor.capture());
-        Empresa empresaAtualizada = empresaCaptor.getValue();
-        
-        Assertions.assertNotNull(empresaAtualizada);
-        Assertions.assertEquals("novo nome de empresa", empresaAtualizada.getNome());
-        Assertions.assertEquals("novo_hash", empresaAtualizada.getSenhaHash());
-        Assertions.assertEquals(empresaId, empresaAtualizada.getId());
+        Assertions.assertEquals("Novo Nome", responseDTO.getNome());
+        verify(mapper).atualizaEmpresaDeDTO(dtoAtualizado, empresa);
+        verify(repositorio).salvar(empresa);
     }
 
     @Test
     @DisplayName("Ao passar um id existente, o conteúdo retornado deve ser um ResponseDTO da empresa correspondente")
-    void buscarEmpresaPorIdComSucesso(){
+    void buscarEmpresaPorIdComSucesso() {
 
         when(repositorio.encontrarPorId(empresaId))
-        .thenReturn(Optional.of(empresa));
+                .thenReturn(Optional.of(empresa));
 
         ContaResponseDTO resultado = empresaService.buscarPorId(empresaId);
 

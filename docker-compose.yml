@@ -23,7 +23,7 @@ services:
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
       timeout: 10s
-      retries: 5
+      retries: 3
       start_period: 30s
       interval: 10s
 
@@ -31,13 +31,11 @@ services:
     build:
       context: ./saraEmprega
       dockerfile: sara_backend.dockerfile
-      cache_from:
-        - sara-emprega-backend:latest
     container_name: sara-emprega-backend
     restart: unless-stopped
     env_file: ./.env
     environment:
-      DB_HOST: database
+      DB_HOST: ${DB_HOST}
       DB_PORT: 3306
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
@@ -55,7 +53,7 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
       timeout: 20s
-      retries: 5
+      retries: 3
       start_period: 60s
       interval: 15s
     volumes:
@@ -65,8 +63,6 @@ services:
     build:
       context: ./projeto-sara-frontend
       dockerfile: sara_frontend.dockerfile
-      cache_from:
-        - sara-emprega-frontend:latest
     container_name: sara-emprega-frontend
     restart: unless-stopped
     ports:

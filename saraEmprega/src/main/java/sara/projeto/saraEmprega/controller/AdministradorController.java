@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,15 +28,22 @@ public class AdministradorController extends ContasController<AdministradorReque
         super(administradorService);
     }
 
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<ContaResponseDTO> criar(@Valid @RequestBody AdministradorRequestDTO dto) {
         ContaResponseDTO novaAdministracao = service.criar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaAdministracao);
     }
 
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @GetMapping("/dados/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN') or (hasRole('ADMIN') and authentication.principal.claims['userId'] == #id.toString())")
+    public ResponseEntity<AdministradorRequestDTO> getDados(@PathVariable UUID id) {
+        AdministradorRequestDTO admin = service.getDados(id);
+        return ResponseEntity.ok(admin);
+    }
+
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<ContaResponseDTO> atualizar(@PathVariable UUID id,
             @Valid @RequestBody AdministradorRequestDTO dto) {
         ContaResponseDTO novaAdministracao = service.atualizar(id, dto);
@@ -44,10 +52,7 @@ public class AdministradorController extends ContasController<AdministradorReque
 
     @Override
     @DeleteMapping("/{id}")
-    @PreAuthorize(
-        "hasRole('SUPER_ADMIN') or " +
-        "(hasRole('ADMIN') and authentication.principal.claims['userId'] == #id.toString())"
-    )
+    @PreAuthorize("hasRole('SUPER_ADMIN') or (hasRole('ADMIN') and authentication.principal.claims['userId'] == #id.toString())")
     public ResponseEntity<Void> excluirConta(@PathVariable UUID id) {
         service.excluirConta(id);
         return ResponseEntity.noContent().build();

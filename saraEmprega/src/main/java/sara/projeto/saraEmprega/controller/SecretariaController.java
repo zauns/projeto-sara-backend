@@ -35,6 +35,19 @@ public class SecretariaController extends ContasController<SecretariaRequestDTO,
         return ResponseEntity.status(HttpStatus.CREATED).body(novaSecretaria);
     }
 
+    @GetMapping("/dados/{id}")
+    @PreAuthorize("hasRole('SECRETARIA') and authentication.principal.claims['userId'] == #id.toString()")
+    public ResponseEntity<SecretariaRequestDTO> getDados(@PathVariable UUID id){
+        SecretariaRequestDTO secretaria = service.getDados(id);
+        return ResponseEntity.ok(secretaria);
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    @GetMapping("/pendentes")
+    public ResponseEntity<List<ContaResponseDTO>> buscarPendentes() {
+        return ResponseEntity.ok(service.getSecretariasNaoValidadas());
+    }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('SECRETARIA') and authentication.principal.claims['userId'] == #id.toString() or hasRole('SUPER_ADMIN')")
     public ResponseEntity<ContaResponseDTO> atualizar(
@@ -44,11 +57,6 @@ public class SecretariaController extends ContasController<SecretariaRequestDTO,
         return ResponseEntity.ok(contaAtualizada);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
-    @GetMapping("/pendentes")
-    public ResponseEntity<List<ContaResponseDTO>> buscarPendentes() {
-        return ResponseEntity.ok(service.getSecretariasNaoValidadas());
-    }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @PutMapping("/aprovar/{id}")

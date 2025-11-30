@@ -11,4 +11,5 @@ public interface EmpresaServicePort extends ContaServicePort {
     ContaResponseDTO aprovarEmpresa(UUID id);
     ContaResponseDTO criar(EmpresaRequestDTO dto);
     ContaResponseDTO atualizar(UUID id, EmpresaRequestDTO dto);
+    EmpresaRequestDTO getDados(UUID id);
 }

@@ -10,13 +10,13 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.persistence.EntityNotFoundException;
 import sara.projeto.saraEmprega.dto.ContaResponseDTO;
 import sara.projeto.saraEmprega.dto.UserRequestDTO;
 import sara.projeto.saraEmprega.model.User;
 import sara.projeto.saraEmprega.ports.ContaRepositoryPort;
+import sara.projeto.saraEmprega.util.Mapper;
 import sara.projeto.saraEmprega.util.user_statagy.UpdateContext;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,7 +29,7 @@ public class UserServiceTestFullCoverage {
     private UpdateContext updateContext;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private Mapper mapper;
 
     @InjectMocks
     private UserService userService;
@@ -41,7 +41,7 @@ public class UserServiceTestFullCoverage {
     @BeforeEach
     void setUp() {
         userId = UUID.randomUUID();
-        requestDTO = new UserRequestDTO("User Teste", "user@teste.com", "senha123");
+        requestDTO = new UserRequestDTO("User Teste", "user@teste.com", "senha123", "1239123123", "Um endereço gentil");
 
         user = new User();
         user.setId(userId);
@@ -56,38 +56,33 @@ public class UserServiceTestFullCoverage {
 
     @Test
     void create_DeveCriarComSucesso() {
+        User userMapeado = new User();
+        userMapeado.setNome("User Teste");
+        userMapeado.setEmail("user@teste.com");
 
-        when(passwordEncoder.encode("senha123")).thenReturn("hash123");
+        when(mapper.userParaEntidade(requestDTO)).thenReturn(userMapeado);
         when(repositorio.salvar(any(User.class))).thenAnswer(i -> i.getArgument(0));
-
-        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
 
         ContaResponseDTO response = userService.create(requestDTO);
 
         Assertions.assertEquals("User Teste", response.getNome());
-        Assertions.assertEquals("user@teste.com", response.getEmail());
-
-        verify(repositorio).salvar(captor.capture());
-        User salvo = captor.getValue();
-
-        Assertions.assertEquals("User Teste", salvo.getNome());
-        Assertions.assertEquals("hash123", salvo.getSenhaHash());
-        verifyNoMoreInteractions(repositorio);
+        verify(mapper).userParaEntidade(requestDTO); // Verifica se o mapper foi chamado
+        verify(repositorio).salvar(userMapeado);
     }
 
-    @Test
-    void create_deveFuncionarComSenhaEncoderRetornandoNull() {
+    // @Test teste de senha agora no MapperTest
+    // void create_deveFuncionarComSenhaEncoderRetornandoNull() {
 
-        when(passwordEncoder.encode("senha123")).thenReturn(null);
-        when(repositorio.salvar(any(User.class))).thenAnswer(i -> i.getArgument(0));
+    //     when(passwordEncoder.encode("senha123")).thenReturn(null);
+    //     when(repositorio.salvar(any(User.class))).thenAnswer(i -> i.getArgument(0));
 
-        UserRequestDTO dto = new UserRequestDTO("ABC", "a@a.com", "senha123");
+    //     UserRequestDTO dto = new UserRequestDTO("ABC", "a@a.com", "senha123", "123213123", "Um endereço ainda mais gentil");
 
-        ContaResponseDTO res = userService.create(dto);
+    //     ContaResponseDTO res = userService.create(dto);
 
-        Assertions.assertEquals("ABC", res.getNome());
-        Assertions.assertEquals("a@a.com", res.getEmail());
-    }
+    //     Assertions.assertEquals("ABC", res.getNome());
+    //     Assertions.assertEquals("a@a.com", res.getEmail());
+    // }
 
     @Test
     void create_deveAceitarRequestNuloSemExplodir() {
@@ -101,17 +96,26 @@ public class UserServiceTestFullCoverage {
 
     @Test
     void update_DeveAtualizarComSucesso() {
-
-        UserRequestDTO dto = new UserRequestDTO("Novo", "novo@mail.com", "newpwd");
+        UserRequestDTO dto = new UserRequestDTO("Novo", "novo@mail.com", "newpwd", "123123563", "um lugar insano");
 
         when(repositorio.encontrarPorId(userId)).thenReturn(Optional.of(user));
-        when(passwordEncoder.encode("newpwd")).thenReturn("newHash");
+
+        doAnswer(invocation -> {
+            User u = invocation.getArgument(1);
+            u.setNome("Novo");
+            u.setEmail("novo@mail.com");
+            return null;
+        }).when(mapper).atualizaUserDeDTO(dto, user);
+
         when(repositorio.salvar(any(User.class))).thenAnswer(i -> i.getArgument(0));
 
         ContaResponseDTO res = userService.update(userId, dto);
 
         Assertions.assertEquals("Novo", res.getNome());
         Assertions.assertEquals("novo@mail.com", res.getEmail());
+
+        verify(mapper).atualizaUserDeDTO(dto, user);
+        verify(repositorio).salvar(user);
     }
 
     @Test
@@ -123,23 +127,24 @@ public class UserServiceTestFullCoverage {
                 () -> userService.update(userId, requestDTO));
 
         verify(repositorio, never()).salvar(any());
+        verifyNoInteractions(mapper);
     }
 
-    @Test
-    void update_ComSenhaEncoderNula() {
+    // @Test teste com senha agora no MapperTest
+    // void update_ComSenhaEncoderNula() {
 
-        UserRequestDTO dto = new UserRequestDTO("A", "b@c.com", "123");
+    //     UserRequestDTO dto = new UserRequestDTO("A", "b@c.com", "123", "3812983912" , "um lugar peculiar");
 
-        when(repositorio.encontrarPorId(userId)).thenReturn(Optional.of(user));
-        when(passwordEncoder.encode("123")).thenReturn(null);
-        when(repositorio.salvar(any(User.class))).thenAnswer(i -> i.getArgument(0));
+    //     when(repositorio.encontrarPorId(userId)).thenReturn(Optional.of(user));
+    //     when(passwordEncoder.encode("123")).thenReturn(null);
+    //     when(repositorio.salvar(any(User.class))).thenAnswer(i -> i.getArgument(0));
 
-        ContaResponseDTO res = userService.update(userId, dto);
+    //     ContaResponseDTO res = userService.update(userId, dto);
 
-        Assertions.assertEquals("A", res.getNome());
-        Assertions.assertEquals("b@c.com", res.getEmail());
-        Assertions.assertNull(user.getSenhaHash());
-    }
+    //     Assertions.assertEquals("A", res.getNome());
+    //     Assertions.assertEquals("b@c.com", res.getEmail());
+    //     Assertions.assertNull(user.getSenhaHash());
+    // }
 
     @Test
     void update_RequestNull() {

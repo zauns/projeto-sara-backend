@@ -12,6 +12,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Administrador extends Conta {
-
 	private boolean isSuperAdmin;
 }

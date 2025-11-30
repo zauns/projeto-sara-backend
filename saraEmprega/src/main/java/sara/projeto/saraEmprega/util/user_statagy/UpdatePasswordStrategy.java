@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import sara.projeto.saraEmprega.dto.UserDTO;
+import sara.projeto.saraEmprega.dto.UserRequestDTO;
 import sara.projeto.saraEmprega.model.User;
 
 @Component
@@ -15,7 +15,7 @@ public class UpdatePasswordStrategy implements UserUpdateStrategy {
     private int encoderStrength;
 
     @Override
-    public boolean update(User user, UserDTO dto) {
+    public boolean update(User user, UserRequestDTO dto) {
         if  (dto.password() != null && !user.getSenhaHash().equals(dto.password())) {
             PasswordEncoder encoder = new BCryptPasswordEncoder(encoderStrength);
             user.setSenhaHash(encoder.encode(dto.password()));

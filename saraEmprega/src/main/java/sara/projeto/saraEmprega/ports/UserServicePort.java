@@ -16,6 +16,7 @@ public interface UserServicePort extends ContaServicePort { //adapta as outras f
 
     User curriculumUpdate(User user);
 
+    UserRequestDTO getDados(UUID id);
     //curriculum jaja
 
     // Optional<User> getUserById(UUID id);
