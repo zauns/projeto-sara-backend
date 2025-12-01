@@ -63,6 +63,8 @@ services:
     build:
       context: ./projeto-sara-frontend
       dockerfile: sara_frontend.dockerfile
+      args:
+        NEXT_PUBLIC_BACKEND_URL: http://localhost:8080 # no codespaces, o final da url deve ser -8080.app.github.dev
     container_name: sara-emprega-frontend
     restart: unless-stopped
     ports:
