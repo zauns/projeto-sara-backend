@@ -23,12 +23,13 @@ jobs:
 
       - name: Build com Maven
         run: ./mvnw -B clean package
+        working-directory: saraEmprega
 
       - name: Upload do JAR como artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-jar
-          path: target/*.jar
+          path: saraEmprega/target/*.jar
 
   release:
     name: Criar Release
