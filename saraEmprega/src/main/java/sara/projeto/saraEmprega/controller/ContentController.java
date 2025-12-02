@@ -1,4 +1,4 @@
-package sara.emprega.msusers.controller;
+package sara.projeto.saraEmprega.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
