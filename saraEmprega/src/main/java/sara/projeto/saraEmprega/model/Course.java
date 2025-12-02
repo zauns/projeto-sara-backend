@@ -35,9 +35,9 @@ public class Course {
     int length;
     @ElementCollection(fetch = FetchType.LAZY)
     List<String> creators;
-    int rating;
+    Double rating ;
+    int numberOfReviews = 0;
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-
     @Builder.Default
-    private List<Module> modules = new ArrayList<>();
+    private List<Document> docs = new ArrayList<>();
 }
