@@ -1,6 +1,6 @@
 # --- Configuração do Servidor ---
 server:
-  port: ${SERVER_PORT}
+  port: ${PORT:8080}
 
 cloudflare:
   r2:
