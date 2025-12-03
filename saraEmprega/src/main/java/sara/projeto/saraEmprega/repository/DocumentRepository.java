@@ -3,6 +3,7 @@ package sara.projeto.saraEmprega.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import sara.projeto.saraEmprega.model.Document;
+import sara.projeto.saraEmprega.model.User;
 
 import java.util.UUID;
 
@@ -12,5 +13,5 @@ public interface DocumentRepository extends JpaRepository<Document, UUID> {
 
     Document findByUserEmail(String mail);
 
-    Document getDocumentByUser();
+    Document getDocumentByUser(User user);
 }
