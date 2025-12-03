@@ -34,7 +34,22 @@ public class CurriculumService implements CurriculumServicePort {
 
     public Document saveCurriculum(Document document, String mail, MultipartFile file) throws IOException  {
         User user = userService.getUserByMail(mail);
-        String key = r2Service.upload(user.getId(),document.getDocumentType(),file, document.getDocumentName());
+
+        Document existing = documentRepository.getDocumentByUser(user);
+        String key;
+
+        if (existing != null) {
+            key = r2Service.replace(existing.getPathR2(), user.getId(), document.getDocumentType(), file, document.getDocumentName());
+
+            // Atualiza campos
+            existing.setDocumentName(document.getDocumentName());
+            existing.setDocumentType(document.getDocumentType());
+            existing.setPathR2(key);
+
+            return documentRepository.saveDocument(existing);
+
+        }
+        key = r2Service.upload(user.getId(),document.getDocumentType(),file, document.getDocumentName());
         document.setPathR2(key);
         document.setUser(user);
         userService.curriculumUpdate(user);

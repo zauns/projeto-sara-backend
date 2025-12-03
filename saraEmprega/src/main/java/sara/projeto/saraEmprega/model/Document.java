@@ -29,5 +29,5 @@ import java.util.UUID;
 
         @ManyToOne
         @JoinColumn
-        private Module module;
+        private Course course;
     }

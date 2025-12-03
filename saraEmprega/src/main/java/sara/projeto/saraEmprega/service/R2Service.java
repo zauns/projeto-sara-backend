@@ -43,6 +43,24 @@ public class R2Service {
         return key;
     }
 
+    public String replace(String existingKey, UUID userId, String tipo, MultipartFile file, String fileName) throws IOException {
+
+        Path tempFile = Files.createTempFile("upload-", fileName);
+        file.transferTo(tempFile.toFile());
+
+        s3Client.putObject(
+                PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(existingKey)
+                        .contentType("application/pdf")
+                        .build(),
+                tempFile
+        );
+
+        Files.deleteIfExists(tempFile);
+        return existingKey;
+    }
+
     private String generateKey(String tipo,UUID userId,String fileName) {
         return String.format("%s/%s/%s-%s",
                 tipo.toLowerCase(),

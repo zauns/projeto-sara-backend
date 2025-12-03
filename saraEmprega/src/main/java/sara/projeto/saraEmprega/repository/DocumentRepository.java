@@ -11,4 +11,6 @@ public interface DocumentRepository extends JpaRepository<Document, UUID> {
 
 
     Document findByUserEmail(String mail);
+
+    Document getDocumentByUser();
 }
