@@ -40,7 +40,10 @@ public class CourseService implements CourseServicePort {
     public Document addGuideToCourse(UUID id, MultipartFile file,Document doc) throws IOException {
         Course course = courseRepository.findById(id);
         r2Service.upload(id, doc.getDocumentType(), file,doc.getDocumentName());
+        doc.setCourse(course);
         course.getDocs().add(doc);
+
+        courseRepository.updateCourse(course);
         return doc;
     }
 
