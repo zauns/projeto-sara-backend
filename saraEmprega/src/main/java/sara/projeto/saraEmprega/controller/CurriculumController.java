@@ -31,7 +31,14 @@ public class CurriculumController {
             Validate.validatePDF(file);
             Document document = Mapper.mapToCurriculum(fileName);
             Jwt jwt = (Jwt) auth.getPrincipal();
-            curriculumService.saveCurriculum(document, jwt.getSubject(),file);
+
+            String userEmail = jwt.getClaimAsString("email");
+
+            if (userEmail == null) {
+                userEmail = jwt.getSubject();
+            }
+
+            curriculumService.saveCurriculum(document, userEmail,file);
             return ResponseEntity.ok().body(new CurriculumDTO(document.getPathR2(),document.getDocumentName()
                     , document.getDocumentType()));
         }
@@ -40,8 +47,12 @@ public class CurriculumController {
     public ResponseEntity<byte[]> getCurriculum(Authentication auth) {
 
         Jwt jwt = (Jwt) auth.getPrincipal();
-        byte[] doc = curriculumService.getCurriculum(jwt.getSubject());
 
+        String userEmail = jwt.getClaimAsString("email");
+        if (userEmail == null) {
+                userEmail = jwt.getSubject();
+        }
+        byte[] doc = curriculumService.getCurriculum(userEmail);
         //CurriculumDTO curriculumDTO = new CurriculumDTO(document.getPathR2(),document.getDocumentName()
         //        , document.getDocumentType());
 
