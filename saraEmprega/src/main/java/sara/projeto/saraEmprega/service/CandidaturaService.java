@@ -52,9 +52,10 @@ public class CandidaturaService implements CandidaturaServicePort {
         }
 
         Candidatura candidatura = new Candidatura();
-
+        
         // Mapeia usando o ID do usuário logado e o ID da vaga do DTO
-        mapear(new CandidaturaRequestDTO(userIdLogado, dto.vagaId()), candidatura);
+        //REFATORAR CASO O PROJETO TENHA CONTINUACAO
+        mapear(new CandidaturaRequestDTO(dto.vagaId(), userIdLogado), candidatura);
 
         Candidatura novaCandidatura = candidaturaRepositoryPort.save(candidatura);
         return new CandidaturaResponseDTO(novaCandidatura);
