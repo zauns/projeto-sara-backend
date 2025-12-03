@@ -50,7 +50,7 @@ public class ContaAutenticada implements UserDetails { // transferi pro tipo con
 
     @Override
     public String getUsername() {
-        return conta.getNome();
+        return conta.getEmail(); //feioso mas fazer oquê
     }
 
     public String getEmail() {

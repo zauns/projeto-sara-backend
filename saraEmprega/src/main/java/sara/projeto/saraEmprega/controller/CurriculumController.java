@@ -34,10 +34,6 @@ public class CurriculumController {
 
             String userEmail = jwt.getClaimAsString("email");
 
-            if (userEmail == null) {
-                userEmail = jwt.getSubject();
-            }
-
             curriculumService.saveCurriculum(document, userEmail,file);
             return ResponseEntity.ok().body(new CurriculumDTO(document.getPathR2(),document.getDocumentName()
                     , document.getDocumentType()));
@@ -49,9 +45,7 @@ public class CurriculumController {
         Jwt jwt = (Jwt) auth.getPrincipal();
 
         String userEmail = jwt.getClaimAsString("email");
-        if (userEmail == null) {
-                userEmail = jwt.getSubject();
-        }
+
         byte[] doc = curriculumService.getCurriculum(userEmail);
         //CurriculumDTO curriculumDTO = new CurriculumDTO(document.getPathR2(),document.getDocumentName()
         //        , document.getDocumentType());

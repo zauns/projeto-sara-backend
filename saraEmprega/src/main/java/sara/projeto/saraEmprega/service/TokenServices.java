@@ -26,7 +26,8 @@ public class TokenServices implements TokenServicesPort {
 
         ContaAutenticada principal = (ContaAutenticada) authentication.getPrincipal();
         String userId = principal.getConta().getId().toString();
-                            
+        String email = principal.getEmail();
+
         String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
@@ -36,6 +37,7 @@ public class TokenServices implements TokenServicesPort {
                 .expiresAt(now.plusSeconds(expiry))
                 .subject(authentication.getName())
                 .claim("scope", scope)
+                .claim("email", email)
                 .claim("userId", userId)
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
