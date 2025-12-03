@@ -46,6 +46,8 @@ class SecurityConfiguration {
 
     // @Value("${spring.util.encoderStrength}")
     // private int encoderStrong;
+    @Value("${FRONTEND_URL:http://localhost:3000}")
+    private String frontendUrl;
 
     @Value("${JWT_PUBLIC_KEY_CONTENT}")
     private String key;
@@ -149,7 +151,7 @@ class SecurityConfiguration {
 
         // Configure origens específicas em produção
         configuration.setAllowedOriginPatterns(List.of("*")); // Em produção, especifique os domínios
-
+        configuration.setAllowedOrigins(List.of(frontendUrl,"http://localhost:3000"));
         configuration.setAllowedMethods(
             List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
         );
