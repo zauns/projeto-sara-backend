@@ -1,6 +1,7 @@
 package sara.projeto.saraEmprega.service;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -49,4 +50,17 @@ public class CurriculumController {
                         , "inline; filename=\"curriculo.pdf\"")
                 .body(doc);
     }
+
+    @GetMapping("/candidatas/{email}/curriculos")
+    @PreAuthorize("hasRole('EMPRESA')")
+    public ResponseEntity<byte[]> getCurriculumByMail(@PathVariable("email") String email) {
+        byte[] doc = curriculumService.getCurriculum(email);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION
+                        , "inline; filename=\"curriculo.pdf\"")
+                .body(doc);
+    }
+
+
 }
