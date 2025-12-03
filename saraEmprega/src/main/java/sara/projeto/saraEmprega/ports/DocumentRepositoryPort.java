@@ -16,6 +16,6 @@ public class DocumentRepositoryPort {
     }
 
     public Document getDocumentByUser(User user) {
-        return documentRepository.getDocumentByUser();
+        return documentRepository.getDocumentByUser(user);
     }
 }
